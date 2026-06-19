@@ -81,7 +81,7 @@
 
 ```bash
 # 1. 克隆仓库到 Claude Code 的 skills 目录
-git clone https://github.com/<your-username>/FIFAWorldCup.git
+git clone https://github.com/ImMappyJ/FIFAWorldCup.git
 
 # 2. 将 skill 注册到 Claude Code (选择以下一种)
 
