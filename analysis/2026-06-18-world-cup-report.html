@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFA World Cup Match Intelligence Report - 2026-06-18</title>
+<style>
+
+:root { --bg: #0B1220; --card: #111827; --card-hover: #1a2332; --primary: #2563EB; --success: #22C55E; --warning: #F59E0B; --danger: #EF4444; --text: #E5E7EB; --text-muted: #9CA3AF; --border: #1F2937; --radius: 12px; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.6; }
+.container { max-width:1400px; margin:0 auto; padding:20px; }
+.header { text-align:center; padding:40px 20px; background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); border-radius:var(--radius); margin-bottom:30px; border:1px solid var(--border); }
+.header h1 { font-size:2.2em; margin-bottom:10px; background:linear-gradient(135deg,#F59E0B,#EF4444,#2563EB); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.header .subtitle { color:var(--text-muted); font-size:1.1em; }
+.dashboard { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:30px; }
+.dash-card { background:var(--card); border-radius:var(--radius); padding:20px; text-align:center; border:1px solid var(--border); transition:all 0.3s; }
+.dash-card:hover { background:var(--card-hover); transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,0.3); }
+.dash-card .icon { font-size:2.5em; margin-bottom:8px; }
+.dash-card .value { font-size:2em; font-weight:700; }
+.dash-card .label { color:var(--text-muted); font-size:0.9em; }
+.dash-card.positive .value { color:var(--success); }
+.dash-card.upset .value { color:var(--danger); }
+.dash-card.confidence .value { color:var(--primary); }
+.section-title { font-size:1.5em; margin:30px 0 16px; padding-bottom:10px; border-bottom:2px solid var(--primary); display:flex; align-items:center; gap:10px; }
+.match-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(600px,1fr)); gap:20px; margin-bottom:30px; }
+.match-card { background:var(--card); border-radius:var(--radius); padding:24px; border:1px solid var(--border); transition:all 0.3s; margin-bottom:20px; }
+.match-card:hover { box-shadow:0 8px 25px rgba(0,0,0,0.3); }
+.match-card .match-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
+.match-card .match-header .teams { font-size:1.4em; font-weight:700; }
+.match-card .match-header .group-badge { background:var(--primary); color:white; padding:4px 12px; border-radius:20px; font-size:0.8em; font-weight:600; }
+.info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin-bottom:16px; }
+.info-box { background:rgba(255,255,255,0.03); border-radius:8px; padding:14px; border:1px solid var(--border); }
+.info-box h4 { color:var(--primary); margin-bottom:8px; font-size:0.9em; text-transform:uppercase; letter-spacing:0.5px; }
+.info-box p,.info-box li { font-size:0.9em; color:var(--text-muted); }
+.info-box ul { list-style:none; padding:0; }
+.info-box ul li { padding:2px 0; }
+.stars { color:var(--warning); font-size:1.1em; letter-spacing:2px; }
+.bar-container { background:rgba(255,255,255,0.05); border-radius:6px; height:20px; margin:6px 0; overflow:hidden; }
+.bar { height:100%; border-radius:6px; transition:width 0.8s ease; }
+.bar.primary { background:var(--primary); }
+.bar.success { background:var(--success); }
+.bar.warning { background:var(--warning); }
+.bar.danger { background:var(--danger); }
+.prob-row { display:flex; justify-content:space-between; align-items:center; margin:4px 0; font-size:0.9em; }
+.prob-label { min-width:60px; }
+.prob-pct { min-width:40px; text-align:right; font-weight:600; }
+.scripts-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin:16px 0; }
+.script-card { background:rgba(255,255,255,0.03); border-radius:8px; padding:14px; border-left:4px solid var(--primary); }
+.script-card.script-a { border-left-color:var(--success); }
+.script-card.script-b { border-left-color:var(--primary); }
+.script-card.script-c { border-left-color:var(--danger); }
+.script-card.script-d { border-left-color:var(--warning); }
+.script-card h4 { margin-bottom:6px; font-size:0.95em; }
+.script-card .scores { color:var(--warning); font-weight:600; margin:4px 0; }
+.script-card .reason { color:var(--text-muted); font-size:0.85em; }
+.scoreline-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); font-size:0.9em; }
+.top3-card { background:rgba(255,255,255,0.03); border-radius:8px; padding:12px; margin:8px 0; }
+.top3-card .rank { color:var(--warning); font-weight:700; }
+.odds-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:0.85em; }
+.odds-table th { background:rgba(37,99,235,0.2); padding:8px 10px; text-align:left; font-size:0.8em; text-transform:uppercase; }
+.odds-table td { padding:8px 10px; border-bottom:1px solid var(--border); }
+.odds-table tr:hover { background:rgba(255,255,255,0.03); }
+.conf-badge { padding:3px 8px; border-radius:12px; font-size:0.75em; font-weight:600; }
+.conf-badge.high { background:rgba(34,197,94,0.2); color:var(--success); }
+.conf-badge.medium { background:rgba(245,158,11,0.2); color:var(--warning); }
+.conf-badge.low { background:rgba(239,68,68,0.2); color:var(--danger); }
+.heatmap { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin:12px 0; font-size:0.8em; }
+.heatmap .hm-header { text-align:center; color:var(--text-muted); font-weight:600; padding:4px; }
+.heatmap .hm-cell { text-align:center; padding:8px 4px; border-radius:4px; font-weight:600; }
+.heatmap .hm-row-label { color:var(--text-muted); text-align:right; padding:8px 6px; font-weight:600; }
+.conclusion-card { border-radius:var(--radius); padding:20px; margin:12px 0; border:1px solid var(--border); }
+.conclusion-card.green { background:rgba(34,197,94,0.08); border-left:4px solid var(--success); }
+.conclusion-card.yellow { background:rgba(245,158,11,0.08); border-left:4px solid var(--warning); }
+.conclusion-card.red { background:rgba(239,68,68,0.08); border-left:4px solid var(--danger); }
+.risk-card { background:var(--card); border-radius:var(--radius); padding:20px; border:1px solid var(--border); margin:12px 0; }
+.risk-card h4 { color:var(--danger); margin-bottom:8px; }
+.summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin:20px 0; }
+.summary-card { background:var(--card); border-radius:var(--radius); padding:20px; border:1px solid var(--border); }
+.summary-card h4 { color:var(--primary); margin-bottom:8px; }
+.footer { text-align:center; padding:30px; color:var(--text-muted); font-size:0.85em; border-top:1px solid var(--border); margin-top:40px; }
+@media(max-width:768px) { .match-grid { grid-template-columns:1fr; } .info-grid { grid-template-columns:1fr; } .heatmap { font-size:0.7em; } .header h1 { font-size:1.5em; } .scripts-grid { grid-template-columns:1fr; } }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<h1>&#127942; FIFA World Cup Match Intelligence Report</h1>
+<div class="subtitle">2026年6月18日-19日 | Matchday 2 | 小组赛第二轮</div>
+<div class="subtitle" style="margin-top:6px;">Generated: 2026-06-18 08:00 UTC | Data: FIFA, China Sports Lottery, DraftKings, Weather Channel</div>
+</div>
+
+<div class="dashboard">
+<div class="dash-card"><div class="icon">⚽</div><div class="value">8</div><div class="label">Matches Analyzed</div></div>
+<div class="dash-card positive"><div class="icon">✅</div><div class="value">5</div><div class="label">Positive Signals</div></div>
+<div class="dash-card upset"><div class="icon">⚠️</div><div class="value">3</div><div class="label">Upset Alerts</div></div>
+<div class="dash-card confidence"><div class="icon">📊</div><div class="value">68%</div><div class="label">Avg Confidence</div></div>
+</div>
+
+<div class="section-title">📅 2026年6月18日 (周四) — Group A &amp; B 第二轮</div>
+
+<div class="match-card">
+<div class="match-header">
+<span class="teams">🇨🇿 捷克 Czech Republic vs 南非 South Africa 🇿🇦</span>
+<span class="group-badge">A组 · 第2轮</span>
+</div>
+<div style="color:var(--text-muted);font-size:0.85em;margin-bottom:14px;">📅 2026-06-18 12:00 ET (北京时间 6/19 00:00) · 🏟 Mercedes-Benz Stadium, Atlanta · 👥 71,000</div>
+<div class="info-grid">
+<div class="info-box"><h4>🌤 天气 Weather</h4><p>🌡 26°C · 💧 湿度78% · 🌬 SW 12km/h</p>
+<p>🌧 雷暴概率: 60% (屋顶关闭,室内空调)</p>
+<p>🏟 草皮完美,无天气影响</p>
+<p>天气影响: <span class="stars">★★</span> (几乎无影响)</p></div>
+<div class="info-box"><h4>📋 阵容 Squad</h4><p><strong>捷克 (4-2-3-1):</strong> Kovar; Coufal, Hranac, Krejci, Jurasek; Soucek, Darida; Provod, Sulc, Hlozek; Schick</p>
+<p><strong>南非 (4-3-3):</strong> Williams; Mobbie, Xulu, Mvala, Modiba; Mokoena, Le Roux; Tau, Makgopa, Foster</p>
+<p style="color:var(--danger);">❌ SA: Sithole 红牌停赛 · Zwane 禁赛3场</p></div>
+<div class="info-box"><h4>📊 近期状态 Form</h4><p>🇨🇿: <span style="color:var(--danger);">L</span> (1-2 vs韩国) | 控球47% | xG 0.9 | 射门8</p>
+<p>🇿🇦: <span style="color:var(--danger);">L</span> (0-2 vs墨西哥) | 控球38% | xG 0.3 | 射门4</p>
+<p>ELO: 捷克 1698 (#21) · 南非 1487 (#58)</p></div>
+<div class="info-box"><h4>🎯 战意 Motivation</h4><p>⚡ <strong>双方生死战</strong> — 输球几乎出局</p>
+<p>🇨🇿 必须取胜保留晋级希望</p>
+<p>🇿🇦 缺少2名核心中场, 背水一战</p>
+<p>战意: <span class="stars">★★★★★</span></p></div>
+</div>
+<div class="section-title" style="font-size:1.1em;">📈 市场分析 Market Analysis</div>
+<table class="odds-table"><tr><th>市场 Market</th><th>选项 Selection</th><th>赔率 Odds</th><th>信心 Confidence</th></tr><tr><td>胜平负</td><td>🇨🇿 胜 (Win)</td><td>1.77</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>胜平负</td><td>平 (Draw)</td><td>3.75</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>胜平负</td><td>🇿🇦 负 (Loss)</td><td>4.90</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇨🇿 让胜</td><td>3.25</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>让平</td><td>3.50</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇿🇦 让负</td><td>2.05</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>胜胜 (Win/Win)</td><td>2.80</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>平胜 (Draw/Win)</td><td>4.50</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>总进球数</td><td>2球</td><td>3.20</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>1:0 (🇨🇿)</td><td>6.50</td><td><span class="conf-badge medium">MED</span></td></tr></table>
+<p style="color:var(--text-muted);font-size:0.8em;">📝 赔率为国际市场共识折算 · 中国体育彩票实际赔率请以 lottery.gov.cn 为准</p>
+<div class="section-title" style="font-size:1.1em;">🎬 比赛脚本模拟 Match Scripts</div>
+<div class="scripts-grid">
+<div class="script-card script-a"><h4>🟢 Script A — 捷克控场小胜</h4>
+<div class="scores">1:0 · 2:0 · 2:1</div>
+<div class="bar-container"><div class="bar success" style="width:42%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 42%</p>
+<div class="reason">捷克中场Soucek+Darida压制南非残阵。Schick个人能力破门。南非中场拦截能力因停赛崩溃,反击威胁有限。</div></div>
+<div class="script-card script-b"><h4>🔵 Script B — 对攻开放</h4>
+<div class="scores">2:2 · 3:1 · 3:2</div>
+<div class="bar-container"><div class="bar primary" style="width:18%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 18%</p>
+<div class="reason">生死战若早进球比赛开放。但南非首轮xG仅0.3,此脚本需南非超常发挥。</div></div>
+<div class="script-card script-c"><h4>🔴 Script C — 冷门 Upset</h4>
+<div class="scores">0:1 · 0:2 · 1:2</div>
+<div class="bar-container"><div class="bar danger" style="width:22%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 22%</p>
+<div class="reason">捷克首轮被逆转,防守有漏洞。南非边路速度可造威胁。Bafana逆境精神力强。</div></div>
+<div class="script-card script-d"><h4>🟡 Script D — 防守平局</h4>
+<div class="scores">0:0 · 1:1</div>
+<div class="bar-container"><div class="bar warning" style="width:18%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 18%</p>
+<div class="reason">双方都怕输,0:0后趋于保守。平局对双方不理想但好过输球。</div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+<div><div class="section-title" style="font-size:1em;">🏆 胜平负概率</div><div class="prob-row"><span class="prob-label">🇨🇿 主胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar success" style="width:48%;"></div></div></div>
+<span class="prob-pct">48%</span></div><div class="prob-row"><span class="prob-label">平局</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar warning" style="width:25%;"></div></div></div>
+<span class="prob-pct">25%</span></div><div class="prob-row"><span class="prob-label">🇿🇦 客胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar danger" style="width:27%;"></div></div></div>
+<span class="prob-pct">27%</span></div></div>
+<div><div class="section-title" style="font-size:1em;">📊 总进球分布</div><div class="prob-row"><span>0球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:10%;background:#374151;"></div></div></div>
+<span>10%</span></div><div class="prob-row"><span>1球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:28%;background:#374151;"></div></div></div>
+<span>28%</span></div><div class="prob-row"><span>2球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:32%;background:#374151;"></div></div></div>
+<span>32%</span></div><div class="prob-row"><span>3球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:18%;background:#374151;"></div></div></div>
+<span>18%</span></div><div class="prob-row"><span>4球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:8%;background:#374151;"></div></div></div>
+<span>8%</span></div><div class="prob-row"><span>5球+</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:4%;background:#374151;"></div></div></div>
+<span>4%</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🎯 Top 3 比分</div><div class="top3-card"><span class="rank">#1</span> <strong>1:0 (捷克)</strong> — 18% — 捷克小胜,南非中场缺失创造力不足</div><div class="top3-card"><span class="rank">#2</span> <strong>2:0 (捷克)</strong> — 14% — 捷克掌控节奏,下半场锁定胜局</div><div class="top3-card"><span class="rank">#3</span> <strong>1:1</strong> — 13% — 双方各进一球,保守收场</div></div>
+<div><div class="section-title" style="font-size:1em;">⏱ 半全场预测</div><div style="margin:10px 0;"><p><strong>最可能:</strong> <span style="color:var(--success);">胜胜 (Win/Win)</span> — 概率 35%</p><p><strong>次选:</strong> <span style="color:var(--warning);">平平 (Draw/Draw)</span> — 概率 22%</p><p><strong>警惕:</strong> <span style="color:var(--warning);">平胜 (Draw/Win)</span> — 概率 16%</p><p style="color:var(--text-muted);font-size:0.85em;">分析: 捷克开场谨慎,南非中场缺失导致上半场保守。若半场平局,捷克下半场发力是经典模式。</p></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🔥 比分热力图 Score Heatmap</div><div class="heatmap">
+<div class="hm-header"></div><div class="hm-header">0</div><div class="hm-header">1</div><div class="hm-header">2</div><div class="hm-header">3</div><div class="hm-header">4</div><div class="hm-header">5+</div><div class="hm-row-label">🇨🇿 捷克 Czech Republic0</div><div class="hm-cell" style="background:rgba(245,158,11,0.35);">10%</div><div class="hm-cell" style="background:rgba(239,68,68,0.25);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇿 捷克 Czech Republic1</div><div class="hm-cell" style="background:rgba(239,68,68,0.30);">8%</div><div class="hm-cell" style="background:rgba(245,158,11,0.40);">13%</div><div class="hm-cell" style="background:rgba(34,197,94,0.45);">18%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇿 捷克 Czech Republic2</div><div class="hm-cell" style="background:rgba(239,68,68,0.20);">5%</div><div class="hm-cell" style="background:rgba(34,197,94,0.35);">8%</div><div class="hm-cell" style="background:rgba(34,197,94,0.35);">14%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇿 捷克 Czech Republic3+</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.08);">4%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div></div><p style="color:var(--text-muted);font-size:0.75em;text-align:center;">行=主队进球 列=客队进球 · 颜色深度=概率</p></div>
+<div><div class="section-title" style="font-size:1em;">📋 最终结论</div><div class="conclusion-card green">
+<h4>🟢 最可能结果</h4><p><strong>捷克胜 (1:0 / 2:0)</strong> — 南非少两名中场核心。捷克实力优势明显但需提升进攻效率。</p></div><div class="conclusion-card yellow">
+<h4>🟡 冷门风险</h4><p><strong>南非爆冷 (~27%)</strong> — 捷克防守并非铁板(首轮被逆转)。南非速度型前锋可制造威胁。</p></div><p style="text-align:center;margin-top:10px;">信心评级: <span class="stars">★★★</span></p></div>
+</div>
+</div>
+<div class="match-card">
+<div class="match-header">
+<span class="teams">🇨🇭 瑞士 Switzerland vs 波黑 Bosnia & Herzegovina 🇧🇦</span>
+<span class="group-badge">B组 · 第2轮</span>
+</div>
+<div style="color:var(--text-muted);font-size:0.85em;margin-bottom:14px;">📅 2026-06-18 15:00 ET (北京时间 6/19 03:00) · 🏟 SoFi Stadium, Los Angeles · 👥 70,000</div>
+<div class="info-grid">
+<div class="info-box"><h4>🌤 天气 Weather</h4><p>🌡 27°C · 💧 湿度44% · 🌬 SW 14km/h</p>
+<p>☀️ 晴天,降雨概率 0%</p>
+<p>🏟 固定顶棚+喷雾风扇,体感约31°C</p>
+<p>天气影响: <span class="stars">★★★</span> (温暖,对欧洲球队略不利)</p></div>
+<div class="info-box"><h4>📋 阵容 Squad</h4><p><strong>瑞士 (3-4-2-1):</strong> Kobel; Zakaria, Akanji, Elvedi; Ndoye, Freuler, Xhaka, Vargas; Manzambi, Aebischer; Embolo</p>
+<p><strong>波黑 (4-4-2):</strong> Vasilj; Dedic, Katic, Muharemovic, Kolasinac; Alajbegovic, Basic, Tahirovic, Memic; Demirovic, Lukic</p>
+<p style="color:var(--warning);">⚠️ 波黑: Džeko 肩伤存疑,首轮缺阵</p></div>
+<div class="info-box"><h4>📊 近期状态 Form</h4><p>🇨🇭: <span style="color:var(--warning);">D</span> (1-1 vs卡塔尔) | 控球61% | xG 2.1 | 射门18</p>
+<p>🇧🇦: <span style="color:var(--warning);">D</span> (1-1 vs加拿大) | 控球39% | xG 0.6 | 射门4</p>
+<p>ELO: 瑞士 1755 (#12) · 波黑 1510 (#48)</p></div>
+<div class="info-box"><h4>🎯 战意 Motivation</h4><p>B组4队同积1分 — <strong>必须取胜抢占先机</strong></p>
+<p>🇨🇭 首轮平卡塔尔是巨大意外,必须反弹</p>
+<p>🇧🇦 平加拿大已算成功,再抢分即超额</p>
+<p>战意: <span class="stars">★★★★★</span></p></div>
+</div>
+<div class="section-title" style="font-size:1.1em;">📈 市场分析 Market Analysis</div>
+<table class="odds-table"><tr><th>市场 Market</th><th>选项 Selection</th><th>赔率 Odds</th><th>信心 Confidence</th></tr><tr><td>胜平负</td><td>🇨🇭 胜 (Win)</td><td>1.59</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>胜平负</td><td>平 (Draw)</td><td>4.10</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>胜平负</td><td>🇧🇦 负 (Loss)</td><td>5.75</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇨🇭 让胜</td><td>2.60</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>让平</td><td>3.40</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇧🇦 让负</td><td>2.40</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>半全场</td><td>胜胜 (Win/Win)</td><td>2.30</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>平胜 (Draw/Win)</td><td>4.00</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>总进球数</td><td>2球</td><td>3.10</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>2:0 (🇨🇭)</td><td>6.00</td><td><span class="conf-badge medium">MED</span></td></tr></table>
+<p style="color:var(--text-muted);font-size:0.8em;">📝 赔率为国际市场共识折算 · 中国体育彩票实际赔率请以 lottery.gov.cn 为准</p>
+<div class="section-title" style="font-size:1.1em;">🎬 比赛脚本模拟 Match Scripts</div>
+<div class="scripts-grid">
+<div class="script-card script-a"><h4>🟢 Script A — 瑞士掌控反弹</h4>
+<div class="scores">2:0 · 2:1 · 1:0</div>
+<div class="bar-container"><div class="bar success" style="width:48%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 48%</p>
+<div class="reason">瑞士首轮xG 2.1碾压卡塔尔却只进1球(乌龙)。回归正常水平后应轻松取胜。Xhaka+Freuler控制中场,Embolo终结。</div></div>
+<div class="script-card script-b"><h4>🔵 Script B — 对攻开放</h4>
+<div class="scores">2:2 · 3:2 · 3:1</div>
+<div class="bar-container"><div class="bar primary" style="width:15%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 15%</p>
+<div class="reason">波黑若有Džeko回归攻击力大增,瑞士防线偶尔走神(首轮94分钟丢球)。开放对攻对波黑有利。</div></div>
+<div class="script-card script-c"><h4>🔴 Script C — 冷门</h4>
+<div class="scores">0:1 · 1:2 · 0:2</div>
+<div class="bar-container"><div class="bar danger" style="width:18%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 18%</p>
+<div class="reason">瑞士首轮表现令人担忧。波黑反击效率尚可(首轮4射1球)。若瑞士持续浪费机会...</div></div>
+<div class="script-card script-d"><h4>🟡 Script D — 低分平局</h4>
+<div class="scores">0:0 · 1:1</div>
+<div class="bar-container"><div class="bar warning" style="width:19%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 19%</p>
+<div class="reason">波黑可能全力防守保1分。瑞士可能久攻不下。B组形势混乱,平局可接受。</div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+<div><div class="section-title" style="font-size:1em;">🏆 胜平负概率</div><div class="prob-row"><span class="prob-label">🇨🇭 主胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar success" style="width:55%;"></div></div></div>
+<span class="prob-pct">55%</span></div><div class="prob-row"><span class="prob-label">平局</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar warning" style="width:24%;"></div></div></div>
+<span class="prob-pct">24%</span></div><div class="prob-row"><span class="prob-label">🇧🇦 客胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar danger" style="width:21%;"></div></div></div>
+<span class="prob-pct">21%</span></div></div>
+<div><div class="section-title" style="font-size:1em;">📊 总进球分布</div><div class="prob-row"><span>0球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:8%;background:#374151;"></div></div></div>
+<span>8%</span></div><div class="prob-row"><span>1球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:22%;background:#374151;"></div></div></div>
+<span>22%</span></div><div class="prob-row"><span>2球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:32%;background:#374151;"></div></div></div>
+<span>32%</span></div><div class="prob-row"><span>3球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:22%;background:#374151;"></div></div></div>
+<span>22%</span></div><div class="prob-row"><span>4球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:11%;background:#374151;"></div></div></div>
+<span>11%</span></div><div class="prob-row"><span>5球+</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:5%;background:#374151;"></div></div></div>
+<span>5%</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🎯 Top 3 比分</div><div class="top3-card"><span class="rank">#1</span> <strong>2:0 (瑞士)</strong> — 16% — 瑞士实力碾压,波黑进攻有限</div><div class="top3-card"><span class="rank">#2</span> <strong>1:0 (瑞士)</strong> — 13% — 瑞士小胜,场面控制但效率不高</div><div class="top3-card"><span class="rank">#3</span> <strong>2:1 (瑞士)</strong> — 12% — 瑞士主导但波黑偷一球</div></div>
+<div><div class="section-title" style="font-size:1em;">⏱ 半全场预测</div><div style="margin:10px 0;"><p><strong>最可能:</strong> <span style="color:var(--success);">胜胜 (Win/Win)</span> — 概率 38%</p><p><strong>次选:</strong> <span style="color:var(--warning);">平胜 (Draw/Win)</span> — 概率 20%</p><p><strong>警惕:</strong> <span style="color:var(--warning);">平平 (Draw/Draw)</span> — 概率 18%</p><p style="color:var(--text-muted);font-size:0.85em;">分析: 瑞士控场能力强,波黑可能上半场全力防守。瑞士需尽早进球避免焦虑。Xhaka定位球是破防关键。</p></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🔥 比分热力图 Score Heatmap</div><div class="heatmap">
+<div class="hm-header"></div><div class="hm-header">0</div><div class="hm-header">1</div><div class="hm-header">2</div><div class="hm-header">3</div><div class="hm-header">4</div><div class="hm-header">5+</div><div class="hm-row-label">🇨🇭 瑞士 Switzerland0</div><div class="hm-cell" style="background:rgba(245,158,11,0.25);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇭 瑞士 Switzerland1</div><div class="hm-cell" style="background:rgba(239,68,68,0.25);">8%</div><div class="hm-cell" style="background:rgba(245,158,11,0.35);">11%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇭 瑞士 Switzerland2</div><div class="hm-cell" style="background:rgba(34,197,94,0.40);">13%</div><div class="hm-cell" style="background:rgba(34,197,94,0.35);">12%</div><div class="hm-cell" style="background:rgba(245,158,11,0.30);">8%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇭 瑞士 Switzerland3+</div><div class="hm-cell" style="background:rgba(34,197,94,0.30);">10%</div><div class="hm-cell" style="background:rgba(34,197,94,0.25);">8%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div></div><p style="color:var(--text-muted);font-size:0.75em;text-align:center;">行=主队进球 列=客队进球 · 颜色深度=概率</p></div>
+<div><div class="section-title" style="font-size:1em;">📋 最终结论</div><div class="conclusion-card green">
+<h4>🟢 最可能结果</h4><p><strong>瑞士胜 (2:0 / 1:0)</strong> — 瑞士实力远超波黑。首轮平局是意外,回归常态后应稳胜。</p></div><div class="conclusion-card yellow">
+<h4>🟡 潜在风险</h4><p><strong>进攻效率低下</strong> — 瑞士首轮xG 2.1只进1球。若持续浪费机会,平局风险真实存在。</p></div><p style="text-align:center;margin-top:10px;">信心评级: <span class="stars">★★★★</span></p></div>
+</div>
+</div>
+<div class="match-card">
+<div class="match-header">
+<span class="teams">🇨🇦 加拿大 Canada vs 卡塔尔 Qatar 🇶🇦</span>
+<span class="group-badge">B组 · 第2轮</span>
+</div>
+<div style="color:var(--text-muted);font-size:0.85em;margin-bottom:14px;">📅 2026-06-18 18:00 ET (北京时间 6/19 06:00) · 🏟 BC Place, Vancouver · 👥 54,000</div>
+<div class="info-grid">
+<div class="info-box"><h4>🌤 天气 Weather</h4><p>🌡 22°C · 💧 湿度55% · 🌬 NW 18km/h</p>
+<p>☀️ 晴天,降雨概率 0%,本周最佳天气窗口</p>
+<p>🏟 可伸缩屋顶(通常关闭),非常舒适</p>
+<p>天气影响: <span class="stars">★</span> (几乎无影响)</p></div>
+<div class="info-box"><h4>📋 阵容 Squad</h4><p><strong>加拿大 (4-4-2):</strong> Crepeau; Johnston, De Fougerolles, Cornelius, Laryea; Buchanan, Eustaquio, Kone, Millar; David, Oluwaseyi</p>
+<p><strong>卡塔尔 (4-3-3):</strong> Barsham; Al-Oui, Khoukhi, Pedro Miguel, Al-Amin; Boudiaf, Fathy, Laye; Edmilson Junior, Almoez Ali, Afif</p>
+<p style="color:var(--danger);">❌ CAN: Alphonso Davies (队长/LB) 腿筋伤疑,大概率缺阵</p></div>
+<div class="info-box"><h4>📊 近期状态 Form</h4><p>🇨🇦: <span style="color:var(--warning);">D</span> (1-1 vs波黑) | 控球56% | xG 1.4 | 射门13 | 首获世界杯积分!</p>
+<p>🇶🇦: <span style="color:var(--warning);">D</span> (1-1 vs瑞士) | 控球29% | xG 0.4 | 射门3 | 94分钟绝平</p>
+<p>ELO: 加拿大 1640 (#28) · 卡塔尔 1420 (#68)</p></div>
+<div class="info-box"><h4>🎯 战意 Motivation</h4><p>🇨🇦 <strong>主场世界杯!首次取胜的绝佳机会</strong></p>
+<p>🇶🇦 寻求世界杯历史首胜 (0-3-9 总战绩)</p>
+<p>B组4队1分,胜者占据出线主动权</p>
+<p>战意: <span class="stars">★★★★★</span></p></div>
+</div>
+<div class="section-title" style="font-size:1.1em;">📈 市场分析 Market Analysis</div>
+<table class="odds-table"><tr><th>市场 Market</th><th>选项 Selection</th><th>赔率 Odds</th><th>信心 Confidence</th></tr><tr><td>胜平负</td><td>🇨🇦 胜 (Win)</td><td>1.28</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>胜平负</td><td>平 (Draw)</td><td>5.75</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>胜平负</td><td>🇶🇦 负 (Loss)</td><td>11.00</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇨🇦 让胜</td><td>1.87</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>让球胜平负(-1)</td><td>让平</td><td>3.60</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇶🇦 让负</td><td>3.30</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>半全场</td><td>胜胜 (Win/Win)</td><td>1.85</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>总进球数</td><td>2球</td><td>3.25</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>2:0 (🇨🇦)</td><td>5.50</td><td><span class="conf-badge high">HIGH</span></td></tr></table>
+<p style="color:var(--text-muted);font-size:0.8em;">📝 赔率为国际市场共识折算 · 中国体育彩票实际赔率请以 lottery.gov.cn 为准</p>
+<div class="section-title" style="font-size:1.1em;">🎬 比赛脚本模拟 Match Scripts</div>
+<div class="scripts-grid">
+<div class="script-card script-a"><h4>🟢 Script A — 加拿大强势取胜</h4>
+<div class="scores">2:0 · 3:0 · 2:1</div>
+<div class="bar-container"><div class="bar success" style="width:52%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 52%</p>
+<div class="reason">加拿大主场气势+实力碾压。Jonathan David领衔锋线,卡塔尔首轮仅29%控球。加拿大零封概率约53%。</div></div>
+<div class="script-card script-b"><h4>🔵 Script B — 开放对攻</h4>
+<div class="scores">3:1 · 3:2 · 4:1</div>
+<div class="bar-container"><div class="bar primary" style="width:15%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 15%</p>
+<div class="reason">若卡塔尔早进球可能迫使比赛开放。但卡塔尔进攻火力有限(首轮xG 0.4)。加拿大可能打出大比分。</div></div>
+<div class="script-card script-c"><h4>🔴 Script C — 卡塔尔爆冷</h4>
+<div class="scores">0:1 · 1:2 · 0:0(点)</div>
+<div class="bar-container"><div class="bar danger" style="width:12%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 12%</p>
+<div class="reason">卡塔尔首轮94分钟绝平瑞士展示韧性。加拿大缺少Davies是巨大损失。Afif反击能力强。</div></div>
+<div class="script-card script-d"><h4>🟡 Script D — 焦灼平局</h4>
+<div class="scores">0:0 · 1:1</div>
+<div class="bar-container"><div class="bar warning" style="width:21%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 21%</p>
+<div class="reason">卡塔尔摆大巴求平。加拿大缺少Davies的突破能力。BC Place主场压力可能影响发挥。</div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+<div><div class="section-title" style="font-size:1em;">🏆 胜平负概率</div><div class="prob-row"><span class="prob-label">🇨🇦 主胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar success" style="width:62%;"></div></div></div>
+<span class="prob-pct">62%</span></div><div class="prob-row"><span class="prob-label">平局</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar warning" style="width:22%;"></div></div></div>
+<span class="prob-pct">22%</span></div><div class="prob-row"><span class="prob-label">🇶🇦 客胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar danger" style="width:16%;"></div></div></div>
+<span class="prob-pct">16%</span></div></div>
+<div><div class="section-title" style="font-size:1em;">📊 总进球分布</div><div class="prob-row"><span>0球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:8%;background:#374151;"></div></div></div>
+<span>8%</span></div><div class="prob-row"><span>1球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:18%;background:#374151;"></div></div></div>
+<span>18%</span></div><div class="prob-row"><span>2球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:30%;background:#374151;"></div></div></div>
+<span>30%</span></div><div class="prob-row"><span>3球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:24%;background:#374151;"></div></div></div>
+<span>24%</span></div><div class="prob-row"><span>4球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:13%;background:#374151;"></div></div></div>
+<span>13%</span></div><div class="prob-row"><span>5球+</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:7%;background:#374151;"></div></div></div>
+<span>7%</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🎯 Top 3 比分</div><div class="top3-card"><span class="rank">#1</span> <strong>2:0 (加拿大)</strong> — 17% — 加拿大零封,David+Buchanan建功</div><div class="top3-card"><span class="rank">#2</span> <strong>2:1 (加拿大)</strong> — 13% — 加拿大主导但卡塔尔偷一球</div><div class="top3-card"><span class="rank">#3</span> <strong>1:0 (加拿大)</strong> — 11% — 焦灼小胜,加拿大缺乏Davies创造力</div></div>
+<div><div class="section-title" style="font-size:1em;">⏱ 半全场预测</div><div style="margin:10px 0;"><p><strong>最可能:</strong> <span style="color:var(--success);">胜胜 (Win/Win)</span> — 概率 42%</p><p><strong>次选:</strong> <span style="color:var(--warning);">平胜 (Draw/Win)</span> — 概率 18%</p><p><strong>警惕:</strong> <span style="color:var(--warning);">平平 (Draw/Draw)</span> — 概率 16%</p><p style="color:var(--text-muted);font-size:0.85em;">分析: 加拿大应主导场面。缺少Davies突破力下降但整体实力仍远超卡塔尔。加拿大定位球和David跑位是关键。</p></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🔥 比分热力图 Score Heatmap</div><div class="heatmap">
+<div class="hm-header"></div><div class="hm-header">0</div><div class="hm-header">1</div><div class="hm-header">2</div><div class="hm-header">3</div><div class="hm-header">4</div><div class="hm-header">5+</div><div class="hm-row-label">🇨🇦 加拿大 Canada0</div><div class="hm-cell" style="background:rgba(245,158,11,0.20);">6%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇦 加拿大 Canada1</div><div class="hm-cell" style="background:rgba(34,197,94,0.30);">8%</div><div class="hm-cell" style="background:rgba(245,158,11,0.35);">10%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇦 加拿大 Canada2</div><div class="hm-cell" style="background:rgba(34,197,94,0.55);">17%</div><div class="hm-cell" style="background:rgba(34,197,94,0.40);">13%</div><div class="hm-cell" style="background:rgba(245,158,11,0.25);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇨🇦 加拿大 Canada3+</div><div class="hm-cell" style="background:rgba(34,197,94,0.35);">12%</div><div class="hm-cell" style="background:rgba(34,197,94,0.25);">8%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div></div><p style="color:var(--text-muted);font-size:0.75em;text-align:center;">行=主队进球 列=客队进球 · 颜色深度=概率</p></div>
+<div><div class="section-title" style="font-size:1em;">📋 最终结论</div><div class="conclusion-card green">
+<h4>🟢 最可能结果</h4><p><strong>加拿大胜 (2:0 / 2:1)</strong> — 主场作战+实力碾压。卡塔尔世界杯历史0胜,难破加拿大防线。</p></div><div class="conclusion-card yellow">
+<h4>🟡 需警惕</h4><p><strong>Davies缺阵影响</strong> — 加拿大失去最佳突破手。进攻过度依赖David,卡塔尔若死守可能制造麻烦。</p></div><p style="text-align:center;margin-top:10px;">信心评级: <span class="stars">★★★★</span></p></div>
+</div>
+</div>
+<div class="match-card">
+<div class="match-header">
+<span class="teams">🇲🇽 墨西哥 Mexico vs 韩国 South Korea 🇰🇷</span>
+<span class="group-badge">A组 · 第2轮·头名之争</span>
+</div>
+<div style="color:var(--text-muted);font-size:0.85em;margin-bottom:14px;">📅 2026-06-18 21:00 ET (北京时间 6/19 09:00) · 🏟 Estadio Akron, Guadalajara · 👥 48,000</div>
+<div class="info-grid">
+<div class="info-box"><h4>🌤 天气 Weather</h4><p>🌡 18-22°C · 💧 湿度70% · 🌬 W 25km/h</p>
+<p>🌧 降雨/雷暴概率: 40-60% · ⚡雷暴可能</p>
+<p>🏟 露天球场,湿滑草皮</p>
+<p>天气影响: <span class="stars">★★★★</span> (雷暴/湿滑影响明显)</p></div>
+<div class="info-box"><h4>📋 阵容 Squad</h4><p><strong>墨西哥 (4-3-3):</strong> Rangel; Reyes, Alvarez, Vasquez, Gallardo; Mora, Lira, Fidalgo; Alvarado, Jimenez, Quinones</p>
+<p><strong>韩国 (3-4-2-1):</strong> Kim Seung-Gyu; Cho Yu-min, Kim Min-Jae, Lee Han-Beom; Kim Moon-Hwan, Kim Jin-Gyu, Paik Seung-Ho, Castrop; Bae Jun-Ho, Lee Kang-in; Son Heung-min</p>
+<p style="color:var(--danger);">❌ MEX: Cesar Montes (CB) 红牌停赛</p></div>
+<div class="info-box"><h4>📊 近期状态 Form</h4><p>🇲🇽: <span style="color:var(--success);">W</span> (2-0 vs南非) | 控球62% | xG 1.8 | 射门15</p>
+<p>🇰🇷: <span style="color:var(--success);">W</span> (2-1 vs捷克) | 控球53% | xG 1.3 | 射门12</p>
+<p>ELO: 墨西哥 1720 (#15) · 韩国 1680 (#22)</p></div>
+<div class="info-box"><h4>🎯 战意 Motivation</h4><p>🏆 <strong>A组头名之争!</strong> 胜者几乎锁定出线</p>
+<p>🇲🇽 主场作战,6万球迷助威</p>
+<p>🇰🇷 首轮逆转展现韧性,Son带队冲击</p>
+<p>战意: <span class="stars">★★★★★</span></p></div>
+</div>
+<div class="section-title" style="font-size:1.1em;">📈 市场分析 Market Analysis</div>
+<table class="odds-table"><tr><th>市场 Market</th><th>选项 Selection</th><th>赔率 Odds</th><th>信心 Confidence</th></tr><tr><td>胜平负</td><td>🇲🇽 胜 (Win)</td><td>2.00</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>胜平负</td><td>平 (Draw)</td><td>3.35</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>胜平负</td><td>🇰🇷 负 (Loss)</td><td>4.10</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇲🇽 让胜</td><td>4.00</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>让球胜平负(-1)</td><td>让平</td><td>3.60</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇰🇷 让负</td><td>1.80</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>胜胜 (Win/Win)</td><td>3.20</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>半全场</td><td>平胜 (Draw/Win)</td><td>4.50</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>半全场</td><td>平平 (Draw/Draw)</td><td>4.80</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>总进球数</td><td>2球</td><td>3.10</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>1:0 (🇲🇽)</td><td>6.50</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>比分</td><td>1:1</td><td>6.00</td><td><span class="conf-badge medium">MED</span></td></tr></table>
+<p style="color:var(--text-muted);font-size:0.8em;">📝 赔率为国际市场共识折算 · 中国体育彩票实际赔率请以 lottery.gov.cn 为准</p>
+<div class="section-title" style="font-size:1.1em;">🎬 比赛脚本模拟 Match Scripts</div>
+<div class="scripts-grid">
+<div class="script-card script-a"><h4>🟢 Script A — 墨西哥主场小胜</h4>
+<div class="scores">1:0 · 2:0 · 2:1</div>
+<div class="bar-container"><div class="bar success" style="width:38%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 38%</p>
+<div class="reason">墨西哥主场气势+整体配合默契。缺少Montes但防线仍有深度。Quinones+Jimenez状态佳。韩国防线在墨西哥主场压力下可能出错。</div></div>
+<div class="script-card script-b"><h4>🔵 Script B — 对攻大战</h4>
+<div class="scores">2:2 · 3:2 · 3:1</div>
+<div class="bar-container"><div class="bar primary" style="width:22%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 22%</p>
+<div class="reason">两队首轮都展现出进攻能力。Son+Lee Kang-in领衔韩国攻击线,墨西哥防线缺少Montes可能被利用。</div></div>
+<div class="script-card script-c"><h4>🔴 Script C — 韩国客场取胜</h4>
+<div class="scores">1:2 · 0:1 · 0:2</div>
+<div class="bar-container"><div class="bar danger" style="width:24%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 24%</p>
+<div class="reason">韩国首轮逆转展现强大心理素质。Son是世界级球星。墨西哥缺少Montes+雷暴天气可能抵消主场优势。</div></div>
+<div class="script-card script-d"><h4>🟡 Script D — 谨慎平局</h4>
+<div class="scores">1:1 · 0:0</div>
+<div class="bar-container"><div class="bar warning" style="width:16%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 16%</p>
+<div class="reason">双方都尊重对手实力。雷暴天气可能导致比赛质量下降。如果上半场平局,双方可能接受各取1分。</div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+<div><div class="section-title" style="font-size:1em;">🏆 胜平负概率</div><div class="prob-row"><span class="prob-label">🇲🇽 主胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar success" style="width:42%;"></div></div></div>
+<span class="prob-pct">42%</span></div><div class="prob-row"><span class="prob-label">平局</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar warning" style="width:28%;"></div></div></div>
+<span class="prob-pct">28%</span></div><div class="prob-row"><span class="prob-label">🇰🇷 客胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar danger" style="width:30%;"></div></div></div>
+<span class="prob-pct">30%</span></div></div>
+<div><div class="section-title" style="font-size:1em;">📊 总进球分布</div><div class="prob-row"><span>0球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:10%;background:#374151;"></div></div></div>
+<span>10%</span></div><div class="prob-row"><span>1球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:25%;background:#374151;"></div></div></div>
+<span>25%</span></div><div class="prob-row"><span>2球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:30%;background:#374151;"></div></div></div>
+<span>30%</span></div><div class="prob-row"><span>3球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:22%;background:#374151;"></div></div></div>
+<span>22%</span></div><div class="prob-row"><span>4球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:9%;background:#374151;"></div></div></div>
+<span>9%</span></div><div class="prob-row"><span>5球+</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:4%;background:#374151;"></div></div></div>
+<span>4%</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🎯 Top 3 比分</div><div class="top3-card"><span class="rank">#1</span> <strong>1:0 (墨西哥)</strong> — 14% — 墨西哥主场小胜,比赛焦灼</div><div class="top3-card"><span class="rank">#2</span> <strong>1:1</strong> — 13% — 势均力敌,双方各进一球</div><div class="top3-card"><span class="rank">#3</span> <strong>2:1 (墨西哥)</strong> — 12% — 墨西哥主场优势取胜</div></div>
+<div><div class="section-title" style="font-size:1em;">⏱ 半全场预测</div><div style="margin:10px 0;"><p><strong>最可能:</strong> <span style="color:var(--warning);">平胜 (Draw/Win)</span> — 概率 28%</p><p><strong>次选:</strong> <span style="color:var(--warning);">平平 (Draw/Draw)</span> — 概率 25%</p><p><strong>警惕:</strong> <span style="color:var(--success);">胜胜 (Win/Win)</span> — 概率 22%</p><p style="color:var(--text-muted);font-size:0.85em;">分析: 天气可能打乱比赛节奏。韩国上半场通常稳守,下半场发力(首轮2球逆转)。墨西哥需在上半场建立优势。最不可预测的比赛之一。</p></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🔥 比分热力图 Score Heatmap</div><div class="heatmap">
+<div class="hm-header"></div><div class="hm-header">0</div><div class="hm-header">1</div><div class="hm-header">2</div><div class="hm-header">3</div><div class="hm-header">4</div><div class="hm-header">5+</div><div class="hm-row-label">🇲🇽 墨西哥 Mexico0</div><div class="hm-cell" style="background:rgba(245,158,11,0.28);">8%</div><div class="hm-cell" style="background:rgba(239,68,68,0.25);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇲🇽 墨西哥 Mexico1</div><div class="hm-cell" style="background:rgba(34,197,94,0.45);">14%</div><div class="hm-cell" style="background:rgba(245,158,11,0.40);">13%</div><div class="hm-cell" style="background:rgba(239,68,68,0.30);">9%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇲🇽 墨西哥 Mexico2</div><div class="hm-cell" style="background:rgba(34,197,94,0.35);">10%</div><div class="hm-cell" style="background:rgba(34,197,94,0.40);">12%</div><div class="hm-cell" style="background:rgba(245,158,11,0.20);">6%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇲🇽 墨西哥 Mexico3+</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(34,197,94,0.20);">6%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div></div><p style="color:var(--text-muted);font-size:0.75em;text-align:center;">行=主队进球 列=客队进球 · 颜色深度=概率</p></div>
+<div><div class="section-title" style="font-size:1em;">📋 最终结论</div><div class="conclusion-card green">
+<h4>🟢 最可能结果</h4><p><strong>墨西哥小胜或平局</strong> — 主场优势+整体实力。但Montes停赛是防线隐忧,韩国绝非鱼腩。</p></div><div class="conclusion-card yellow">
+<h4>🟡 高不确定性</h4><p><strong>本场比赛不确定性最高</strong> — 两队实力接近,天气因素+主场压力+停赛使结果难以预测。投注需格外谨慎。</p></div><p style="text-align:center;margin-top:10px;">信心评级: <span class="stars">★★</span></p></div>
+</div>
+</div>
+<div class="section-title">📅 2026年6月19日 (周五) — Group C &amp; D 第二轮</div>
+
+<div class="match-card">
+<div class="match-header">
+<span class="teams">🇧🇷 巴西 Brazil vs 海地 Haiti 🇭🇹</span>
+<span class="group-badge">C组 · 第2轮</span>
+</div>
+<div style="color:var(--text-muted);font-size:0.85em;margin-bottom:14px;">📅 2026-06-19 19:30 ET (北京时间 6/20 07:30) · 🏟 Lincoln Financial Field, Philadelphia · 👥 67,000</div>
+<div class="info-grid">
+<div class="info-box"><h4>🌤 天气 Weather</h4><p>🌡 27-32°C · 💧 湿度65% · 🌬 SW 16km/h</p>
+<p>⛈ 午后雷暴概率中等,晚间转好</p>
+<p>🏟 露天球场,草皮良好</p>
+<p>天气影响: <span class="stars">★★★</span> (炎热潮湿,下半场体能考验)</p></div>
+<div class="info-box"><h4>📋 阵容 Squad</h4><p><strong>巴西 (4-2-3-1):</strong> Alisson; Danilo, Marquinhos, Gabriel, Alex Sandro; Bruno Guimaraes, Casemiro; Raphinha, Paqueta, Vinicius Jr; Matheus Cunha</p>
+<p><strong>海地 (5-4-1):</strong> Pierre; Arcus, Christian, Experance, Lambese, Ade; Antoine, Pierrot, Alceus, Nazon; Frantzdy</p>
+<p style="color:var(--danger);">❌ BRA: Neymar (小腿) · Rodrygo (伤缺) · Estevao (伤缺)</p>
+<p style="color:var(--warning);">⚠️ BRA: Alisson 伤愈复出,状态存疑</p></div>
+<div class="info-box"><h4>📊 近期状态 Form</h4><p>🇧🇷: <span style="color:var(--warning);">D</span> (1-1 vs摩洛哥) | 控球54% | xG 1.1 | 射门10 · Ancelotti称"战术失衡"</p>
+<p>🇭🇹: <span style="color:var(--danger);">L</span> (0-1 vs苏格兰) | 控球43% | xG 0.7 | 射门15(!) · C组射门最多</p>
+<p>ELO: 巴西 1805 (#6) · 海地 1380 (#82)</p></div>
+<div class="info-box"><h4>🎯 战意 Motivation</h4><p>🇧🇷 <strong>巨大压力!</strong> 首轮平摩洛哥后必须大胜回应</p>
+<p>🇧🇷 Ancelotti变阵4-2-4训练,全力进攻信号</p>
+<p>🇭🇹 0压力,首轮15次射门展现进攻勇气</p>
+<p>战意: <span class="stars">★★★★★</span> (巴西背水一战)</p></div>
+</div>
+<div class="section-title" style="font-size:1.1em;">📈 市场分析 Market Analysis</div>
+<table class="odds-table"><tr><th>市场 Market</th><th>选项 Selection</th><th>赔率 Odds</th><th>信心 Confidence</th></tr><tr><td>胜平负</td><td>🇧🇷 胜 (Win)</td><td>1.12</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>胜平负</td><td>平 (Draw)</td><td>8.50</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>胜平负</td><td>🇭🇹 负 (Loss)</td><td>19.00</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>让球胜平负(-2)</td><td>🇧🇷 让胜</td><td>2.10</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>让球胜平负(-2)</td><td>让平</td><td>3.80</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-2)</td><td>🇭🇹 让负</td><td>2.75</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>半全场</td><td>胜胜 (Win/Win)</td><td>1.35</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>总进球数</td><td>4球</td><td>4.00</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>总进球数</td><td>3球</td><td>3.60</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>3:0 (🇧🇷)</td><td>6.00</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>4:0 (🇧🇷)</td><td>7.50</td><td><span class="conf-badge medium">MED</span></td></tr></table>
+<p style="color:var(--text-muted);font-size:0.8em;">📝 赔率为国际市场共识折算 · 中国体育彩票实际赔率请以 lottery.gov.cn 为准</p>
+<div class="section-title" style="font-size:1.1em;">🎬 比赛脚本模拟 Match Scripts</div>
+<div class="scripts-grid">
+<div class="script-card script-a"><h4>🟢 Script A — 巴西狂胜正名</h4>
+<div class="scores">3:0 · 4:0 · 4:1</div>
+<div class="bar-container"><div class="bar success" style="width:48%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 48%</p>
+<div class="reason">巴西实力碾压(ELO差425分)。Ancelotti变阵4-2-4全攻信号。Vinicius+Raphinha两翼齐飞,海地防线难以招架。</div></div>
+<div class="script-card script-b"><h4>🔵 Script B — 开放对攻意外</h4>
+<div class="scores">3:1 · 4:2 · 3:2</div>
+<div class="bar-container"><div class="bar primary" style="width:20%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 20%</p>
+<div class="reason">海地首轮15次射门证明敢于进攻。巴西防线首轮被摩洛哥打穿。若海地率先破门可能引发进球大战。</div></div>
+<div class="script-card script-c"><h4>🔴 Script C — 历史级冷门</h4>
+<div class="scores">0:0 · 1:1 · 0:1</div>
+<div class="bar-container"><div class="bar danger" style="width:8%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 8%</p>
+<div class="reason">巴西首轮状态低迷。Neymar缺阵导致创造力下降。但海地实力差距过大,此脚本极不可能。</div></div>
+<div class="script-card script-d"><h4>🟡 Script D — 巴西艰难小胜</h4>
+<div class="scores">1:0 · 2:0 · 2:1</div>
+<div class="bar-container"><div class="bar warning" style="width:24%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 24%</p>
+<div class="reason">巴西持续状态不佳,创造机会但效率低。海地全力防守(5后卫),巴西需定位球或个人能力破局。</div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+<div><div class="section-title" style="font-size:1em;">🏆 胜平负概率</div><div class="prob-row"><span class="prob-label">🇧🇷 主胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar success" style="width:78%;"></div></div></div>
+<span class="prob-pct">78%</span></div><div class="prob-row"><span class="prob-label">平局</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar warning" style="width:12%;"></div></div></div>
+<span class="prob-pct">12%</span></div><div class="prob-row"><span class="prob-label">🇭🇹 客胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar danger" style="width:10%;"></div></div></div>
+<span class="prob-pct">10%</span></div></div>
+<div><div class="section-title" style="font-size:1em;">📊 总进球分布</div><div class="prob-row"><span>0球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:3%;background:#374151;"></div></div></div>
+<span>3%</span></div><div class="prob-row"><span>1球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:8%;background:#374151;"></div></div></div>
+<span>8%</span></div><div class="prob-row"><span>2球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:16%;background:#374151;"></div></div></div>
+<span>16%</span></div><div class="prob-row"><span>3球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:28%;background:#374151;"></div></div></div>
+<span>28%</span></div><div class="prob-row"><span>4球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:24%;background:#374151;"></div></div></div>
+<span>24%</span></div><div class="prob-row"><span>5球+</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:21%;background:#374151;"></div></div></div>
+<span>21%</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🎯 Top 3 比分</div><div class="top3-card"><span class="rank">#1</span> <strong>3:0 (巴西)</strong> — 16% — 巴西实力碾压,海地无力抵抗</div><div class="top3-card"><span class="rank">#2</span> <strong>4:0 (巴西)</strong> — 13% — Ancelotti全力进攻,巴西火力全开</div><div class="top3-card"><span class="rank">#3</span> <strong>2:0 (巴西)</strong> — 10% — 巴西仍低迷但足以取胜</div></div>
+<div><div class="section-title" style="font-size:1em;">⏱ 半全场预测</div><div style="margin:10px 0;"><p><strong>最可能:</strong> <span style="color:var(--success);">胜胜 (Win/Win)</span> — 概率 55%</p><p><strong>次选:</strong> <span style="color:var(--warning);">平胜 (Draw/Win)</span> — 概率 18%</p><p><strong>远选:</strong> <span style="color:var(--danger);">胜平 (Win/Draw)</span> — 概率 8%</p><p style="color:var(--text-muted);font-size:0.85em;">分析: 巴西应上半场建立领先。Ancelotti 4-2-4阵型攻击性极强。海地首轮15射展示勇气但防守能力有限。巴西高进球概率。</p></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🔥 比分热力图 Score Heatmap</div><div class="heatmap">
+<div class="hm-header"></div><div class="hm-header">0</div><div class="hm-header">1</div><div class="hm-header">2</div><div class="hm-header">3</div><div class="hm-header">4</div><div class="hm-header">5+</div><div class="hm-row-label">🇧🇷 巴西 Brazil0</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇧🇷 巴西 Brazil1</div><div class="hm-cell" style="background:rgba(34,197,94,0.20);">6%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇧🇷 巴西 Brazil2</div><div class="hm-cell" style="background:rgba(34,197,94,0.35);">10%</div><div class="hm-cell" style="background:rgba(34,197,94,0.20);">6%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇧🇷 巴西 Brazil3+</div><div class="hm-cell" style="background:rgba(34,197,94,0.55);">16%</div><div class="hm-cell" style="background:rgba(34,197,94,0.25);">8%</div><div class="hm-cell" style="background:rgba(34,197,94,0.22);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div></div><p style="color:var(--text-muted);font-size:0.75em;text-align:center;">行=主队进球 列=客队进球 · 颜色深度=概率</p></div>
+<div><div class="section-title" style="font-size:1em;">📋 最终结论</div><div class="conclusion-card green">
+<h4>🟢 最可能结果</h4><p><strong>巴西大胜 (3:0+)</strong> — ELO差425分,实力鸿沟。Ancelotti全力进攻,海地虽勇敢但难以抵挡。</p></div><div class="conclusion-card yellow">
+<h4>🟡 唯一风险</h4><p><strong>巴西状态延续低迷</strong> — 首轮平摩洛哥暴露问题。Neymar缺阵,若海地早摆大巴,可能1:0或2:0小胜。</p></div><p style="text-align:center;margin-top:10px;">信心评级: <span class="stars">★★★★</span></p></div>
+</div>
+</div>
+<div class="match-card">
+<div class="match-header">
+<span class="teams">🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰 Scotland vs 摩洛哥 Morocco 🇲🇦</span>
+<span class="group-badge">C组 · 第2轮</span>
+</div>
+<div style="color:var(--text-muted);font-size:0.85em;margin-bottom:14px;">📅 2026-06-19 22:00 ET (北京时间 6/20 10:00) · 🏟 Gillette Stadium, Boston · 👥 65,000</div>
+<div class="info-grid">
+<div class="info-box"><h4>🌤 天气 Weather</h4><p>🌡 24-29°C · 💧 湿度60% · 🌬 SW 18km/h</p>
+<p>⛈ 午后雷暴概率中,夜场转好</p>
+<p>🏟 露天球场,夜场凉爽</p>
+<p>天气影响: <span class="stars">★★</span> (夜场降温,影响小)</p></div>
+<div class="info-box"><h4>📋 阵容 Squad</h4><p><strong>苏格兰 (3-4-2-1):</strong> Gunn; Hendry, McKenna, Tierney; Ralston, McGregor, Gilmour, Robertson; McTominay, McGinn; Adams</p>
+<p><strong>摩洛哥 (4-3-3):</strong> Bono; Hakimi, Aguerd, Dari, Mazraoui; Amrabat, Ounahi, El Khannouss; Ziyech, En-Nesyri, Boufal</p>
+<p>✅ 双方全员健康,无停赛</p></div>
+<div class="info-box"><h4>📊 近期状态 Form</h4><p>🏴󠁧󠁢󠁳󠁣󠁴󠁿: <span style="color:var(--success);">W</span> (1-0 vs海地) | 控球48% | xG 1.2 | 射门11 · 1990年以来首场世界杯胜利!</p>
+<p>🇲🇦: <span style="color:var(--warning);">D</span> (1-1 vs巴西) | 控球46% | xG 1.4 | 射门13 · 统治级表现</p>
+<p>ELO: 苏格兰 1590 (#35) · 摩洛哥 1758 (#8)</p></div>
+<div class="info-box"><h4>🎯 战意 Motivation</h4><p>C组形势: 苏格兰3分,摩洛哥1分,巴西1分</p>
+<p>🏴󠁧󠁢󠁳󠁣󠁴󠁿 取胜即锁定出线!</p>
+<p>🇲🇦 必须取胜避免末轮死磕苏格兰</p>
+<p>战意: <span class="stars">★★★★★</span></p></div>
+</div>
+<div class="section-title" style="font-size:1.1em;">📈 市场分析 Market Analysis</div>
+<table class="odds-table"><tr><th>市场 Market</th><th>选项 Selection</th><th>赔率 Odds</th><th>信心 Confidence</th></tr><tr><td>胜平负</td><td>🏴󠁧󠁢󠁳󠁣󠁴󠁿 胜 (Win)</td><td>4.50</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>胜平负</td><td>平 (Draw)</td><td>3.40</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>胜平负</td><td>🇲🇦 负 (Loss)</td><td>1.85</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>让球胜平负(+1)</td><td>🏴󠁧󠁢󠁳󠁣󠁴󠁿 让胜</td><td>1.95</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>让球胜平负(+1)</td><td>让平</td><td>3.40</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(+1)</td><td>🇲🇦 让负</td><td>3.20</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>半全场</td><td>负负 (Loss/Loss)</td><td>2.80</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>平负 (Draw/Loss)</td><td>4.50</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>总进球数</td><td>1球</td><td>3.80</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>总进球数</td><td>2球</td><td>3.20</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>0:1 (🇲🇦)</td><td>6.00</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>0:0</td><td>8.00</td><td><span class="conf-badge medium">MED</span></td></tr></table>
+<p style="color:var(--text-muted);font-size:0.8em;">📝 赔率为国际市场共识折算 · 中国体育彩票实际赔率请以 lottery.gov.cn 为准</p>
+<div class="section-title" style="font-size:1.1em;">🎬 比赛脚本模拟 Match Scripts</div>
+<div class="scripts-grid">
+<div class="script-card script-a"><h4>🟢 Script A — 摩洛哥掌控取胜</h4>
+<div class="scores">0:1 · 0:2 · 1:2</div>
+<div class="bar-container"><div class="bar success" style="width:42%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 42%</p>
+<div class="reason">摩洛哥首轮对巴西展现顶级实力(xG 1.4 vs巴西1.1)。Hakimi+Ziyech右路世界级。苏格兰虽胜海地但进攻创造力有限。</div></div>
+<div class="script-card script-b"><h4>🔵 Script B — 对攻意外</h4>
+<div class="scores">2:2 · 2:1 · 1:2</div>
+<div class="bar-container"><div class="bar primary" style="width:15%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 15%</p>
+<div class="reason">若苏格兰早早进球可能开放。McTominay+McGinn前插威胁大。但摩洛哥防守组织严密(对巴西仅失1球)。</div></div>
+<div class="script-card script-c"><h4>🔴 Script C — 苏格兰爆冷连胜</h4>
+<div class="scores">1:0 · 2:0 · 2:1</div>
+<div class="bar-container"><div class="bar danger" style="width:20%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 20%</p>
+<div class="reason">苏格兰29年首胜后士气爆棚。定位球(McTominay头球)是最大武器。摩洛哥可能轻敌。</div></div>
+<div class="script-card script-d"><h4>🟡 Script D — 防守平局</h4>
+<div class="scores">0:0 · 1:1</div>
+<div class="bar-container"><div class="bar warning" style="width:23%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 23%</p>
+<div class="reason">双方都尊重对手。苏格兰满足于1分(积4分基本出线)。摩洛哥也不愿冒险输球。低比分平局很可能。</div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+<div><div class="section-title" style="font-size:1em;">🏆 胜平负概率</div><div class="prob-row"><span class="prob-label">🏴󠁧󠁢󠁳󠁣󠁴󠁿 主胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar danger" style="width:24%;"></div></div></div>
+<span class="prob-pct">24%</span></div><div class="prob-row"><span class="prob-label">平局</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar warning" style="width:30%;"></div></div></div>
+<span class="prob-pct">30%</span></div><div class="prob-row"><span class="prob-label">🇲🇦 客胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar success" style="width:46%;"></div></div></div>
+<span class="prob-pct">46%</span></div></div>
+<div><div class="section-title" style="font-size:1em;">📊 总进球分布</div><div class="prob-row"><span>0球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:15%;background:#374151;"></div></div></div>
+<span>15%</span></div><div class="prob-row"><span>1球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:28%;background:#374151;"></div></div></div>
+<span>28%</span></div><div class="prob-row"><span>2球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:30%;background:#374151;"></div></div></div>
+<span>30%</span></div><div class="prob-row"><span>3球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:18%;background:#374151;"></div></div></div>
+<span>18%</span></div><div class="prob-row"><span>4球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:7%;background:#374151;"></div></div></div>
+<span>7%</span></div><div class="prob-row"><span>5球+</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:2%;background:#374151;"></div></div></div>
+<span>2%</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🎯 Top 3 比分</div><div class="top3-card"><span class="rank">#1</span> <strong>0:1 (摩洛哥)</strong> — 15% — 摩洛哥掌控,苏格兰守不住</div><div class="top3-card"><span class="rank">#2</span> <strong>1:1</strong> — 13% — 双方各进一球,平局收场</div><div class="top3-card"><span class="rank">#3</span> <strong>0:0</strong> — 11% — 防守大战,互交白卷</div></div>
+<div><div class="section-title" style="font-size:1em;">⏱ 半全场预测</div><div style="margin:10px 0;"><p><strong>最可能:</strong> <span style="color:var(--warning);">平负 (Draw/Loss)</span> — 概率 28%</p><p><strong>次选:</strong> <span style="color:var(--danger);">负负 (Loss/Loss)</span> — 概率 24%</p><p><strong>警惕:</strong> <span style="color:var(--warning);">平平 (Draw/Draw)</span> — 概率 22%</p><p style="color:var(--text-muted);font-size:0.85em;">分析: 摩洛哥实力优势明显但苏格兰防守顽强。上半场大概率0:0,下半场摩洛哥发力。若苏格兰守半场平局,平局概率大增。</p></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🔥 比分热力图 Score Heatmap</div><div class="heatmap">
+<div class="hm-header"></div><div class="hm-header">0</div><div class="hm-header">1</div><div class="hm-header">2</div><div class="hm-header">3</div><div class="hm-header">4</div><div class="hm-header">5+</div><div class="hm-row-label">🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰 Scotland0</div><div class="hm-cell" style="background:rgba(245,158,11,0.38);">11%</div><div class="hm-cell" style="background:rgba(34,197,94,0.50);">15%</div><div class="hm-cell" style="background:rgba(34,197,94,0.22);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰 Scotland1</div><div class="hm-cell" style="background:rgba(239,68,68,0.26);">8%</div><div class="hm-cell" style="background:rgba(245,158,11,0.42);">13%</div><div class="hm-cell" style="background:rgba(34,197,94,0.32);">10%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰 Scotland2</div><div class="hm-cell" style="background:rgba(239,68,68,0.15);">4%</div><div class="hm-cell" style="background:rgba(34,197,94,0.22);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰 Scotland3+</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div></div><p style="color:var(--text-muted);font-size:0.75em;text-align:center;">行=主队进球 列=客队进球 · 颜色深度=概率</p></div>
+<div><div class="section-title" style="font-size:1em;">📋 最终结论</div><div class="conclusion-card green">
+<h4>🟢 最可能结果</h4><p><strong>摩洛哥不败 (0:1 / 1:1)</strong> — ELO前8实力,对巴西已证明。苏格兰29年首胜后状态存疑。</p></div><div class="conclusion-card yellow">
+<h4>🟡 平局高风险</h4><p><strong>平局概率30%</strong> — 苏格兰满足于1分(积4分几乎出线)。摩洛哥实力更强但客场面对苏格兰大巴不易破。</p></div><p style="text-align:center;margin-top:10px;">信心评级: <span class="stars">★★★</span></p></div>
+</div>
+</div>
+<div class="match-card">
+<div class="match-header">
+<span class="teams">🇺🇸 美国 USA vs 澳大利亚 Australia 🇦🇺</span>
+<span class="group-badge">D组 · 第2轮·头名之争</span>
+</div>
+<div style="color:var(--text-muted);font-size:0.85em;margin-bottom:14px;">📅 2026-06-19 19:00 ET (北京时间 6/20 07:00) · 🏟 Lumen Field, Seattle · 👥 69,000</div>
+<div class="info-grid">
+<div class="info-box"><h4>🌤 天气 Weather</h4><p>🌡 22°C · 💧 湿度55% · 🌬 NW 14km/h</p>
+<p>☀️ 晴朗干燥,降雨概率 10%</p>
+<p>🏟 露天球场,草皮优良。西雅图夏季完美天气</p>
+<p>天气影响: <span class="stars">★</span> (几乎无影响)</p></div>
+<div class="info-box"><h4>📋 阵容 Squad</h4><p><strong>美国 (4-3-3):</strong> Turner; Dest, Richards, Ream, Robinson; McKennie, Adams, Reyna; Weah, Balogun, Aaronson</p>
+<p><strong>澳大利亚 (4-4-2):</strong> Beech; Atkinson, Souttar, Rowles, Behich; Irankunda, O'Neill, Hrustic, Goodwin; Duke, Boyle</p>
+<p style="color:var(--danger);">⚠️ USA: Pulisic (小腿) 半场被换下,出战成疑</p>
+<p>✅ AUS: 全员健康,22岁门将Beech首轮8次扑救惊艳</p></div>
+<div class="info-box"><h4>📊 近期状态 Form</h4><p>🇺🇸: <span style="color:var(--success);">W</span> (4-1 vs巴拉圭) | 控球55% | xG 2.3 | 射门16 · Balogun梅开二度</p>
+<p>🇦🇺: <span style="color:var(--success);">W</span> (2-0 vs土耳其) | 控球34% | xG 0.8 | 射门5 · Irankunda(19岁)进球</p>
+<p>ELO: 美国 1760 (#11) · 澳大利亚 1620 (#30)</p></div>
+<div class="info-box"><h4>🎯 战意 Motivation</h4><p>🏆 <strong>D组头名之战!</strong> 胜者基本锁定小组第一</p>
+<p>🇺🇸 主场,望延续首轮4-1强势</p>
+<p>🇦🇺 防守反击策略清晰,爆冷即登顶</p>
+<p>战意: <span class="stars">★★★★★</span></p></div>
+</div>
+<div class="section-title" style="font-size:1.1em;">📈 市场分析 Market Analysis</div>
+<table class="odds-table"><tr><th>市场 Market</th><th>选项 Selection</th><th>赔率 Odds</th><th>信心 Confidence</th></tr><tr><td>胜平负</td><td>🇺🇸 胜 (Win)</td><td>1.57</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>胜平负</td><td>平 (Draw)</td><td>4.00</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>胜平负</td><td>🇦🇺 负 (Loss)</td><td>5.50</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇺🇸 让胜</td><td>2.75</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>让平</td><td>3.40</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇦🇺 让负</td><td>2.25</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>胜胜 (Win/Win)</td><td>2.40</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>平胜 (Draw/Win)</td><td>4.20</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>总进球数</td><td>3球</td><td>3.50</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>2:1 (🇺🇸)</td><td>8.00</td><td><span class="conf-badge medium">MED</span></td></tr></table>
+<p style="color:var(--text-muted);font-size:0.8em;">📝 赔率为国际市场共识折算 · 中国体育彩票实际赔率请以 lottery.gov.cn 为准</p>
+<div class="section-title" style="font-size:1.1em;">🎬 比赛脚本模拟 Match Scripts</div>
+<div class="scripts-grid">
+<div class="script-card script-a"><h4>🟢 Script A — 美国主场取胜</h4>
+<div class="scores">2:1 · 2:0 · 3:1</div>
+<div class="bar-container"><div class="bar success" style="width:44%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 44%</p>
+<div class="reason">美国首轮4-1展现强大攻击力。主场西雅图优势。澳大利亚防守虽强(首轮零封土耳其),但美国攻击线深度远超土耳其。</div></div>
+<div class="script-card script-b"><h4>🔵 Script B — 对攻大战</h4>
+<div class="scores">3:2 · 2:2 · 3:3</div>
+<div class="bar-container"><div class="bar primary" style="width:16%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 16%</p>
+<div class="reason">若澳大利亚早进球可能迫使对攻。Irankunda速度+Boyle经验威胁美国防线。但澳大利亚更倾向于防守。</div></div>
+<div class="script-card script-c"><h4>🔴 Script C — 澳大利亚爆冷</h4>
+<div class="scores">0:1 · 1:2 · 0:2</div>
+<div class="bar-container"><div class="bar danger" style="width:18%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 18%</p>
+<div class="reason">澳大利亚首轮零封土耳其证明防守能力。Pulisic缺阵可能严重削弱美国创造力。Beech(门将)状态火热。</div></div>
+<div class="script-card script-d"><h4>🟡 Script D — 战术平局</h4>
+<div class="scores">1:1 · 0:0</div>
+<div class="bar-container"><div class="bar warning" style="width:22%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 22%</p>
+<div class="reason">澳大利亚摆大巴,Souttar防空优势明显。美国缺少Pulisic可能破门乏术。平局对双方都可接受。</div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+<div><div class="section-title" style="font-size:1em;">🏆 胜平负概率</div><div class="prob-row"><span class="prob-label">🇺🇸 主胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar success" style="width:50%;"></div></div></div>
+<span class="prob-pct">50%</span></div><div class="prob-row"><span class="prob-label">平局</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar warning" style="width:27%;"></div></div></div>
+<span class="prob-pct">27%</span></div><div class="prob-row"><span class="prob-label">🇦🇺 客胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar danger" style="width:23%;"></div></div></div>
+<span class="prob-pct">23%</span></div></div>
+<div><div class="section-title" style="font-size:1em;">📊 总进球分布</div><div class="prob-row"><span>0球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:8%;background:#374151;"></div></div></div>
+<span>8%</span></div><div class="prob-row"><span>1球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:18%;background:#374151;"></div></div></div>
+<span>18%</span></div><div class="prob-row"><span>2球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:28%;background:#374151;"></div></div></div>
+<span>28%</span></div><div class="prob-row"><span>3球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:26%;background:#374151;"></div></div></div>
+<span>26%</span></div><div class="prob-row"><span>4球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:14%;background:#374151;"></div></div></div>
+<span>14%</span></div><div class="prob-row"><span>5球+</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:6%;background:#374151;"></div></div></div>
+<span>6%</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🎯 Top 3 比分</div><div class="top3-card"><span class="rank">#1</span> <strong>2:1 (美国)</strong> — 14% — 美国主导,澳大利亚偷一球</div><div class="top3-card"><span class="rank">#2</span> <strong>1:1</strong> — 12% — 澳大利亚顽强防守,美国难破</div><div class="top3-card"><span class="rank">#3</span> <strong>2:0 (美国)</strong> — 11% — 美国零封取胜</div></div>
+<div><div class="section-title" style="font-size:1em;">⏱ 半全场预测</div><div style="margin:10px 0;"><p><strong>最可能:</strong> <span style="color:var(--warning);">平胜 (Draw/Win)</span> — 概率 30%</p><p><strong>次选:</strong> <span style="color:var(--success);">胜胜 (Win/Win)</span> — 概率 26%</p><p><strong>警惕:</strong> <span style="color:var(--warning);">平平 (Draw/Draw)</span> — 概率 22%</p><p style="color:var(--text-muted);font-size:0.85em;">分析: Pulisic伤情是本场最大不确定因素。澳大利亚首轮零封土耳其证明防守组织顶级。美国上半场可能受阻,下半场利用体能优势。</p></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🔥 比分热力图 Score Heatmap</div><div class="heatmap">
+<div class="hm-header"></div><div class="hm-header">0</div><div class="hm-header">1</div><div class="hm-header">2</div><div class="hm-header">3</div><div class="hm-header">4</div><div class="hm-header">5+</div><div class="hm-row-label">🇺🇸 美国 USA0</div><div class="hm-cell" style="background:rgba(245,158,11,0.20);">6%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇺🇸 美国 USA1</div><div class="hm-cell" style="background:rgba(34,197,94,0.28);">8%</div><div class="hm-cell" style="background:rgba(245,158,11,0.38);">12%</div><div class="hm-cell" style="background:rgba(239,68,68,0.28);">8%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇺🇸 美国 USA2</div><div class="hm-cell" style="background:rgba(34,197,94,0.35);">11%</div><div class="hm-cell" style="background:rgba(34,197,94,0.45);">14%</div><div class="hm-cell" style="background:rgba(245,158,11,0.25);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇺🇸 美国 USA3+</div><div class="hm-cell" style="background:rgba(34,197,94,0.25);">8%</div><div class="hm-cell" style="background:rgba(34,197,94,0.20);">6%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div></div><p style="color:var(--text-muted);font-size:0.75em;text-align:center;">行=主队进球 列=客队进球 · 颜色深度=概率</p></div>
+<div><div class="section-title" style="font-size:1em;">📋 最终结论</div><div class="conclusion-card green">
+<h4>🟢 最可能结果</h4><p><strong>美国胜 (2:1 / 2:0)</strong> — 主场+实力优势。但Pulisic伤情是关键变量。</p></div><div class="conclusion-card yellow">
+<h4>🟡 最大变数</h4><p><strong>Pulisic出战与否</strong> — 若缺阵,美国创造力下降50%。澳大利亚低位防守+快速反击极具威胁。平局概率显著上升。</p></div><p style="text-align:center;margin-top:10px;">信心评级: <span class="stars">★★★</span></p></div>
+</div>
+</div>
+<div class="match-card">
+<div class="match-header">
+<span class="teams">🇹🇷 土耳其 Turkey vs 巴拉圭 Paraguay 🇵🇾</span>
+<span class="group-badge">D组 · 第2轮·生死战</span>
+</div>
+<div style="color:var(--text-muted);font-size:0.85em;margin-bottom:14px;">📅 2026-06-19 22:00 ET (北京时间 6/20 10:00) · 🏟 Levi's Stadium, San Francisco · 👥 68,000</div>
+<div class="info-grid">
+<div class="info-box"><h4>🌤 天气 Weather</h4><p>🌡 16-20°C · 💧 湿度65% · 🌬 W 22km/h</p>
+<p>🌫 典型旧金山夏季:凉爽,可能有雾/风</p>
+<p>🏟 露天球场,海风影响传球</p>
+<p>天气影响: <span class="stars">★★★</span> (海风影响长传,对技术型球队略不利)</p></div>
+<div class="info-box"><h4>📋 阵容 Squad</h4><p><strong>土耳其 (4-2-3-1):</strong> Cakir; Celik, Demiral, Soyuncu, Elmali; Yuksek, Calhanoglu; Yildiz, Guler, Akturkoglu; Yilmaz</p>
+<p><strong>巴拉圭 (4-2-3-1):</strong> Coronel; Rojas, Balbuena, Gomez, Alonso; Cubas, Villasanti; Almiron, Gamarra, Enciso; Gonzalez</p>
+<p>✅ 双方全员健康,无停赛</p></div>
+<div class="info-box"><h4>📊 近期状态 Form</h4><p>🇹🇷: <span style="color:var(--danger);">L</span> (0-2 vs澳大利亚) | 控球66% | xG 1.8 | 射门30(!) · 得势不得分</p>
+<p>🇵🇾: <span style="color:var(--danger);">L</span> (1-4 vs美国) | 控球45% | xG 0.5 | 射门7 · 防守崩溃</p>
+<p>ELO: 土耳其 1690 (#22) · 巴拉圭 1520 (#45)</p></div>
+<div class="info-box"><h4>🎯 战意 Motivation</h4><p>⚡ <strong>生死战!</strong> 输球=出局</p>
+<p>🇹🇷 首轮30射0球,进攻效率需大幅提升</p>
+<p>🇵🇾 首轮丢4球,防守必须改善</p>
+<p>战意: <span class="stars">★★★★★</span> (最高级别)</p></div>
+</div>
+<div class="section-title" style="font-size:1.1em;">📈 市场分析 Market Analysis</div>
+<table class="odds-table"><tr><th>市场 Market</th><th>选项 Selection</th><th>赔率 Odds</th><th>信心 Confidence</th></tr><tr><td>胜平负</td><td>🇹🇷 胜 (Win)</td><td>1.83</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>胜平负</td><td>平 (Draw)</td><td>3.60</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>胜平负</td><td>🇵🇾 负 (Loss)</td><td>4.20</td><td><span class="conf-badge low">LOW</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇹🇷 让胜</td><td>3.50</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>让平</td><td>3.60</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>让球胜平负(-1)</td><td>🇵🇾 让负</td><td>1.95</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>胜胜 (Win/Win)</td><td>2.90</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>半全场</td><td>平胜 (Draw/Win)</td><td>4.50</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>总进球数</td><td>3球</td><td>3.40</td><td><span class="conf-badge high">HIGH</span></td></tr><tr><td>比分</td><td>2:1 (🇹🇷)</td><td>7.50</td><td><span class="conf-badge medium">MED</span></td></tr><tr><td>比分</td><td>1:0 (🇹🇷)</td><td>7.00</td><td><span class="conf-badge medium">MED</span></td></tr></table>
+<p style="color:var(--text-muted);font-size:0.8em;">📝 赔率为国际市场共识折算 · 中国体育彩票实际赔率请以 lottery.gov.cn 为准</p>
+<div class="section-title" style="font-size:1.1em;">🎬 比赛脚本模拟 Match Scripts</div>
+<div class="scripts-grid">
+<div class="script-card script-a"><h4>🟢 Script A — 土耳其反弹取胜</h4>
+<div class="scores">2:1 · 1:0 · 3:1</div>
+<div class="bar-container"><div class="bar success" style="width:40%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 40%</p>
+<div class="reason">土耳其首轮30射+66%控球证明实力。Calhanoglu+Guler创造力顶级。巴拉圭防守首轮崩盘(丢4球)。回归均值后土耳其应取胜。</div></div>
+<div class="script-card script-b"><h4>🔵 Script B — 进球大战</h4>
+<div class="scores">3:2 · 2:2 · 3:1</div>
+<div class="bar-container"><div class="bar primary" style="width:22%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 22%</p>
+<div class="reason">双方都急需3分,可能开放对攻。土耳其攻击力强但防守不稳。巴拉圭Almiron+Enciso反击速度快。</div></div>
+<div class="script-card script-c"><h4>🔴 Script C — 巴拉圭逆袭</h4>
+<div class="scores">1:2 · 0:1 · 0:2</div>
+<div class="bar-container"><div class="bar danger" style="width:20%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 20%</p>
+<div class="reason">土耳其首轮30射0球暴露效率问题。巴拉圭首轮惨败后可能反弹。Almiron个人能力可改变比赛。</div></div>
+<div class="script-card script-d"><h4>🟡 Script D — 焦灼平局</h4>
+<div class="scores">1:1 · 0:0 · 2:2</div>
+<div class="bar-container"><div class="bar warning" style="width:18%;"></div></div>
+<p style="text-align:right;font-size:0.8em;">概率 18%</p>
+<div class="reason">双方惧怕输球。土耳其在浪费机会后可能焦虑。平局保留双方理论出线希望但都不理想。</div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+<div><div class="section-title" style="font-size:1em;">🏆 胜平负概率</div><div class="prob-row"><span class="prob-label">🇹🇷 主胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar success" style="width:46%;"></div></div></div>
+<span class="prob-pct">46%</span></div><div class="prob-row"><span class="prob-label">平局</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar warning" style="width:27%;"></div></div></div>
+<span class="prob-pct">27%</span></div><div class="prob-row"><span class="prob-label">🇵🇾 客胜</span>
+<div style="flex:1;margin:0 10px;"><div class="bar-container"><div class="bar danger" style="width:27%;"></div></div></div>
+<span class="prob-pct">27%</span></div></div>
+<div><div class="section-title" style="font-size:1em;">📊 总进球分布</div><div class="prob-row"><span>0球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:8%;background:#374151;"></div></div></div>
+<span>8%</span></div><div class="prob-row"><span>1球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:20%;background:#374151;"></div></div></div>
+<span>20%</span></div><div class="prob-row"><span>2球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:28%;background:#374151;"></div></div></div>
+<span>28%</span></div><div class="prob-row"><span>3球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:24%;background:#374151;"></div></div></div>
+<span>24%</span></div><div class="prob-row"><span>4球</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:13%;background:#374151;"></div></div></div>
+<span>13%</span></div><div class="prob-row"><span>5球+</span>
+<div style="flex:1;margin:0 8px;"><div class="bar-container"><div class="bar" style="width:7%;background:#374151;"></div></div></div>
+<span>7%</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🎯 Top 3 比分</div><div class="top3-card"><span class="rank">#1</span> <strong>2:1 (土耳其)</strong> — 14% — 土耳其反弹,对攻取胜</div><div class="top3-card"><span class="rank">#2</span> <strong>1:1</strong> — 12% — 焦灼平局,双方都不满意</div><div class="top3-card"><span class="rank">#3</span> <strong>1:0 (土耳其)</strong> — 10% — 土耳其小胜,效率仍堪忧</div></div>
+<div><div class="section-title" style="font-size:1em;">⏱ 半全场预测</div><div style="margin:10px 0;"><p><strong>最可能:</strong> <span style="color:var(--warning);">平胜 (Draw/Win)</span> — 概率 28%</p><p><strong>次选:</strong> <span style="color:var(--success);">胜胜 (Win/Win)</span> — 概率 24%</p><p><strong>警惕:</strong> <span style="color:var(--warning);">平平 (Draw/Draw)</span> — 概率 20%</p><p style="color:var(--text-muted);font-size:0.85em;">分析: 本场不确定性极高。土耳其数据好看但效率差,巴拉圭首轮惨败后必然反弹。Guler+Yildiz双星闪耀是关键。旧金山海风可能影响比赛质量。</p></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div><div class="section-title" style="font-size:1em;">🔥 比分热力图 Score Heatmap</div><div class="heatmap">
+<div class="hm-header"></div><div class="hm-header">0</div><div class="hm-header">1</div><div class="hm-header">2</div><div class="hm-header">3</div><div class="hm-header">4</div><div class="hm-header">5+</div><div class="hm-row-label">🇹🇷 土耳其 Turkey0</div><div class="hm-cell" style="background:rgba(245,158,11,0.20);">6%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇹🇷 土耳其 Turkey1</div><div class="hm-cell" style="background:rgba(34,197,94,0.25);">7%</div><div class="hm-cell" style="background:rgba(245,158,11,0.38);">12%</div><div class="hm-cell" style="background:rgba(239,68,68,0.28);">8%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇹🇷 土耳其 Turkey2</div><div class="hm-cell" style="background:rgba(34,197,94,0.28);">8%</div><div class="hm-cell" style="background:rgba(34,197,94,0.45);">14%</div><div class="hm-cell" style="background:rgba(245,158,11,0.25);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-row-label">🇹🇷 土耳其 Turkey3+</div><div class="hm-cell" style="background:rgba(34,197,94,0.20);">6%</div><div class="hm-cell" style="background:rgba(34,197,94,0.22);">7%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div><div class="hm-cell" style="background:rgba(255,255,255,0.02);"><1%</div></div><p style="color:var(--text-muted);font-size:0.75em;text-align:center;">行=主队进球 列=客队进球 · 颜色深度=概率</p></div>
+<div><div class="section-title" style="font-size:1em;">📋 最终结论</div><div class="conclusion-card green">
+<h4>🟢 最可能结果</h4><p><strong>土耳其反弹取胜</strong> — 首轮30射非偶然,Calhanoglu场均3.5关键传球。巴拉圭防守首轮崩盘,难以零封。</p></div><div class="conclusion-card yellow">
+<h4>🟡 最大风险</h4><p><strong>土耳其"浪射"继续</strong> — 若首轮效率问题持续,平局甚至输球风险真实。巴拉圭首轮惨败后必然加强防守。</p></div><p style="text-align:center;margin-top:10px;">信心评级: <span class="stars">★★</span></p></div>
+</div>
+</div>
+<div class="section-title">⚠️ 关键风险分析 Key Risks</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;">
+
+<div class="risk-card">
+<h4>⛈ 天气风险 — Mexico vs South Korea</h4>
+<p style="color:var(--text-muted);">Guadalajara 40-60%雷暴概率。露天球场。若雷暴导致比赛中断,可能影响节奏和体能分配。湿滑草皮不利于韩国传控风格。墨西哥更适应高原+雨季条件。</p>
+<p>风险等级: <span class="stars">★★★★</span></p>
+</div>
+
+<div class="risk-card">
+<h4>🔄 轮换/伤停风险</h4>
+<p style="color:var(--text-muted);"><strong>关键缺阵:</strong> South Africa缺失2名中场核心(Sithole+Zwane); Canada可能缺少Davies(队长); USA Pulisic出战成疑; Brazil Neymar+Rodrygo缺阵; Mexico Montes停赛。这些缺失可能显著改变比赛走向。</p>
+<p>风险等级: <span class="stars">★★★★</span></p>
+</div>
+
+<div class="risk-card">
+<h4>🎰 市场陷阱 Market Trap</h4>
+<p style="color:var(--text-muted);"><strong>加拿大-360赔率:</strong> 市场过度看好加拿大。缺少Davies的加拿大进攻创造力大幅下降。卡塔尔首轮绝平瑞士证明韧性。11.00的客胜赔率可能隐含价值。</p>
+<p style="color:var(--text-muted);"><strong>巴西-2让球:</strong> Neymar+Rodrygo缺阵,巴西进攻效率存疑。海地首轮15射证明非鱼腩。-2让球过深。</p>
+<p>风险等级: <span class="stars">★★★★</span></p>
+</div>
+
+<div class="risk-card">
+<h4>😴 体能/疲劳风险</h4>
+<p style="color:var(--text-muted);">第二轮小组赛,各队仅休息3-4天。高温城市(Atlanta 31°C, LA 31°C体感, Philadelphia 32°C)加剧体能消耗。下半场60-75分钟是变数窗口。关注阵容深度更深的球队(瑞士、摩洛哥、巴西)。</p>
+<p>风险等级: <span class="stars">★★★</span></p>
+</div>
+
+<div class="risk-card">
+<h4>🔮 低信心比赛</h4>
+<p style="color:var(--text-muted);"><strong>Mexico vs South Korea:</strong> 天气+停赛+主场压力+实力接近=最难预测。投注需格外谨慎。</p>
+<p style="color:var(--text-muted);"><strong>Turkey vs Paraguay:</strong> 土耳其"浪射"问题未解,巴拉圭反弹需求强。50-50的比赛。</p>
+<p>风险等级: <span class="stars">★★★★★</span></p>
+</div>
+
+</div>
+
+<div class="section-title">📋 综合总结 Summary</div>
+<div class="summary-grid">
+
+<div class="summary-card">
+<h4>✅ 最稳定比赛 Most Stable</h4>
+<p style="color:var(--success);font-size:1.1em;"><strong>巴西 vs 海地</strong></p>
+<p style="color:var(--text-muted);">ELO差425分,实力鸿沟。巴西首轮平局后全力反弹。Ancelotti变阵全攻。虽Neymar缺阵,但Vinicius+Raphinha足够碾压。</p>
+<p>推荐: <strong>巴西让球胜(-2)</strong> · 比分 3:0 / 4:0</p>
+</div>
+
+<div class="summary-card">
+<h4>⚠️ 最高冷门概率 Highest Upset Risk</h4>
+<p style="color:var(--danger);font-size:1.1em;"><strong>墨西哥 vs 韩国</strong></p>
+<p style="color:var(--text-muted);">韩国客场取胜概率30%。Son+LKI世界级。墨西哥缺少Montes+雷暴天气=变数极大。墨西哥让球(-1)风险高。</p>
+<p>警惕: <strong>韩国不败 (+0.5)</strong> · 比分 1:1 / 0:1</p>
+</div>
+
+<div class="summary-card">
+<h4>🛡 最佳防守 Best Defensive Teams</h4>
+<p style="color:var(--primary);font-size:1.1em;"><strong>摩洛哥 · 澳大利亚 · 加拿大</strong></p>
+<p style="color:var(--text-muted);">摩洛哥首轮对巴西仅失1球。澳大利亚零封土耳其(8扑救)。加拿大零封概率53% vs卡塔尔。低进球比赛候选。</p>
+<p>推荐: <strong>摩洛哥vs苏格兰 1球 / 加拿大零封</strong></p>
+</div>
+
+<div class="summary-card">
+<h4>🔥 最高进球 Highest Scoring Potential</h4>
+<p style="color:var(--warning);font-size:1.1em;"><strong>巴西 vs 海地 · 土耳其 vs 巴拉圭</strong></p>
+<p style="color:var(--text-muted);">巴西全攻阵容vs海地开放风格=大比分可期。土耳其首轮30射+巴拉圭首轮丢4球=对攻基础。两队都不能接受平局。</p>
+<p>推荐: <strong>总进球数 3-4球</strong></p>
+</div>
+
+</div>
+
+<div class="section-title">🏅 推荐投注组合 Betting Suggestions</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:16px;">
+<div class="conclusion-card green">
+<h4>🟢 保守串关 Conservative Accumulator (×4)</h4>
+<p style="color:var(--text-muted);">选择最稳定的4场比赛的胜平负:</p>
+<ol style="color:var(--text-muted);margin-left:20px;">
+<li><strong>瑞士 胜</strong> vs 波黑 (1.59) — 实力碾压,回稳之选</li>
+<li><strong>加拿大 胜</strong> vs 卡塔尔 (1.28) — 主场优势,实力差距</li>
+<li><strong>巴西 胜</strong> vs 海地 (1.12) — ELO差425分,稳胆</li>
+<li><strong>摩洛哥 胜</strong> vs 苏格兰 (1.85) — ELO前8,状态正佳</li>
+</ol>
+<p style="color:var(--success);">综合赔率 ≈ 4.22 · 保守策略</p>
+<p style="color:var(--text-muted);font-size:0.8em;">⚠️ 不构成投注建议。足球比赛结果不可预测。请理性投注。</p>
+</div>
+<div class="conclusion-card yellow">
+<h4>🟡 进取串关 Value Accumulator (×3)</h4>
+<p style="color:var(--text-muted);">选择价值较高的让球盘:</p>
+<ol style="color:var(--text-muted);margin-left:20px;">
+<li><strong>加拿大 让球胜 (-1)</strong> vs 卡塔尔 (1.87) — 主场大胜可期</li>
+<li><strong>美国 胜</strong> vs 澳大利亚 (1.57) — Pulisic若可出战</li>
+<li><strong>土耳其 胜</strong> vs 巴拉圭 (1.83) — 反弹逻辑</li>
+</ol>
+<p style="color:var(--warning);">综合赔率 ≈ 5.36 · 进取策略</p>
+<p style="color:var(--text-muted);font-size:0.8em;">⚠️ 不构成投注建议。足球比赛结果不可预测。请理性投注。</p>
+</div>
+</div>
+
+<div class="footer">
+<p>Generated by Claude Code World Cup Match Intelligence</p>
+<p style="margin-top:6px;">Data sources: FIFA Official, China Sports Lottery (lottery.gov.cn), DraftKings, Weather Channel, Fox Sports, Yahoo Sports</p>
+<p style="margin-top:6px;font-size:0.8em;">Disclaimer: This report is for informational purposes only. All probabilities are estimates based on available data and analyst judgment. Football outcomes are inherently uncertain. Never bet more than you can afford to lose. If you or someone you know has a gambling problem, call China's gambling helpline or visit responsible gambling resources.</p>
+</div>
+</div>
+</body>
+</html>

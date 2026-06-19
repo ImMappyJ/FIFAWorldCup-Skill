@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 2026世界杯预测报告 — 6月19日 (北京时间)</title>
+<style>
+:root {
+  --bg:#0B1220; --card:#111827; --card-hover:#1A2332; --primary:#2563EB;
+  --success:#22C55E; --warning:#F59E0B; --danger:#EF4444; --text:#E5E7EB;
+  --text-secondary:#9CA3AF; --text-muted:#6B7280; --border:#1F2937;
+  --purple:#8B5CF6; --cyan:#06B6D4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg); color:var(--text);
+  line-height:1.6; padding:16px; max-width:1200px; margin:0 auto;
+}
+/* Header */
+.header{
+  text-align:center; padding:32px 16px 24px;
+  background:linear-gradient(135deg,var(--card) 0%,#0F1D3A 100%);
+  border-radius:16px; margin-bottom:24px; border:1px solid var(--border);
+}
+.header h1{font-size:clamp(1.5rem,4vw,2.2rem);margin-bottom:8px}
+.header .subtitle{color:var(--text-secondary);font-size:.9rem}
+.header .badge-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.badge{
+  display:inline-block;padding:4px 12px;border-radius:20px;
+  font-size:.75rem;font-weight:600;
+}
+.badge--ok{background:rgba(34,197,94,.15);color:var(--success)}
+.badge--warn{background:rgba(245,158,11,.15);color:var(--warning)}
+.badge--info{background:rgba(37,99,235,.15);color:var(--primary)}
+/* Dashboard */
+.dashboard{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px; margin-bottom:24px;
+}
+.dash-card{
+  background:var(--card);border-radius:12px;padding:16px 20px;
+  border:1px solid var(--border);text-align:center;
+  transition:background .2s ease;
+}
+.dash-card:hover{background:var(--card-hover)}
+.dash-card .num{font-size:2rem;font-weight:800}
+.dash-card .label{font-size:.8rem;color:var(--text-secondary);margin-top:4px}
+.num--blue{color:var(--primary)} .num--green{color:var(--success)}
+.num--yellow{color:var(--warning)} .num--red{color:var(--danger)}
+.num--purple{color:var(--purple)}
+/* Match Card */
+.match-card{
+  background:var(--card);border-radius:14px;margin-bottom:20px;
+  border:1px solid var(--border);overflow:hidden;
+}
+.match-card summary{
+  padding:16px 20px; cursor:pointer; font-weight:700; font-size:1.1rem;
+  display:flex; align-items:center; gap:10px; user-select:none;
+  background:var(--card); transition:background .2s;
+}
+.match-card summary:hover{background:var(--card-hover)}
+.match-card summary .teams{flex:1}
+.match-card summary .time-badge{
+  font-size:.8rem;padding:4px 10px;border-radius:6px;
+  background:var(--primary);color:#fff;white-space:nowrap;
+}
+.match-body{padding:12px 20px 20px}
+/* Group Strip */
+.group-strip{
+  background:var(--bg);border-radius:10px;padding:14px 16px;margin-bottom:14px;
+  font-size:.82rem; border:1px solid var(--border);
+  overflow-x:auto;
+}
+.group-strip table{width:100%;border-collapse:collapse;font-size:.78rem}
+.group-strip th{color:var(--text-muted);font-weight:500;text-align:left;padding:2px 8px}
+.group-strip td{padding:2px 8px}
+.group-strip .highlight{color:var(--warning);font-weight:700}
+.group-strip .note-row{color:var(--text-secondary);font-size:.75rem;margin-top:6px}
+.group-strip .travel-row{color:var(--cyan);font-size:.75rem}
+.group-strip .warn-row{color:var(--danger);font-size:.75rem}
+/* Weather bar */
+.weather-bar{
+  display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;
+  font-size:.8rem;color:var(--text-secondary);
+  padding:8px 12px;background:var(--bg);border-radius:8px;
+}
+.weather-bar span{display:flex;align-items:center;gap:4px}
+/* Form bars */
+.form-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px}
+.form-team{flex:1;min-width:200px}
+.form-team .name{font-weight:700;font-size:.9rem;margin-bottom:4px}
+.form-dots{display:flex;gap:3px}
+.form-dot{
+  width:24px;height:24px;border-radius:4px;display:flex;
+  align-items:center;justify-content:center;font-size:.65rem;font-weight:700;
+}
+.form-dot--w{background:#22C55E;color:#000}
+.form-dot--d{background:#6B7280;color:#fff}
+.form-dot--l{background:#EF4444;color:#fff}
+/* Win probs */
+.prob-bars{margin:14px 0}
+.prob-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:.85rem}
+.prob-row .label{width:60px;text-align:right;font-weight:600}
+.prob-row .bar-wrap{flex:1;height:22px;background:var(--bg);border-radius:6px;overflow:hidden}
+.prob-row .bar{height:100%;border-radius:6px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:.7rem;font-weight:700}
+.bar--home{background:linear-gradient(90deg,var(--primary),#3B82F6)}
+.bar--draw{background:linear-gradient(90deg,var(--text-muted),var(--text-secondary))}
+.bar--away{background:linear-gradient(90deg,var(--danger),#F87171)}
+.prob-row .pct{width:48px;font-weight:700;font-size:.82rem}
+/* Scripts */
+.scripts{margin:14px 0}
+.script-card{
+  padding:10px 14px;border-radius:10px;margin-bottom:8px;
+  border-left:4px solid var(--border);font-size:.82rem;
+  background:var(--bg);
+}
+.script-card--a{border-color:var(--primary)}
+.script-card--b{border-color:var(--warning)}
+.script-card--c{border-color:var(--danger)}
+.script-card--d{border-color:var(--text-muted)}
+.script-card .script-title{font-weight:700;margin-bottom:2px}
+.script-card .script-meta{font-size:.73rem;color:var(--text-muted)}
+/* Section titles */
+.sec-title{
+  font-size:.9rem;font-weight:700;color:var(--text-secondary);
+  text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px;
+  padding-bottom:6px;border-bottom:1px solid var(--border);
+}
+/* Score grid */
+.score-grid-wrapper{
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  margin:10px 0;border-radius:10px;
+}
+.score-grid{
+  display:grid;grid-template-columns:60px repeat(5,1fr);gap:2px;
+  min-width:360px;font-size:.78rem;
+}
+.score-grid .hdr{background:var(--card-hover);padding:8px 4px;text-align:center;font-weight:700;color:var(--text-muted);font-size:.7rem}
+.score-cell{
+  aspect-ratio:1;min-width:44px;display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:600;border-radius:3px;
+}
+.score-cell--best{
+  box-shadow:0 0 10px rgba(245,158,11,.4);border:2px solid var(--warning);
+  border-radius:6px;
+}
+/* Goal dist */
+.goal-bars{margin:10px 0}
+.goal-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:.8rem}
+.goal-bar-row .glabel{width:32px;text-align:right;font-weight:700}
+.goal-bar-row .gbar-wrap{flex:1;height:16px;background:var(--bg);border-radius:4px;overflow:hidden}
+.goal-bar-row .gbar{height:100%;border-radius:4px}
+.goal-bar-row .gpct{width:42px;font-size:.75rem;color:var(--text-secondary);text-align:right}
+/* HTFT grid */
+.htft-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+  margin:10px 0;
+}
+.htft-cell{
+  padding:8px 4px;text-align:center;border-radius:8px;
+  background:var(--bg);font-size:.82rem;border:1px solid var(--border);
+}
+.htft-cell--edge{border:1px solid var(--success);background:rgba(34,197,94,.08)}
+.htft-label{font-weight:700;color:var(--text)}
+.htft-prob{font-size:.73rem;color:var(--text-secondary)}
+.htft-odds{font-size:.7rem;color:var(--text-muted)}
+.htft-edge{font-size:.68rem;color:var(--success);font-weight:600}
+/* Odds table */
+.odds-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:10px 0}
+.odds-table th{text-align:left;padding:8px 6px;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.72rem}
+.odds-table td{padding:8px 6px;border-bottom:1px solid var(--border)}
+.edge-pos{color:var(--success);font-weight:700}
+.edge-neg{color:var(--danger)}
+.edge-neutral{color:var(--text-muted)}
+/* Risk */
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:10px 0}
+.risk-item{background:var(--bg);border-radius:10px;padding:12px;border:1px solid var(--border)}
+.risk-item .risk-label{font-weight:700;font-size:.85rem}
+.risk-item .risk-dots{display:flex;gap:3px;margin-top:4px}
+.risk-dot{width:14px;height:14px;border-radius:50%}
+.risk-dot--on{background:var(--danger)}.risk-dot--off{background:var(--border)}
+/* Tickets */
+.ticket-card{
+  background:linear-gradient(135deg,var(--card) 0%,#0F1D3A 100%);
+  border-radius:14px;padding:18px;margin-bottom:14px;border:1px solid var(--border);
+}
+.ticket-card h3{font-size:1rem;margin-bottom:10px}
+.ticket-leg{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.82rem}
+.ticket-leg:last-child{border-bottom:none}
+.ticket-summary{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;font-size:.82rem}
+.ticket-summary div{display:flex;flex-direction:column}
+.ticket-summary .ts-val{font-weight:700;font-size:1.1rem}
+/* Footer */
+.footer{
+  text-align:center;padding:20px;color:var(--text-muted);font-size:.75rem;
+  border-top:1px solid var(--border);margin-top:24px;
+}
+/* Responsive */
+@media(max-width:768px){
+  .match-card summary{font-size:.95rem;padding:12px 14px}
+  .match-body{padding:8px 12px 14px}
+  .dashboard{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:360px){
+  .htft-cell{padding:4px 2px;font-size:.7rem}
+  .htft-label{font-size:.7rem}
+}
+@media print{
+  body{background:#fff;color:#000}
+  .match-card{break-inside:avoid;border:1px solid #ccc}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏆 2026世界杯 — 第8比赛日预测报告</h1>
+  <div class="subtitle">2026年6月19日 · 北京时间 · 小组赛第二轮 (A组&B组) · 4场分析</div>
+  <div class="badge-row">
+    <span class="badge badge--ok">数据质量 78%</span>
+    <span class="badge badge--info">模型版本 v2.4</span>
+    <span class="badge badge--warn">8层架构完整分析</span>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div class="dashboard">
+  <div class="dash-card"><div class="num num--blue">4</div><div class="label">比赛分析</div></div>
+  <div class="dash-card"><div class="num num--green">2</div><div class="label">核心场次 (CORE)</div></div>
+  <div class="dash-card"><div class="num num--yellow">3</div><div class="label">价值机会 (Edge>2%)</div></div>
+  <div class="dash-card"><div class="num num--red">1</div><div class="label">冷门预警</div></div>
+  <div class="dash-card"><div class="num num--purple">2.8</div><div class="label">平均风险分 /5</div></div>
+</div>
+
+<!-- ==================== MATCH 1: CZE vs RSA ==================== -->
+<details class="match-card" open>
+<summary>
+  <span class="teams">🇨🇿 捷克 vs 南非 🇿🇦</span>
+  <span class="time-badge">00:00 北京</span>
+</summary>
+<div class="match-body">
+
+<div class="group-strip">
+  <div style="font-weight:700;margin-bottom:6px;color:var(--primary)">📊 A组积分榜 (第2轮前)</div>
+  <table>
+    <tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>GF</th><th>GA</th><th>GD</th><th>分</th></tr>
+    <tr><td>1</td><td>🇲🇽 墨西哥</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2</td><td>0</td><td>+2</td><td><b>3</b></td></tr>
+    <tr><td>2</td><td>🇰🇷 韩国</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2</td><td>1</td><td>+1</td><td><b>3</b></td></tr>
+    <tr style="background:rgba(37,99,235,.1)"><td>3</td><td>🇨🇿 捷克</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>2</td><td>-1</td><td><b>0</b></td></tr>
+    <tr style="background:rgba(37,99,235,.1)"><td>4</td><td>🇿🇦 南非</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>2</td><td>-2</td><td><b>0</b></td></tr>
+  </table>
+  <div class="note-row">⚠️ <b>生死战：</b>两队首轮皆败，输球方基本告别前两名+最佳第三名竞争。</div>
+  <div class="note-row">🔮 CZE下场: vs 🇲🇽墨西哥 (强敌) | RSA下场: vs 🇰🇷韩国 (强敌)</div>
+  <div class="travel-row">🚌 CZE: 达拉斯→亚特兰大 ~1200km (✈2.5h) | RSA: 佛罗里达→亚特兰大 ~700km (✈1.5h)</div>
+</div>
+
+<div class="weather-bar">
+  <span>🏟️ 梅赛德斯-奔驰体育场, 亚特兰大</span>
+  <span>🌡️ 26°C (场外)</span>
+  <span>🏠 顶棚关闭·空调恒温</span>
+  <span>🌧️ 场外暴雨⛈️ (无影响)</span>
+</div>
+
+<div class="form-row">
+  <div class="form-team">
+    <div class="name">🇨🇿 捷克 (FIFA #42 · ELO 1691 · €190M)</div>
+    <div class="form-dots">
+      <span class="form-dot form-dot--l" title="vs KOR 1-2">L</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--l" title="热身">L</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">⚽ 近5场 xG: 1.3 · 射门/场: 12.8 · 控球: 48% · 三中卫体系</div>
+  </div>
+  <div class="form-team">
+    <div class="name">🇿🇦 南非 (FIFA #61 · ELO 1526 · €46M)</div>
+    <div class="form-dots">
+      <span class="form-dot form-dot--l" title="vs MEX 0-2">L</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--l" title="热身">L</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">⚽ 近5场 xG: 0.7 · 射门/场: 9.2 · 控球: 41% · 5-4-1防反</div>
+  </div>
+</div>
+
+<div class="prob-bars">
+  <div class="prob-row"><span class="label">捷克胜</span><span class="bar-wrap"><span class="bar bar--home" style="width:52%">52%</span></span><span class="pct" style="color:var(--primary)">52%</span></div>
+  <div class="prob-row"><span class="label">平局</span><span class="bar-wrap"><span class="bar bar--draw" style="width:26%">26%</span></span><span class="pct">26%</span></div>
+  <div class="prob-row"><span class="label">南非胜</span><span class="bar-wrap"><span class="bar bar--away" style="width:22%">22%</span></span><span class="pct" style="color:var(--danger)">22%</span></div>
+</div>
+
+<div class="scripts">
+  <div class="script-card script-card--a">
+    <div class="script-title">🅰 捷克控制局 (38%) — 高空轰炸制胜</div>
+    <div class="script-meta">捷克利用身高+定位球优势先拔头筹(<30')，南非两主力中场停赛导致防线衔接断裂。顶棚关闭=技术流有利。1-0, 2-0, 2-1</div>
+    <div class="script-meta">🎯 半全场: 胜胜/平胜 | 希克支点作用关键</div>
+  </div>
+  <div class="script-card script-card--d">
+    <div class="script-title">🅳 沉闷拉锯 (27%) — 双方保守求生</div>
+    <div class="script-meta">两队都不敢输。0-0持续到60'，比赛最后30分钟才勉强提速。失利=出局 → 极度保守开局。0-0, 1-1</div>
+    <div class="script-meta">🎯 半全场: 平平/平胜</div>
+  </div>
+  <div class="script-card script-card--c">
+    <div class="script-title">🅲 南非偷袭 (20%) — 防守反击爆冷</div>
+    <div class="script-meta">南非5-4-1深度防守，边路速度反击得手。捷克左后卫伤病缺口被精准打击。0-1, 1-2</div>
+    <div class="script-meta">🎯 半全场: 平负/负负 | 捷克左路防守是关键漏洞⚠️</div>
+  </div>
+  <div class="script-card script-card--b">
+    <div class="script-title">🅱 对攻大战 (15%) — 双方破釜沉舟</div>
+    <div class="script-meta">两队意识到必须赢球才能存活，下半场放开对攻。双方防线均有漏洞。2-2, 3-2, 2-3</div>
+    <div class="script-meta">🎯 半全场: 胜平/平胜</div>
+  </div>
+</div>
+
+</div>
+</details>
+
+<!-- MATCH 1: Score + Goals + HTFT -->
+<details class="match-card" open>
+<summary><span class="teams">🇨🇿 vs 🇿🇦 — 比分&数据深度</span></summary>
+<div class="match-body">
+
+<div class="sec-title">🎯 比分概率热力图</div>
+<div class="score-grid-wrapper">
+<div class="score-grid">
+  <div class="hdr">H\A</div><div class="hdr">0</div><div class="hdr">1</div><div class="hdr">2</div><div class="hdr">3</div><div class="hdr">4+</div>
+  <div class="hdr">0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.18)">7.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.15)">5.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.08)">2.1</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.04)">0.6</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.2</div>
+  <div class="hdr">1</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.22)">9.8</div>
+  <div class="score-cell score-cell--best" style="background:rgba(37,99,235,.30)">10.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.16)">5.6</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.07)">1.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">0.6</div>
+  <div class="hdr">2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.14)">6.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.18)">7.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.12)">4.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.05)">1.4</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.5</div>
+  <div class="hdr">3</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.06)">2.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.08)">3.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.05)">2.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">0.7</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.3</div>
+  <div class="hdr">4+</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">1.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.04)">1.6</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.9</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.3</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.00)">0.1</div>
+</div>
+</div>
+<div style="font-size:.72rem;color:var(--text-muted);margin-top:4px">🥇 最可能比分: <b style="color:var(--warning)">1:1 (10.5%)</b> · 🥈 1:0 (9.8%) · 🥉 2:1 (7.8%) · BTTS概率: 48%</div>
+
+<div class="sec-title">📊 总进球分布</div>
+<div class="goal-bars">
+  <div class="goal-bar-row"><span class="glabel">0</span><span class="gbar-wrap"><span class="gbar" style="width:7.2%;background:var(--primary)"></span></span><span class="gpct">7.2%</span></div>
+  <div class="goal-bar-row"><span class="glabel">1</span><span class="gbar-wrap"><span class="gbar" style="width:19.6%;background:#3B82F6"></span></span><span class="gpct">19.6%</span></div>
+  <div class="goal-bar-row"><span class="glabel">2</span><span class="gbar-wrap"><span class="gbar" style="width:27.8%;background:var(--success)"></span></span><span class="gpct">27.8%</span></div>
+  <div class="goal-bar-row"><span class="glabel">3</span><span class="gbar-wrap"><span class="gbar" style="width:21.5%;background:var(--warning)"></span></span><span class="gpct">21.5%</span></div>
+  <div class="goal-bar-row"><span class="glabel">4</span><span class="gbar-wrap"><span class="gbar" style="width:12.8%;background:#EA580C"></span></span><span class="gpct">12.8%</span></div>
+  <div class="goal-bar-row"><span class="glabel">5</span><span class="gbar-wrap"><span class="gbar" style="width:6.4%;background:var(--danger)"></span></span><span class="gpct">6.4%</span></div>
+  <div class="goal-bar-row"><span class="glabel">6</span><span class="gbar-wrap"><span class="gbar" style="width:3.2%;background:var(--danger)"></span></span><span class="gpct">3.2%</span></div>
+  <div class="goal-bar-row"><span class="glabel">7+</span><span class="gbar-wrap"><span class="gbar" style="width:1.5%;background:var(--danger)"></span></span><span class="gpct">1.5%</span></div>
+</div>
+
+<div class="sec-title">🎯 半全场 9宫格分析</div>
+<div class="htft-grid">
+  <div class="htft-cell" style="background:var(--card-hover)"><b>FT↓ HT→</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>主队领先</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>半场平局</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>客队领先</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>主胜</b></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">胜胜</div><div class="htft-prob">31%</div><div class="htft-odds">@3.36 <span class="htft-edge">→+2.1%</span></div></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">平胜</div><div class="htft-prob">14%</div><div class="htft-odds">@4.20 <span class="htft-edge">→+2.8%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">负胜</div><div class="htft-prob">6%</div><div class="htft-odds">@15.00</div></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>平局</b></div>
+  <div class="htft-cell"><div class="htft-label">胜平</div><div class="htft-prob">4%</div><div class="htft-odds">@12.00</div></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">平平</div><div class="htft-prob">14%</div><div class="htft-odds">@4.80 <span class="htft-edge">→+2.4%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">负平</div><div class="htft-prob">6%</div><div class="htft-odds">@11.00</div></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>客胜</b></div>
+  <div class="htft-cell"><div class="htft-label">胜负</div><div class="htft-prob">2%</div><div class="htft-odds">@22.00</div></div>
+  <div class="htft-cell"><div class="htft-label">平负</div><div class="htft-prob">7%</div><div class="htft-odds">@8.00</div></div>
+  <div class="htft-cell"><div class="htft-label">负负</div><div class="htft-prob">13%</div><div class="htft-odds">@3.86</div></div>
+</div>
+
+<div class="sec-title">🎲 竞彩赔率 & 模型价值</div>
+<table class="odds-table">
+  <tr><th>玩法</th><th>选项</th><th>赔率</th><th>隐含概率</th><th>模型概率</th><th>价值</th><th>信心</th></tr>
+  <tr><td rowspan="3">胜平负</td><td>主胜</td><td>1.74</td><td>50.9%</td><td>52.0%</td><td class="edge-pos">+1.1%</td><td>⭐⭐</td></tr>
+  <tr><td>平局</td><td>3.20</td><td>27.7%</td><td>26.0%</td><td class="edge-neg">-1.7%</td><td>⭐</td></tr>
+  <tr><td>客胜</td><td>4.15</td><td>21.3%</td><td>22.0%</td><td class="edge-pos">+0.7%</td><td>⭐</td></tr>
+  <tr><td rowspan="3">让球(-1)</td><td>让胜</td><td>3.36</td><td>—</td><td>—</td><td class="edge-pos">边缘+</td><td>⭐⭐</td></tr>
+  <tr><td>让平</td><td>3.40</td><td>—</td><td>—</td><td class="edge-neutral">—</td><td>—</td></tr>
+  <tr><td>让负</td><td>1.86</td><td>—</td><td>—</td><td class="edge-neutral">—</td><td>—</td></tr>
+  <tr><td rowspan="3">总进球</td><td>2球</td><td>~3.10</td><td>~32%</td><td>27.8%</td><td class="edge-neutral">平</td><td>⭐⭐</td></tr>
+  <tr><td>3球</td><td>~3.60</td><td>~28%</td><td>21.5%</td><td class="edge-neg">轻微-</td><td>⭐⭐</td></tr>
+  <tr><td>1球</td><td>~3.80</td><td>~26%</td><td>19.6%</td><td class="edge-neg">轻微-</td><td>⭐</td></tr>
+</table>
+
+<div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;font-size:.82rem">
+  <b>📋 本场结论:</b><br>
+  🟢 <b>最可能:</b> 捷克不败 (78%) · 总进球2-3球区间最优 · 最可能比分 1-1 / 1-0<br>
+  🟡 <b>风险:</b> 南非两主力中场停赛攻守转换断裂；捷克左后卫伤病缺口；双方"不能输"心态压制进攻<br>
+  🔴 <b>市场解读:</b> 赔率接近公允，无明显套利空间。市场对捷克信心有限(让-1赔率3.36偏高)，暗示穿盘概率不高
+</div>
+
+</div>
+</details>
+
+<!-- ==================== MATCH 2: SUI vs BIH ==================== -->
+<details class="match-card" open>
+<summary>
+  <span class="teams">🇨🇭 瑞士 vs 波黑 🇧🇦</span>
+  <span class="time-badge">03:00 北京</span>
+</summary>
+<div class="match-body">
+
+<div class="group-strip">
+  <div style="font-weight:700;margin-bottom:6px;color:var(--primary)">📊 B组积分榜 (第2轮前) — 四队同积1分!</div>
+  <table>
+    <tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>GF</th><th>GA</th><th>GD</th><th>分</th></tr>
+    <tr><td>1</td><td>🇨🇭 瑞士</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td><b>1</b></td></tr>
+    <tr><td>2</td><td>🇨🇦 加拿大</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td><b>1</b></td></tr>
+    <tr style="background:rgba(37,99,235,.1)"><td>3</td><td>🇧🇦 波黑</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td><b>1</b></td></tr>
+    <tr style="background:rgba(37,99,235,.1)"><td>4</td><td>🇶🇦 卡塔尔</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td><b>1</b></td></tr>
+  </table>
+  <div class="note-row">⚠️ <b>极度开放:</b> B组首轮全部平局! 瑞士取胜将积4分掌控晋级主动权。波黑拿分保留希望。</div>
+  <div class="note-row">🔮 SUI下场: vs 🇨🇦加拿大 (温哥华,客场) | BIH下场: vs 🇶🇦卡塔尔 (西雅图)</div>
+  <div class="travel-row">🚌 SUI: 基地位于加州→洛杉矶 短途 | BIH: 犹他州→洛杉矶 ~1100km (✈2h)</div>
+  <div class="warn-row">⚠️ BIH伤情: 哲科+塔巴科维奇 (两名前锋) 大概率缺阵首发! 科拉希纳茨需赛前体检确认</div>
+</div>
+
+<div class="weather-bar">
+  <span>🏟️ SoFi体育场, 洛杉矶</span>
+  <span>🌡️ ~21°C</span>
+  <span>🌤️ 晴好·露天</span>
+  <span>💨 微风</span>
+</div>
+
+<div class="form-row">
+  <div class="form-team">
+    <div class="name">🇨🇭 瑞士 (FIFA #19 · ELO ~1820 · 阵容€280M)</div>
+    <div class="form-dots">
+      <span class="form-dot form-dot--d" title="vs QAT 1-1">D</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+      <span class="form-dot form-dot--l" title="热身">L</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">⚽ 阵容齐整无伤病 · 扎卡中场调度 · 恩博洛+恩多耶锋线 · 防守组织严密 · 3-4-3/4-3-3切换</div>
+  </div>
+  <div class="form-team">
+    <div class="name">🇧🇦 波黑 (FIFA #64 · ELO ~1620 · 阵容€120M)</div>
+    <div class="form-dots">
+      <span class="form-dot form-dot--d" title="vs CAN 1-1">D</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">⚠️ 哲科(40岁)+塔巴科维奇伤缺 → 攻击线严重削弱 · 老将阵容 · 板凳深度不足 · 传统4-4-2</div>
+  </div>
+</div>
+
+<div class="prob-bars">
+  <div class="prob-row"><span class="label">瑞士胜</span><span class="bar-wrap"><span class="bar bar--home" style="width:62%">62%</span></span><span class="pct" style="color:var(--primary)">62%</span></div>
+  <div class="prob-row"><span class="label">平局</span><span class="bar-wrap"><span class="bar bar--draw" style="width:24%">24%</span></span><span class="pct">24%</span></div>
+  <div class="prob-row"><span class="label">波黑胜</span><span class="bar-wrap"><span class="bar bar--away" style="width:14%">14%</span></span><span class="pct" style="color:var(--danger)">14%</span></div>
+</div>
+
+<div class="scripts">
+  <div class="script-card script-card--a">
+    <div class="script-title">🅰 瑞士掌控 (44%) — 稳守反击教科书</div>
+    <div class="script-meta">扎卡坐镇中场控制节奏，瑞士利用波黑锋线缺阵大胆前压。恩博洛+恩多耶边路冲击。1-0, 2-0, 2-1</div>
+    <div class="script-meta">🎯 半全场: 胜胜/平胜 | 波黑无正印前锋=反击威胁大减</div>
+  </div>
+  <div class="script-card script-card--d">
+    <div class="script-title">🅳 沉闷消耗 (25%) — 波黑铁桶阵守平</div>
+    <div class="script-meta">波黑失去锋线核心后彻底摆大巴，4-5-1极致防守。瑞士久攻不下。0-0, 1-1</div>
+    <div class="script-meta">🎯 半全场: 平平/平胜 | 波黑战略: 拿1分就是重大胜利</div>
+  </div>
+  <div class="script-card script-card--c">
+    <div class="script-title">🅲 波黑爆冷 (16%) — 定位球奇袭</div>
+    <div class="script-meta">波黑利用定位球+身体对抗优势，科拉希纳茨(如通过体检)头球破门。瑞士久攻不下反被偷袭。0-1, 1-2</div>
+    <div class="script-meta">🎯 半全场: 平负/负负 | H2H: 2016年波黑曾客场2-0胜瑞士</div>
+  </div>
+  <div class="script-card script-card--b">
+    <div class="script-title">🅱 对攻开放 (15%) — 瑞士闪电进球打破平衡</div>
+    <div class="script-meta">瑞士早进球(<20')迫使波黑放弃大巴阵，比赛节奏加快。2-2, 3-1, 3-2</div>
+    <div class="script-meta">🎯 半全场: 胜胜/胜平 | 前提: 瑞士必须在15'前破门</div>
+  </div>
+</div>
+
+</div>
+</details>
+
+<!-- MATCH 2: Score + Goals + HTFT -->
+<details class="match-card" open>
+<summary><span class="teams">🇨🇭 vs 🇧🇦 — 比分&数据深度</span></summary>
+<div class="match-body">
+
+<div class="sec-title">🎯 比分概率热力图</div>
+<div class="score-grid-wrapper">
+<div class="score-grid">
+  <div class="hdr">H\A</div><div class="hdr">0</div><div class="hdr">1</div><div class="hdr">2</div><div class="hdr">3</div><div class="hdr">4+</div>
+  <div class="hdr">0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.16)">6.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.10)">3.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.05)">1.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.3</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.1</div>
+  <div class="hdr">1</div>
+  <div class="score-cell score-cell--best" style="background:rgba(37,99,235,.28)">11.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.18)">7.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.08)">2.4</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">0.6</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="hdr">2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.20)">8.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.14)">5.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.07)">2.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">0.6</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="hdr">3</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.08)">3.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.06)">2.4</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">1.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.3</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.00)">0.1</div>
+  <div class="hdr">4+</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">1.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.4</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.00)">0.1</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.00)">0.0</div>
+</div>
+</div>
+<div style="font-size:.72rem;color:var(--text-muted);margin-top:4px">🥇 最可能比分: <b style="color:var(--warning)">1:0 (11.2%)</b> · 🥈 2:0 (8.0%) · 🥉 1:1 (7.2%) · BTTS概率: 42%</div>
+
+<div class="sec-title">📊 总进球分布</div>
+<div class="goal-bars">
+  <div class="goal-bar-row"><span class="glabel">0</span><span class="gbar-wrap"><span class="gbar" style="width:6.5%;background:var(--primary)"></span></span><span class="gpct">6.5%</span></div>
+  <div class="goal-bar-row"><span class="glabel">1</span><span class="gbar-wrap"><span class="gbar" style="width:24%;background:var(--success)"></span></span><span class="gpct">24%</span></div>
+  <div class="goal-bar-row"><span class="glabel">2</span><span class="gbar-wrap"><span class="gbar" style="width:30%;background:var(--success)"></span></span><span class="gpct">30%</span></div>
+  <div class="goal-bar-row"><span class="glabel">3</span><span class="gbar-wrap"><span class="gbar" style="width:20%;background:var(--warning)"></span></span><span class="gpct">20%</span></div>
+  <div class="goal-bar-row"><span class="glabel">4</span><span class="gbar-wrap"><span class="gbar" style="width:11%;background:#EA580C"></span></span><span class="gpct">11%</span></div>
+  <div class="goal-bar-row"><span class="glabel">5</span><span class="gbar-wrap"><span class="gbar" style="width:5%;background:var(--danger)"></span></span><span class="gpct">5%</span></div>
+  <div class="goal-bar-row"><span class="glabel">6</span><span class="gbar-wrap"><span class="gbar" style="width:2.5%;background:var(--danger)"></span></span><span class="gpct">2.5%</span></div>
+  <div class="goal-bar-row"><span class="glabel">7+</span><span class="gbar-wrap"><span class="gbar" style="width:1%;background:var(--danger)"></span></span><span class="gpct">1%</span></div>
+</div>
+
+<div class="sec-title">🎯 半全场 9宫格分析</div>
+<div class="htft-grid">
+  <div class="htft-cell" style="background:var(--card-hover)"><b>FT↓ HT→</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>主队领先</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>半场平局</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>客队领先</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>主胜</b></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">胜胜</div><div class="htft-prob">38%</div><div class="htft-odds">@2.23 <span class="htft-edge">→+3.2%</span></div></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">平胜</div><div class="htft-prob">16%</div><div class="htft-odds">@3.80 <span class="htft-edge">→+2.4%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">负胜</div><div class="htft-prob">7%</div><div class="htft-odds">@13.00</div></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>平局</b></div>
+  <div class="htft-cell"><div class="htft-label">胜平</div><div class="htft-prob">4%</div><div class="htft-odds">@10.00</div></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">平平</div><div class="htft-prob">13%</div><div class="htft-odds">@5.20 <span class="htft-edge">→+2.0%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">负平</div><div class="htft-prob">5%</div><div class="htft-odds">@12.00</div></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>客胜</b></div>
+  <div class="htft-cell"><div class="htft-label">胜负</div><div class="htft-prob">2%</div><div class="htft-odds">@18.00</div></div>
+  <div class="htft-cell"><div class="htft-label">平负</div><div class="htft-prob">5%</div><div class="htft-odds">@9.00</div></div>
+  <div class="htft-cell"><div class="htft-label">负负</div><div class="htft-prob">8%</div><div class="htft-odds">@6.00</div></div>
+</div>
+
+<div class="sec-title">🎲 竞彩赔率 & 模型价值</div>
+<table class="odds-table">
+  <tr><th>玩法</th><th>选项</th><th>赔率</th><th>隐含概率</th><th>模型概率</th><th>价值</th><th>信心</th></tr>
+  <tr><td rowspan="3">胜平负</td><td>主胜</td><td>1.35</td><td>65.6%</td><td>62.0%</td><td class="edge-neg">-3.6%</td><td>⭐⭐</td></tr>
+  <tr style="background:rgba(34,197,94,.06)"><td>平局</td><td>4.10</td><td>21.6%</td><td>24.0%</td><td class="edge-pos">+2.4%</td><td>⭐⭐</td></tr>
+  <tr><td>客胜</td><td>6.90</td><td>12.8%</td><td>14.0%</td><td class="edge-pos">+1.2%</td><td>⭐</td></tr>
+  <tr><td rowspan="3">让球(-1)</td><td>让胜</td><td>2.23</td><td>—</td><td>—</td><td class="edge-pos">轻微+</td><td>⭐⭐</td></tr>
+  <tr><td>让平</td><td>3.35</td><td>—</td><td>—</td><td class="edge-neutral">—</td><td>—</td></tr>
+  <tr><td>让负</td><td>2.62</td><td>—</td><td>—</td><td class="edge-neutral">—</td><td>—</td></tr>
+  <tr><td rowspan="2">总进球</td><td>1球</td><td>~3.50</td><td>~29%</td><td>24%</td><td class="edge-neg">轻微-</td><td>⭐⭐</td></tr>
+  <tr><td>2球</td><td>~3.00</td><td>~33%</td><td>30%</td><td class="edge-neutral">平</td><td>⭐⭐⭐</td></tr>
+</table>
+
+<div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;font-size:.82rem">
+  <b>📋 本场结论:</b><br>
+  🟢 <b>最可能:</b> 瑞士小胜 (62%) · 1-0经典比分 · 总进球1-2球低比分局<br>
+  🟡 <b>价值点:</b> <span style="color:var(--success)">平局有+2.4%正价值!</span> 市场过度追捧瑞士 (隐含65.6% vs 模型62%)<br>
+  🔴 <b>关键不确定性:</b> 波黑锋线几乎全缺 → 但也意味着更可能死守求平; 瑞士破密集能力受考验
+</div>
+
+</div>
+</details>
+
+<!-- ==================== MATCH 3: CAN vs QAT ==================== -->
+<details class="match-card" open>
+<summary>
+  <span class="teams">🇨🇦 加拿大 vs 卡塔尔 🇶🇦</span>
+  <span class="time-badge">06:00 北京</span>
+</summary>
+<div class="match-body">
+
+<div class="group-strip">
+  <div style="font-weight:700;margin-bottom:6px;color:var(--primary)">📊 B组积分榜 · 东道主冲击首胜</div>
+  <table>
+    <tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>GD</th><th>分</th></tr>
+    <tr style="background:rgba(37,99,235,.08)"><td>1</td><td>🇨🇦 加拿大</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td><b>1</b></td></tr>
+    <tr style="background:rgba(37,99,235,.08)"><td>2</td><td>🇶🇦 卡塔尔</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td><b>1</b></td></tr>
+  </table>
+  <div class="note-row">🏠 <b>东道主优势:</b> 加拿大坐镇BC Place主场。取胜即可锁定前两名优势位置(积4分)。</div>
+  <div class="note-row">🔮 CAN下场: vs 🇨🇭瑞士 (同场温哥华) | QAT下场: vs 🇧🇦波黑 (西雅图)</div>
+  <div class="travel-row">🚌 CAN: 多伦多→温哥华 ~3400km (✈5h) ⚠️长途飞行 | QAT: 基地位于西海岸→温哥华短途</div>
+  <div class="warn-row">⚠️ 民间56%支持加拿大，但赔率隐含>71% —— 当日最大市场-民间分歧 (-20%)!</div>
+</div>
+
+<div class="weather-bar">
+  <span>🏟️ BC Place, 温哥华</span>
+  <span>🌡️ ~18°C</span>
+  <span>🏠 室内·空调</span>
+  <span>🌧️ 温哥华多云</span>
+</div>
+
+<div class="form-row">
+  <div class="form-team">
+    <div class="name">🇨🇦 加拿大 (FIFA #30 · ELO ~1720 · 主场)</div>
+    <div class="form-dots">
+      <span class="form-dot form-dot--d" title="vs BIH 1-1">D</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">⚽ 戴维斯(可能复出)·乔纳森·戴维锋线·尤斯塔基奥中场·马什高位逼抢4-4-2</div>
+  </div>
+  <div class="form-team">
+    <div class="name">🇶🇦 卡塔尔 (FIFA #55 · ELO ~1560 · 洛佩特吉执教)</div>
+    <div class="form-dots">
+      <span class="form-dot form-dot--d" title="vs SUI 1-1">D</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+      <span class="form-dot form-dot--l" title="热身">L</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--l" title="热身">L</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">⚽ 阿费夫+阿里双星 · 首轮逼平瑞士展现韧性 · 务实防反 · 定位球威胁(8个定位球进球/预选赛)</div>
+  </div>
+</div>
+
+<div class="prob-bars">
+  <div class="prob-row"><span class="label">加拿大胜</span><span class="bar-wrap"><span class="bar bar--home" style="width:65%">65%</span></span><span class="pct" style="color:var(--primary)">65%</span></div>
+  <div class="prob-row"><span class="label">平局</span><span class="bar-wrap"><span class="bar bar--draw" style="width:22%">22%</span></span><span class="pct">22%</span></div>
+  <div class="prob-row"><span class="label">卡塔尔胜</span><span class="bar-wrap"><span class="bar bar--away" style="width:13%">13%</span></span><span class="pct" style="color:var(--danger)">13%</span></div>
+</div>
+
+<div class="scripts">
+  <div class="script-card script-card--a">
+    <div class="script-title">🅰 加拿大碾压 (42%) — 东道主节奏压制</div>
+    <div class="script-meta">马什高位逼抢体系在BC Place主场发挥极致。戴维斯左路撕裂卡塔尔防线，戴维完成终结。2-0, 2-1, 3-0</div>
+    <div class="script-meta">🎯 半全场: 胜胜 | 加拿大早进球(<25')概率高</div>
+  </div>
+  <div class="script-card script-card--d">
+    <div class="script-title">🅳 卡塔尔死守 (24%) — 洛佩特吉大巴战术</div>
+    <div class="script-meta">卡塔尔复制首轮对瑞士的深度防守策略。收缩防线压缩空间，加拿大久攻不下。0-0, 1-1</div>
+    <div class="script-meta">🎯 半全场: 平平 | 卡塔尔成功经验: 首轮已逼平瑞士</div>
+  </div>
+  <div class="script-card script-card--b">
+    <div class="script-title">🅱 进球大战 (19%) — 双方互爆</div>
+    <div class="script-meta">加拿大高位防线被卡塔尔快速反击打穿，同时加拿大进攻线火力全开。2-2, 3-2</div>
+    <div class="script-meta">🎯 半全场: 胜胜/胜平 | 双方都有明显攻强守弱特征</div>
+  </div>
+  <div class="script-card script-card--c">
+    <div class="script-title">🅲 卡塔尔爆冷 (15%) — 阿费夫个人能力闪光</div>
+    <div class="script-meta">卡塔尔定位球/反击中阿费夫创造机会，加拿大5小时长途飞行后在60'后体能下降。0-1, 1-2</div>
+    <div class="script-meta">🎯 半全场: 平负 | ⚠️ CAN长途旅行疲劳是真实风险</div>
+  </div>
+</div>
+
+</div>
+</details>
+
+<!-- MATCH 3: Score + Goals + HTFT -->
+<details class="match-card" open>
+<summary><span class="teams">🇨🇦 vs 🇶🇦 — 比分&数据深度</span></summary>
+<div class="match-body">
+
+<div class="sec-title">🎯 比分概率热力图</div>
+<div class="score-grid-wrapper">
+<div class="score-grid">
+  <div class="hdr">H\A</div><div class="hdr">0</div><div class="hdr">1</div><div class="hdr">2</div><div class="hdr">3</div><div class="hdr">4+</div>
+  <div class="hdr">0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.14)">5.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.08)">3.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">1.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.3</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.00)">0.1</div>
+  <div class="hdr">1</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.20)">8.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.16)">6.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.07)">2.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="hdr">2</div>
+  <div class="score-cell score-cell--best" style="background:rgba(37,99,235,.26)">10.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.18)">7.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.08)">2.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">0.7</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="hdr">3</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.10)">4.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.07)">2.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.04)">1.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.4</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="hdr">4+</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.04)">1.6</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">1.1</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.00)">0.1</div>
+</div>
+</div>
+<div style="font-size:.72rem;color:var(--text-muted);margin-top:4px">🥇 最可能比分: <b style="color:var(--warning)">2:0 (10.5%)</b> · 🥈 1:0 (8.0%) · 🥉 2:1 (7.2%) · BTTS概率: 40%</div>
+
+<div class="sec-title">📊 总进球分布</div>
+<div class="goal-bars">
+  <div class="goal-bar-row"><span class="glabel">0</span><span class="gbar-wrap"><span class="gbar" style="width:5.5%;background:var(--primary)"></span></span><span class="gpct">5.5%</span></div>
+  <div class="goal-bar-row"><span class="glabel">1</span><span class="gbar-wrap"><span class="gbar" style="width:19%;background:var(--success)"></span></span><span class="gpct">19%</span></div>
+  <div class="goal-bar-row"><span class="glabel">2</span><span class="gbar-wrap"><span class="gbar" style="width:29%;background:var(--success)"></span></span><span class="gpct">29%</span></div>
+  <div class="goal-bar-row"><span class="glabel">3</span><span class="gbar-wrap"><span class="gbar" style="width:22%;background:var(--warning)"></span></span><span class="gpct">22%</span></div>
+  <div class="goal-bar-row"><span class="glabel">4</span><span class="gbar-wrap"><span class="gbar" style="width:13%;background:#EA580C"></span></span><span class="gpct">13%</span></div>
+  <div class="goal-bar-row"><span class="glabel">5</span><span class="gbar-wrap"><span class="gbar" style="width:7%;background:var(--danger)"></span></span><span class="gpct">7%</span></div>
+  <div class="goal-bar-row"><span class="glabel">6</span><span class="gbar-wrap"><span class="gbar" style="width:3%;background:var(--danger)"></span></span><span class="gpct">3%</span></div>
+  <div class="goal-bar-row"><span class="glabel">7+</span><span class="gbar-wrap"><span class="gbar" style="width:1.5%;background:var(--danger)"></span></span><span class="gpct">1.5%</span></div>
+</div>
+
+<div class="sec-title">🎯 半全场 9宫格分析</div>
+<div class="htft-grid">
+  <div class="htft-cell" style="background:var(--card-hover)"><b>FT↓ HT→</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>主队领先</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>半场平局</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>客队领先</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>主胜</b></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">胜胜</div><div class="htft-prob">40%</div><div class="htft-odds">@1.87 <span class="htft-edge">→+3.1%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">平胜</div><div class="htft-prob">17%</div><div class="htft-odds">@3.80</div></div>
+  <div class="htft-cell"><div class="htft-label">负胜</div><div class="htft-prob">7%</div><div class="htft-odds">@14.00</div></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>平局</b></div>
+  <div class="htft-cell"><div class="htft-label">胜平</div><div class="htft-prob">3%</div><div class="htft-odds">@12.00</div></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">平平</div><div class="htft-prob">12%</div><div class="htft-odds">@5.80 <span class="htft-edge">→+2.0%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">负平</div><div class="htft-prob">5%</div><div class="htft-odds">@12.00</div></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>客胜</b></div>
+  <div class="htft-cell"><div class="htft-label">胜负</div><div class="htft-prob">2%</div><div class="htft-odds">@20.00</div></div>
+  <div class="htft-cell"><div class="htft-label">平负</div><div class="htft-prob">5%</div><div class="htft-odds">@10.00</div></div>
+  <div class="htft-cell"><div class="htft-label">负负</div><div class="htft-prob">7%</div><div class="htft-odds">@7.00</div></div>
+</div>
+
+<div class="sec-title">🎲 竞彩赔率 & 模型价值 (⚠️ 最大分歧场次)</div>
+<table class="odds-table">
+  <tr><th>玩法</th><th>选项</th><th>赔率</th><th>隐含概率</th><th>模型概率</th><th>价值</th><th>信心</th></tr>
+  <tr><td rowspan="3">胜平负</td><td>主胜</td><td>1.24</td><td>71.4%</td><td>65.0%</td><td class="edge-neg">-6.4%</td><td>⭐⭐⭐</td></tr>
+  <tr style="background:rgba(34,197,94,.06)"><td>平局</td><td>4.70</td><td>18.9%</td><td>22.0%</td><td class="edge-pos">+3.1%</td><td>⭐⭐⭐</td></tr>
+  <tr style="background:rgba(34,197,94,.04)"><td>客胜</td><td>9.10</td><td>9.7%</td><td>13.0%</td><td class="edge-pos">+3.3%</td><td>⭐⭐</td></tr>
+  <tr><td rowspan="3">让球(-1)</td><td>让胜</td><td>1.87</td><td>—</td><td>—</td><td class="edge-neutral">—</td><td>—</td></tr>
+  <tr><td>让平</td><td>3.45</td><td>—</td><td>—</td><td class="edge-neutral">—</td><td>—</td></tr>
+  <tr><td style="background:rgba(34,197,94,.04)">让负</td><td>3.28</td><td>—</td><td>—</td><td class="edge-pos">+3.0%</td><td>⭐⭐⭐</td></tr>
+  <tr><td rowspan="2">总进球</td><td>2球</td><td>~3.20</td><td>~31%</td><td>29%</td><td class="edge-neutral">平</td><td>⭐⭐</td></tr>
+  <tr><td>3球</td><td>~3.50</td><td>~29%</td><td>22%</td><td class="edge-neg">轻微-</td><td>⭐⭐</td></tr>
+</table>
+
+<div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;font-size:.82rem">
+  <b>📋 本场结论 — ⚠️ 最高价值分歧场次:</b><br>
+  🟢 <b>最可能:</b> 加拿大胜 (65%) · 2-0 / 1-0 · 加拿大不败87%<br>
+  🟡 <b>核心价值:</b> <span style="color:var(--success)">平局+3.1% / 客胜+3.3% / 让负+3.0% 三项正价值!</span> 市场严重高估加拿大<br>
+  🔴 <b>风险警示:</b> 加拿大5小时长途飞行; 卡塔尔已证明能逼平强队(瑞士); 市场-民间分歧-20%为当日最大, 存在明显"热门陷阱"
+</div>
+
+</div>
+</details>
+
+<!-- ==================== MATCH 4: MEX vs KOR ==================== -->
+<details class="match-card" open>
+<summary>
+  <span class="teams">🇲🇽 墨西哥 vs 韩国 🇰🇷</span>
+  <span class="time-badge">09:00 北京</span>
+</summary>
+<div class="match-body">
+
+<div class="group-strip">
+  <div style="font-weight:700;margin-bottom:6px;color:var(--primary)">📊 A组积分榜 · 🏆 头名生死战!</div>
+  <table>
+    <tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>GF</th><th>GA</th><th>GD</th><th>分</th></tr>
+    <tr style="background:rgba(37,99,235,.08)"><td>1</td><td>🇲🇽 墨西哥</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2</td><td>0</td><td>+2</td><td><b>3</b></td></tr>
+    <tr style="background:rgba(37,99,235,.08)"><td>2</td><td>🇰🇷 韩国</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2</td><td>1</td><td>+1</td><td><b>3</b></td></tr>
+  </table>
+  <div class="note-row">🏆 <b>胜者提前晋级16强!</b> 两队首轮皆胜积3分，本场为A组头名决战。输球方最后一轮仍有主动权。</div>
+  <div class="note-row">🔮 MEX下场: vs 🇨🇿捷克 (墨西哥城) | KOR下场: vs 🇿🇦南非 (蒙特雷)</div>
+  <div class="travel-row">🚌 MEX: 主场作战 · 高原本土优势 | KOR: 全程驻扎墨西哥 · 专门高原集训</div>
+  <div class="warn-row">⚠️ MEX: 队长中卫蒙特斯红牌停赛! + 伤病困扰 | KOR: 孙兴慜+李刚仁+金玟哉全核心出战</div>
+  <div class="warn-row">⚡ 高原: 瓜达拉哈拉 ~1500m · KOR已提前进行高原适应训练</div>
+</div>
+
+<div class="weather-bar">
+  <span>🏟️ 阿克伦体育场, 瓜达拉哈拉</span>
+  <span>🌡️ ~28°C</span>
+  <span>⛰️ 海拔1500m</span>
+  <span>🌤️ 晴好</span>
+</div>
+
+<div class="form-row">
+  <div class="form-team">
+    <div class="name">🇲🇽 墨西哥 (FIFA #15 · ELO 1800 · €195M · 东道主)</div>
+    <div class="form-dots">
+      <span class="form-dot form-dot--w" title="vs RSA 2-0">W</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--l" title="热身">L</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">⚠️ 队长CB蒙特斯红牌停赛 · 伤病困扰 · 高压短传渗透 · 防空天然短板 · 快速转换</div>
+  </div>
+  <div class="form-team">
+    <div class="name">🇰🇷 韩国 (FIFA #25 · ELO 1754 · €142M)</div>
+    <div class="form-dots">
+      <span class="form-dot form-dot--w" title="vs CZE 2-1">W</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--d" title="热身">D</span>
+      <span class="form-dot form-dot--w" title="热身">W</span>
+      <span class="form-dot form-dot--l" title="热身">L</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">⚽ 孙兴慜+李刚仁+金玟哉顶级中轴 · 高原集训充分 · 跑动能力超强 · 中场控制+高效反击</div>
+  </div>
+</div>
+
+<div class="prob-bars">
+  <div class="prob-row"><span class="label">墨西哥胜</span><span class="bar-wrap"><span class="bar bar--home" style="width:42%">42%</span></span><span class="pct" style="color:var(--primary)">42%</span></div>
+  <div class="prob-row"><span class="label">平局</span><span class="bar-wrap"><span class="bar bar--draw" style="width:32%">32%</span></span><span class="pct">32%</span></div>
+  <div class="prob-row"><span class="label">韩国胜</span><span class="bar-wrap"><span class="bar bar--away" style="width:26%">26%</span></span><span class="pct" style="color:var(--danger)">26%</span></div>
+</div>
+
+<div class="scripts">
+  <div class="script-card script-card--d">
+    <div class="script-title">🅳 胶着僵局 (35%) — 上半场试探, 下半场谨慎</div>
+    <div class="script-meta">两队都不愿先犯错。墨西哥缺蒙特斯后防空虚但韩国也不急于进攻。0-0持续到60', 最后30分钟定胜负。1-1, 0-0</div>
+    <div class="script-meta">🎯 半全场: 平平/平胜 | 民间平局支持率39%反超主胜37%! 大众观点与模型一致</div>
+  </div>
+  <div class="script-card script-card--a">
+    <div class="script-title">🅰 墨西哥掌控 (28%) — 高原主场压制</div>
+    <div class="script-meta">墨西哥利用主场+高原适应优势压制节奏。前场高压迫使韩国失误，快节奏短传撕破防线。1-0, 2-1</div>
+    <div class="script-meta">🎯 半全场: 胜胜/平胜 | 前提: MEX必须保护脆弱的后防线</div>
+  </div>
+  <div class="script-card script-card--c">
+    <div class="script-title">🅲 韩国逆袭 (22%) — 孙兴慜反击致命</div>
+    <div class="script-meta">韩国精准打击墨西哥防空短板+蒙特斯缺阵的防线。孙兴慜+李刚仁快速反击效率极高。0-1, 1-2, 0-2</div>
+    <div class="script-meta">🎯 半全场: 平负/负负 | H2H: 韩国20年未赢墨西哥 — 纪录是会被打破的</div>
+  </div>
+  <div class="script-card script-card--b">
+    <div class="script-title">🅱 高强度对攻 (15%) — 早进球引爆全场</div>
+    <div class="script-meta">一方15'内破门 → 比赛彻底打开。双方防线都经不住持续冲击。2-2, 3-2, 2-3</div>
+    <div class="script-meta">🎯 半全场: 胜胜/胜平/平平 | 高原环境中后段体能下降 → 后30'进球概率↑</div>
+  </div>
+</div>
+
+</div>
+</details>
+
+<!-- MATCH 4: Score + Goals + HTFT -->
+<details class="match-card" open>
+<summary><span class="teams">🇲🇽 vs 🇰🇷 — 比分&数据深度</span></summary>
+<div class="match-body">
+
+<div class="sec-title">🎯 比分概率热力图</div>
+<div class="score-grid-wrapper">
+<div class="score-grid">
+  <div class="hdr">H\A</div><div class="hdr">0</div><div class="hdr">1</div><div class="hdr">2</div><div class="hdr">3</div><div class="hdr">4+</div>
+  <div class="hdr">0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.18)">7.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.14)">5.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.06)">2.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.6</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="hdr">1</div>
+  <div class="score-cell score-cell--best" style="background:rgba(37,99,235,.28)">10.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.22)">8.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.10)">3.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.04)">1.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.5</div>
+  <div class="hdr">2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.14)">5.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.15)">6.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.08)">2.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">1.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.4</div>
+  <div class="hdr">3</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.05)">2.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.06)">2.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">1.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="hdr">4+</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.8</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.03)">1.0</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.02)">0.5</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.01)">0.2</div>
+  <div class="score-cell" style="background:rgba(37,99,235,.00)">0.1</div>
+</div>
+</div>
+<div style="font-size:.72rem;color:var(--text-muted);margin-top:4px">🥇 最可能比分: <b style="color:var(--warning)">1:1 (10.8%)</b> · 🥈 1:0 (8.5%) · 🥉 0:0 (7.0%) · BTTS概率: 55%</div>
+
+<div class="sec-title">📊 总进球分布</div>
+<div class="goal-bars">
+  <div class="goal-bar-row"><span class="glabel">0</span><span class="gbar-wrap"><span class="gbar" style="width:7%;background:var(--primary)"></span></span><span class="gpct">7%</span></div>
+  <div class="goal-bar-row"><span class="glabel">1</span><span class="gbar-wrap"><span class="gbar" style="width:18%;background:var(--success)"></span></span><span class="gpct">18%</span></div>
+  <div class="goal-bar-row"><span class="glabel">2</span><span class="gbar-wrap"><span class="gbar" style="width:28%;background:var(--success)"></span></span><span class="gpct">28%</span></div>
+  <div class="goal-bar-row"><span class="glabel">3</span><span class="gbar-wrap"><span class="gbar" style="width:23%;background:var(--warning)"></span></span><span class="gpct">23%</span></div>
+  <div class="goal-bar-row"><span class="glabel">4</span><span class="gbar-wrap"><span class="gbar" style="width:14%;background:#EA580C"></span></span><span class="gpct">14%</span></div>
+  <div class="goal-bar-row"><span class="glabel">5</span><span class="gbar-wrap"><span class="gbar" style="width:6%;background:var(--danger)"></span></span><span class="gpct">6%</span></div>
+  <div class="goal-bar-row"><span class="glabel">6</span><span class="gbar-wrap"><span class="gbar" style="width:3%;background:var(--danger)"></span></span><span class="gpct">3%</span></div>
+  <div class="goal-bar-row"><span class="glabel">7+</span><span class="gbar-wrap"><span class="gbar" style="width:1%;background:var(--danger)"></span></span><span class="gpct">1%</span></div>
+</div>
+
+<div class="sec-title">🎯 半全场 9宫格分析 (⚡ 本场核心价值所在)</div>
+<div class="htft-grid">
+  <div class="htft-cell" style="background:var(--card-hover)"><b>FT↓ HT→</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>主队领先</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>半场平局</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>客队领先</b></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>主胜</b></div>
+  <div class="htft-cell"><div class="htft-label">胜胜</div><div class="htft-prob">24%</div><div class="htft-odds">@3.78</div></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">平胜</div><div class="htft-prob">12%</div><div class="htft-odds">@4.50 <span class="htft-edge">→+2.5%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">负胜</div><div class="htft-prob">5%</div><div class="htft-odds">@16.00</div></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>平局</b></div>
+  <div class="htft-cell"><div class="htft-label">胜平</div><div class="htft-prob">5%</div><div class="htft-odds">@11.00</div></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">平平</div><div class="htft-prob">18%</div><div class="htft-odds">@4.00 <span class="htft-edge">→+4.5%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">负平</div><div class="htft-prob">7%</div><div class="htft-odds">@9.00</div></div>
+  <div class="htft-cell" style="background:var(--card-hover)"><b>客胜</b></div>
+  <div class="htft-cell"><div class="htft-label">胜负</div><div class="htft-prob">3%</div><div class="htft-odds">@22.00</div></div>
+  <div class="htft-cell htft-cell--edge"><div class="htft-label">平负</div><div class="htft-prob">8%</div><div class="htft-odds">@7.50 <span class="htft-edge">→+2.2%</span></div></div>
+  <div class="htft-cell"><div class="htft-label">负负</div><div class="htft-prob">14%</div><div class="htft-odds">@3.86</div></div>
+</div>
+
+<div class="sec-title">🎲 竞彩赔率 & 模型价值 (⚡ 逆向价值场次)</div>
+<table class="odds-table">
+  <tr><th>玩法</th><th>选项</th><th>赔率</th><th>隐含概率</th><th>模型概率</th><th>价值</th><th>信心</th></tr>
+  <tr style="background:rgba(239,68,68,.06)"><td rowspan="3">胜平负</td><td>主胜</td><td>1.86</td><td>47.7%</td><td>42.0%</td><td class="edge-neg">-5.7%</td><td>⭐⭐⭐</td></tr>
+  <tr style="background:rgba(34,197,94,.06)"><td>平局</td><td>3.00</td><td>29.5%</td><td>32.0%</td><td class="edge-pos">+2.5%</td><td>⭐⭐⭐</td></tr>
+  <tr style="background:rgba(34,197,94,.04)"><td>客胜</td><td>3.87</td><td>22.9%</td><td>26.0%</td><td class="edge-pos">+3.1%</td><td>⭐⭐⭐</td></tr>
+  <tr><td rowspan="3">让球(-1)</td><td>让胜</td><td>3.78</td><td>—</td><td>—</td><td class="edge-neg">—</td><td>—</td></tr>
+  <tr style="background:rgba(34,197,94,.04)"><td>让平</td><td>3.45</td><td>—</td><td>—</td><td class="edge-pos">+2.0%</td><td>⭐⭐</td></tr>
+  <tr style="background:rgba(34,197,94,.08)"><td>让负</td><td>1.74</td><td>—</td><td>—</td><td class="edge-pos">+4.5%</td><td>⭐⭐⭐</td></tr>
+  <tr><td rowspan="2">总进球</td><td>2球</td><td>~3.00</td><td>~33%</td><td>28%</td><td class="edge-neg">轻微-</td><td>⭐⭐</td></tr>
+  <tr><td>1球</td><td>~4.00</td><td>~25%</td><td>18%</td><td class="edge-neg">-</td><td>⭐</td></tr>
+</table>
+
+<div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;font-size:.82rem">
+  <b>📋 本场结论 — ⚡ 当日最高价值逆向机会:</b><br>
+  🟢 <b>最可能:</b> 平局 (32%) · 1-1经典比分 · 韩国不败概率58% > 墨西哥胜42%<br>
+  🟡 <b>核心价值:</b> <span style="color:var(--success)">客胜+3.1% / 平局+2.5% / 让负+4.5%!</span> 市场严重低估韩国<br>
+  🔴 <b>关键风险:</b> 墨西哥蒙特斯红牌=防空缺口; 韩国高原专门训练消除劣势; 民间平局支持率39%超主胜37%<br>
+  ⚡ <b>逆向信号:</b> 市场开1.86墨西哥胜隐含47.7%, 模型仅42% — 这是典型的"主队光环"溢价
+</div>
+
+</div>
+</details>
+
+<!-- ==================== RISK RADAR ==================== -->
+<div class="sec-title" style="margin-top:24px">🛡️ 风险雷达 — 四场横评</div>
+<div class="risk-grid">
+  <div class="risk-item">
+    <div class="risk-label">🌧️ 天气风险</div>
+    <div class="risk-dots"><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--off"></span><span class="risk-dot risk-dot--off"></span><span class="risk-dot risk-dot--off"></span><span class="risk-dot risk-dot--off"></span></div>
+    <div style="font-size:.73rem;color:var(--text-secondary);margin-top:4px">仅亚特兰大场外暴雨，但顶棚关闭无影响。其他三场天气晴好。</div>
+  </div>
+  <div class="risk-item">
+    <div class="risk-label">🔄 轮换风险</div>
+    <div class="risk-dots"><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--off"></span><span class="risk-dot risk-dot--off"></span></div>
+    <div style="font-size:.73rem;color:var(--text-secondary);margin-top:4px">波黑锋线几乎全缺(Dzeko+Tabakovic); 加拿大Davies存疑; 墨西哥蒙特斯停赛+伤病</div>
+  </div>
+  <div class="risk-item">
+    <div class="risk-label">😴 疲劳/旅行风险</div>
+    <div class="risk-dots"><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--off"></span></div>
+    <div style="font-size:.73rem;color:var(--text-secondary);margin-top:4px">加拿大5h长途飞行; 捷克1200km; 墨西哥高原1500m; 韩国高原适应训练抵消部分影响</div>
+  </div>
+  <div class="risk-item">
+    <div class="risk-label">🎭 市场陷阱风险</div>
+    <div class="risk-dots"><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--off"></span></div>
+    <div style="font-size:.73rem;color:var(--text-secondary);margin-top:4px">加拿大(-20%民间vs市场分歧); 墨西哥(民间反押平局); 瑞士(过度受热) — 三场陷阱信号</div>
+  </div>
+  <div class="risk-item">
+    <div class="risk-label">🤖 模型不确定性</div>
+    <div class="risk-dots"><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--on"></span><span class="risk-dot risk-dot--off"></span><span class="risk-dot risk-dot--off"></span></div>
+    <div style="font-size:.73rem;color:var(--text-secondary);margin-top:4px">B组极度开放(四队同分); 波黑伤情不确定性高; ELO数据可能滞后于实际状态</div>
+  </div>
+</div>
+
+<!-- ==================== TICKET BUILDER ==================== -->
+<div class="sec-title" style="margin-top:24px">🎫 竞彩串关构建器</div>
+
+<div class="ticket-card">
+  <h3>🛡️ 稳健串关 (Conservative Accumulator)</h3>
+  <div style="font-size:.78rem;color:var(--text-secondary);margin-bottom:8px">策略: 仅选CORE场次 · 每条腿edge>0 · 多元市场</div>
+  <div class="ticket-leg"><span>① 捷克 vs 南非 — <b>主胜</b></span><span>@1.74</span></div>
+  <div class="ticket-leg"><span>② 瑞士 vs 波黑 — <b>总进球 2球</b></span><span>@3.00</span></div>
+  <div class="ticket-leg"><span>③ 加拿大 vs 卡塔尔 — <b>主胜</b></span><span>@1.24</span></div>
+  <div class="ticket-summary">
+    <div><span style="color:var(--text-muted)">综合赔率</span><span class="ts-val" style="color:var(--warning)">~6.47</span></div>
+    <div><span style="color:var(--text-muted)">风险等级</span><span class="ts-val" style="color:var(--success)">CORE</span></div>
+    <div><span style="color:var(--text-muted)">建议注码</span><span class="ts-val">1.5u</span></div>
+    <div><span style="color:var(--text-muted)">模型信心</span><span class="ts-val">⭐⭐⭐</span></div>
+  </div>
+</div>
+
+<div class="ticket-card">
+  <h3>💎 价值串关 (Value Accumulator)</h3>
+  <div style="font-size:.78rem;color:var(--text-secondary);margin-bottom:8px">策略: STANDARD+场次 · edge>0.03 · 含逆向选择 · 高赔率高回报</div>
+  <div class="ticket-leg"><span>① 瑞士 vs 波黑 — <b>平局</b></span><span>@4.10 <span style="color:var(--success)">+2.4%</span></span></div>
+  <div class="ticket-leg"><span>② 墨西哥 vs 韩国 — <b>韩国不败 (双选: 平+客胜)</b></span><span>@1.72 <span style="color:var(--success)">+3.1%</span></span></div>
+  <div class="ticket-leg"><span>③ 加拿大 vs 卡塔尔 — <b>让球(-1) 让负</b></span><span>@3.28 <span style="color:var(--success)">+3.0%</span></span></div>
+  <div class="ticket-summary">
+    <div><span style="color:var(--text-muted)">综合赔率</span><span class="ts-val" style="color:var(--warning)">~23.1</span></div>
+    <div><span style="color:var(--text-muted)">风险等级</span><span class="ts-val" style="color:var(--warning)">VOLATILE</span></div>
+    <div><span style="color:var(--text-muted)">建议注码</span><span class="ts-val">0.5u</span></div>
+    <div><span style="color:var(--text-muted)">模型信心</span><span class="ts-val">⭐⭐</span></div>
+  </div>
+</div>
+
+<div class="ticket-card">
+  <h3>🎯 单关精选 (Single Best Bet)</h3>
+  <div style="font-size:.78rem;color:var(--text-secondary);margin-bottom:8px">当日最高edge单项 · Kelly四分之一仓</div>
+  <div class="ticket-leg"><span>🇲🇽 vs 🇰🇷 — <b>韩国 胜平负-客胜</b></span><span>@3.87 <span style="color:var(--success)">+3.1% edge</span></span></div>
+  <div class="ticket-leg"><span>备选: 🇲🇽 vs 🇰🇷 — <b>让球(-1) 让负</b></span><span>@1.74 <span style="color:var(--success)">+4.5% edge</span></span></div>
+  <div class="ticket-summary">
+    <div><span style="color:var(--text-muted)">Kelly 1/4</span><span class="ts-val">1.8u (客胜)</span></div>
+    <div><span style="color:var(--text-muted)">风险等级</span><span class="ts-val" style="color:var(--warning)">VOLATILE</span></div>
+    <div><span style="color:var(--text-muted)">止损线</span><span class="ts-val" style="color:var(--danger)">-5u</span></div>
+  </div>
+</div>
+
+<!-- ==================== KEY RISKS DIGEST ==================== -->
+<div class="sec-title" style="margin-top:24px">⚠️ 关键风险摘要</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;font-size:.82rem">
+  <div style="background:var(--card);padding:14px;border-radius:10px;border-left:4px solid var(--danger)">
+    <b>🔴 热门陷阱: 加拿大</b><br>
+    市场隐含71.4%胜率 vs 模型65%。民间仅56%支持。<span style="color:var(--danger)">分歧-20%为当日最大。</span>卡塔尔已证明防守韧性。切忌重注加拿大让球。
+  </div>
+  <div style="background:var(--card);padding:14px;border-radius:10px;border-left:4px solid var(--warning)">
+    <b>🟡 逆向机会: 墨西哥vs韩国</b><br>
+    MEX队长中卫停赛+伤病; KOR高原特训抵消海拔劣势; 民间平局>主胜支持率。市场过度定价主队。
+  </div>
+  <div style="background:var(--card);padding:14px;border-radius:10px;border-left:4px solid var(--warning)">
+    <b>🟡 波黑伤病危机</b><br>
+    哲科+塔巴科维奇缺阵=攻击力锐减。但反而强化死守求平策略。<span style="color:var(--success)">平局@4.10有+2.4%价值。</span>
+  </div>
+  <div style="background:var(--card);padding:14px;border-radius:10px;border-left:4px solid var(--primary)">
+    <b>🔵 旅行疲劳因子</b><br>
+    加拿大5h飞行为当日最远旅行。B组还有: 波黑犹他→LA 1100km; SUI加州短途; QAT短途。长途飞行的球队下半场后段体能值得关注。
+  </div>
+</div>
+
+<!-- ==================== EXECUTIVE SUMMARY ==================== -->
+<div class="sec-title" style="margin-top:24px">📊 执行摘要</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;font-size:.82rem">
+  <div style="background:var(--card);padding:14px;border-radius:10px">
+    <div style="color:var(--success);font-weight:700;margin-bottom:4px">🟢 最稳定</div>
+    <b>瑞士 胜</b> (62%) · 波黑锋线危机+瑞士阵容齐整=最可预测场次
+  </div>
+  <div style="background:var(--card);padding:14px;border-radius:10px">
+    <div style="color:var(--danger);font-weight:700;margin-bottom:4px">🔴 最高冷门风险</div>
+    <b>墨西哥vs韩国</b> · 韩国不败概率58%超墨西哥胜42%。H2H 20年魔咒可能被打破
+  </div>
+  <div style="background:var(--card);padding:14px;border-radius:10px">
+    <div style="color:var(--primary);font-weight:700;margin-bottom:4px">🔵 最佳防守</div>
+    <b>瑞士vs波黑</b> · 总进球1-2球概率54%。低比分大战，防守主导
+  </div>
+  <div style="background:var(--card);padding:14px;border-radius:10px">
+    <div style="color:var(--warning);font-weight:700;margin-bottom:4px">🟡 最高进球</div>
+    <b>墨西哥vs韩国</b> · 双方防线均有明显缺口，BTTS 55%，总进球2-3最可能
+  </div>
+  <div style="background:var(--card);padding:14px;border-radius:10px">
+    <div style="color:var(--success);font-weight:700;margin-bottom:4px">💰 最佳单注</div>
+    <b>韩国 +0.5 (让负)</b> @1.74 — +4.5%模型价值，墨西哥防线残缺
+  </div>
+  <div style="background:var(--card);padding:14px;border-radius:10px">
+    <div style="color:var(--purple);font-weight:700;margin-bottom:4px">🟣 最佳赔率价值</div>
+    <b>韩国客胜</b> @3.87 (+3.1%) · <b>加拿大让负</b> @3.28 (+3.0%) · <b>瑞士平局</b> @4.10 (+2.4%)
+  </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<div class="footer">
+  <p><b>🏆 FIFA World Cup 2026 Betting Intelligence System</b></p>
+  <p>8层架构: Data → Model → Market → Scenario → Risk → Visual → Backtest ⇄ Learn</p>
+  <p style="margin-top:8px">⚠️ 免责声明: 本报告仅供研究参考，不构成投注建议。足球比赛结果具有高度不确定性。竞彩有风险，投注需谨慎。</p>
+  <p>模型版本: v2.4 · 数据截止: 2026-06-18 18:00 CST · 数据质量: 78% · 生成时间: 2026-06-18T18:00:00+08:00</p>
+  <p style="margin-top:8px;color:var(--text-muted)">本报告所有概率均为模型估计值，不保证准确性。历史回测样本量: 32场 · 模型Brier Score: 0.192 · 校准误差: 0.038</p>
+</div>
+
+</body>
+</html>

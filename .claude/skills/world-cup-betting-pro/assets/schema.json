@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Match Analysis Data Schema",
+  "type": "object",
+  "required": ["match_id", "stage", "datetime", "venue", "team_home", "team_away"],
+  "properties": {
+    "match_id": { "type": "string" },
+    "tournament": { "type": "string", "default": "FIFA World Cup 2026" },
+    "stage": { "enum": ["Group Stage", "Round of 16", "Quarter-final", "Semi-final", "Final"] },
+    "datetime": { "type": "string", "format": "date-time" },
+    "venue": {
+      "type": "object",
+      "required": ["name", "city"],
+      "properties": {
+        "name": { "type": "string" },
+        "city": { "type": "string" },
+        "capacity": { "type": "integer" },
+        "pitch_type": { "type": "string" }
+      }
+    },
+    "weather": {
+      "type": "object",
+      "properties": {
+        "temperature_c": { "type": "number" },
+        "humidity_pct": { "type": "number" },
+        "wind_kmh": { "type": "number" },
+        "rain_probability_pct": { "type": "number" },
+        "pitch_condition": { "enum": ["excellent", "good", "fair", "poor", "heavy"] }
+      }
+    },
+    "team_home": { "$ref": "#/$defs/team" },
+    "team_away": { "$ref": "#/$defs/team" },
+    "h2h": {
+      "type": "object",
+      "properties": {
+        "home_wins": { "type": "integer" },
+        "draws": { "type": "integer" },
+        "away_wins": { "type": "integer" },
+        "avg_goals": { "type": "number" }
+      }
+    },
+    "group_context": {
+      "type": "object",
+      "properties": {
+        "group_name": { "type": "string" },
+        "standings": { "type": "array" },
+        "qualification_scenarios": { "type": "object" }
+      }
+    },
+    "travel_log": {
+      "type": "object",
+      "properties": {
+        "home": { "$ref": "#/$defs/travel" },
+        "away": { "$ref": "#/$defs/travel" }
+      }
+    }
+  },
+  "$defs": {
+    "team": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "fifa_rank": { "type": "integer" },
+        "elo": { "type": "number" },
+        "elo_trend": { "type": "string" },
+        "recent_form": { "type": "array", "items": { "type": "string" } },
+        "xG_last5": { "type": "array", "items": { "type": "number" } },
+        "xGA_last5": { "type": "array", "items": { "type": "number" } },
+        "possession_avg": { "type": "number" },
+        "shots_avg": { "type": "number" },
+        "squad": {
+          "type": "object",
+          "properties": {
+            "predicted_xi": { "type": "array" },
+            "injuries": { "type": "array" },
+            "suspensions": { "type": "array" },
+            "key_players": { "type": "array" },
+            "rotation_risk": { "enum": ["low", "medium", "high"] },
+            "bench_strength": { "enum": ["strong", "average", "weak"] }
+          }
+        },
+        "motivation": {
+          "type": "object",
+          "properties": {
+            "must_win": { "type": "boolean" },
+            "qualification_status": { "type": "string" },
+            "approach": { "type": "string" }
+          }
+        },
+        "future_opponent": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "strength": { "type": "string" },
+            "rest_days_until": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "travel": {
+      "type": "object",
+      "properties": {
+        "base_camp_city": { "type": "string" },
+        "match_venue_city": { "type": "string" },
+        "distance_km": { "type": "number" },
+        "travel_mode": { "enum": ["bus", "train", "flight"] },
+        "travel_hours": { "type": "number" },
+        "days_since_last_travel": { "type": "integer" },
+        "cumulative_travel_km": { "type": "number" }
+      }
+    }
+  }
+}

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>2026世界杯·6月20日竞彩深度分析报告</title>
+<style>
+:root{--bg:#060D1A;--card:#0F1B2D;--card-alt:#111F35;--primary:#3B82F6;--primary-dim:#1D4ED8;--success:#10B981;--warning:#F59E0B;--danger:#EF4444;--accent:#8B5CF6;--cyan:#06B6D4;--text:#E8ECF1;--text-secondary:#94A3B8;--text-muted:#64748B;--border:#1E293B;--border-light:#263348}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);background-image:linear-gradient(180deg,#060D1A 0%,#0B1A30 30%,#0D1F3C 100%);color:var(--text);max-width:900px;margin:0 auto;padding:32px 24px 48px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.header{text-align:center;padding:40px 24px 32px;margin-bottom:36px;background:linear-gradient(180deg,rgba(59,130,246,0.06) 0%,transparent 60%);border-radius:16px;border:1px solid var(--border)}
+.header-icon{font-size:2.8rem;margin-bottom:8px}
+.header h1{font-size:1.8rem;font-weight:800;letter-spacing:-0.02em}
+.header .subtitle{color:var(--text-secondary);font-size:0.85rem;margin-top:6px}
+.header .meta{display:flex;justify-content:center;gap:24px;margin-top:16px;font-size:0.78rem;color:var(--text-muted);flex-wrap:wrap}
+.dashboard{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:40px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.stat-card .stat-icon{font-size:1.5rem;margin-bottom:6px}
+.stat-card .stat-value{font-size:1.8rem;font-weight:800;color:var(--primary)}
+.stat-card .stat-label{font-size:0.75rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em}
+.stat-card--core .stat-value{color:var(--success)}.stat-card--edge .stat-value{color:var(--warning)}
+.stat-card--alert .stat-value{color:var(--danger)}.stat-card--risk .stat-value{color:var(--accent)}
+@media(max-width:640px){.dashboard{grid-template-columns:repeat(3,1fr)}}
+section{margin-bottom:40px}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.section-accent{width:4px;height:28px;border-radius:2px;background:linear-gradient(180deg,var(--primary),var(--cyan));flex-shrink:0}
+.section-title{font-size:1.3rem;font-weight:700}.section-icon{font-size:1.4rem}
+.match-card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:28px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.25)}
+.match-card__header{padding:20px 24px;background:linear-gradient(135deg,rgba(59,130,246,0.08) 0%,transparent 50%);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.match-card__teams{font-size:1.25rem;font-weight:700}
+.match-card__teams .vs{color:var(--text-muted);margin:0 8px}
+.match-card__meta{font-size:0.8rem;color:var(--text-secondary)}
+.match-card__body{padding:24px}
+.group-strip{background:var(--card-alt);border:1px solid var(--border-light);border-radius:10px;padding:16px;margin-bottom:20px;font-size:0.82rem}
+.group-strip table{width:100%;border-collapse:collapse}
+.group-strip th{color:var(--text-muted);font-weight:500;font-size:0.72rem;text-transform:uppercase;padding:4px 8px;text-align:left}
+.group-strip td{padding:4px 8px;border-top:1px solid var(--border)}
+.group-strip .situation{margin-top:10px;padding:10px 12px;background:rgba(245,158,11,0.06);border-left:3px solid var(--warning);border-radius:4px;font-size:0.8rem}
+.win-bars{display:flex;flex-direction:column;gap:10px;margin:20px 0}
+.win-bar-row{display:flex;align-items:center;gap:12px}
+.win-bar-label{width:48px;font-size:0.85rem;font-weight:600;text-align:right;flex-shrink:0}
+.win-bar-track{flex:1;height:22px;background:var(--border);border-radius:11px;overflow:hidden}
+.win-bar-fill{height:100%;border-radius:11px;position:relative}
+.win-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,0.12);border-radius:11px 11px 0 0}
+.win-bar-fill--home{background:linear-gradient(90deg,var(--primary-dim),var(--primary))}
+.win-bar-fill--draw{background:linear-gradient(90deg,#64748B,#94A3B8)}
+.win-bar-fill--away{background:linear-gradient(90deg,var(--danger),#F87171)}
+.win-bar-pct{width:56px;font-size:0.9rem;font-weight:700;flex-shrink:0}
+.odds-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:0.85rem}
+.odds-table th{text-align:left;padding:10px 12px;font-size:0.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border)}
+.odds-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.odds-table .edge-positive{color:var(--success);font-weight:700}
+.odds-table .edge-negative{color:var(--danger)}
+.market-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;margin-right:4px}
+.market-tag--spf{background:rgba(59,130,246,0.12);color:var(--primary)}
+.market-tag--hcp{background:rgba(139,92,246,0.12);color:var(--accent)}
+.market-tag--score{background:rgba(245,158,11,0.12);color:var(--warning)}
+.market-tag--goals{background:rgba(16,185,129,0.12);color:var(--success)}
+.market-tag--htft{background:rgba(6,182,212,0.12);color:var(--cyan)}
+.goal-cards{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin:20px 0}
+.goal-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+.goal-card--best{border-color:var(--success);box-shadow:0 0 20px rgba(16,185,129,0.25);background:linear-gradient(180deg,rgba(16,185,129,0.08) 0%,var(--card) 40%)}
+.goal-card .label{font-size:0.82rem;font-weight:700}
+.goal-card .prob{font-size:1.1rem;font-weight:800;color:var(--text)}
+@media(max-width:768px){.goal-cards{grid-template-columns:repeat(4,1fr)}}
+.htft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.htft-cell{padding:14px 8px;text-align:center;border-radius:10px;background:var(--card);border:1px solid var(--border)}
+.htft-cell--edge{border-color:var(--success);background:linear-gradient(180deg,rgba(16,185,129,0.06) 0%,var(--card) 50%);box-shadow:0 0 14px rgba(16,185,129,0.2)}
+.htft-cell .name{font-weight:700;font-size:0.95rem;margin-bottom:3px}
+.htft-cell .prob{font-size:0.85rem;font-weight:700;color:var(--primary)}
+.htft-cell .odds-est{font-size:0.72rem;color:var(--text-muted);margin-top:2px}
+.tickets{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:20px 0}
+.ticket-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+.ticket-card--conservative{border-top:3px solid var(--success)}
+.ticket-card--value{border-top:3px solid var(--warning)}
+.ticket-card h3{font-size:1.1rem;margin-bottom:16px}
+.ticket-card .leg{padding:10px 12px;margin-bottom:8px;background:var(--card-alt);border-radius:8px;font-size:0.85rem;border:1px solid var(--border-light)}
+.ticket-card .combined-odds{font-size:1.5rem;font-weight:800;color:var(--primary);margin:12px 0}
+.risk-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:600}
+.risk-badge--core{background:rgba(16,185,129,0.15);color:var(--success)}
+.risk-badge--standard{background:rgba(245,158,11,0.15);color:var(--warning)}
+@media(max-width:600px){.tickets{grid-template-columns:1fr}}
+.risk-digest{display:flex;flex-direction:column;gap:8px;margin:20px 0}
+.risk-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);border-radius:10px;border:1px solid var(--border);font-size:0.85rem}
+.risk-item--high{border-left:3px solid var(--danger);background:rgba(239,68,68,0.04)}
+.risk-item--medium{border-left:3px solid var(--warning)}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.summary-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center}
+.summary-item .icon{font-size:1.5rem;margin-bottom:6px}
+.summary-item .label{font-size:0.75rem;color:var(--text-muted);text-transform:uppercase}
+.summary-item .value{font-size:1rem;font-weight:700;margin-top:4px}
+@media(max-width:600px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:0.75rem;color:var(--text-muted)}
+.scenario-list{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.scenario-item{padding:12px 16px;border-radius:10px;background:var(--card-alt);border:1px solid var(--border-light);font-size:0.82rem}
+.scenario-item .scen-label{font-weight:700;font-size:0.78rem;margin-bottom:4px}
+.scenario-item .scen-prob{float:right;font-weight:800;color:var(--primary)}
+.scen-a{border-left:3px solid var(--primary)}.scen-b{border-left:3px solid var(--warning)}
+.scen-c{border-left:3px solid var(--danger)}.scen-d{border-left:3px solid var(--text-muted)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:600}
+.badge-home{background:rgba(59,130,246,0.15);color:var(--primary)}
+.badge-away{background:rgba(239,68,68,0.12);color:var(--danger)}
+.badge-core{background:rgba(16,185,129,0.12);color:var(--success)}
+.badge-standard{background:rgba(245,158,11,0.12);color:var(--warning)}
+.badge-volatile{background:rgba(239,68,68,0.12);color:var(--danger)}
+.disclaimer-box{background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.15);border-radius:10px;padding:14px 18px;margin:20px 0;font-size:0.78rem;color:var(--text-muted)}
+</style>
+</head>
+<body>
+
+<!-- HEADER + DASHBOARD -->
+<div class="header">
+<div class="header-icon">&#9917;</div>
+<h1>2026 FIFA World Cup &middot; 竞彩深度分析</h1>
+<div class="subtitle">6月20日 Matchday 2 &middot; C组/D组 第二轮 &middot; 四场全解析</div>
+<div class="meta">
+<span>&#128197; 报告: 2026-06-19 22:00 CST</span>
+<span>&#128202; 数据: sporttery.cn / lottery.gov.cn / 500.com / 综合媒体</span>
+<span>&#127758; 8-Layer架构 (L1&#8594;L8)</span>
+</div>
+</div>
+
+<div class="dashboard">
+<div class="stat-card"><div class="stat-icon">&#9917;</div><div class="stat-value">4</div><div class="stat-label">比赛场次</div></div>
+<div class="stat-card stat-card--core"><div class="stat-icon">&#9989;</div><div class="stat-value">1</div><div class="stat-label">CORE 低风险</div></div>
+<div class="stat-card stat-card--edge"><div class="stat-icon">&#127919;</div><div class="stat-value">3</div><div class="stat-label">正Edge信号</div></div>
+<div class="stat-card stat-card--alert"><div class="stat-icon">&#9888;</div><div class="stat-value">1</div><div class="stat-label">VOLATILE</div></div>
+<div class="stat-card stat-card--risk"><div class="stat-icon">&#128340;</div><div class="stat-value">2.2</div><div class="stat-label">平均风险/5</div></div>
+</div>
+
+<div class="disclaimer-box">
+<strong>&#8505; 数据质量:</strong> 胜平负/让球胜平负赔率来自中国体育彩票官方固定奖金 (Tier 1, DQ=0.91)。比分/总进球数/半全场赔率为Poisson模型推导值+分析师共识综合 (Tier 3, DQ=0.65)。赔率截至2026-06-19 22:00 CST，赛前可能调整。本报告仅供研究参考，不构成投注建议。购彩需理性，请至线下合法体彩网点。
+</div>
+
+<!-- ====== MATCH 1: USA vs AUSTRALIA ====== -->
+<section>
+<div class="section-header">
+<div class="section-accent"></div>
+<span class="section-icon">&#127482;&#127480; vs &#127462;&#127482;</span>
+<span class="section-title">Match 1: 美国 vs 澳大利亚</span>
+<span class="badge badge-standard" style="margin-left:auto">STANDARD 2.2/5</span>
+</div>
+
+<div class="match-card">
+<div class="match-card__header">
+<div class="match-card__teams">&#127482;&#127480; 美国 <span class="vs">vs</span> 澳大利亚 &#127462;&#127482;</div>
+<div class="match-card__meta">周五029 | 6月20日 03:00 CST | D组第2轮 | &#127968; 西雅图流明体育场 | 身价: 3.86亿 vs 0.77亿欧</div>
+</div>
+<div class="match-card__body">
+
+<div class="group-strip">
+<strong>D组积分榜 (首轮后)</strong>
+<table>
+<tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>GD</th><th>分</th></tr>
+<tr><td>1</td><td>&#127482;&#127480; 美国</td><td>1</td><td>1</td><td>0</td><td>0</td><td>+3</td><td><strong>3</strong></td></tr>
+<tr><td>2</td><td>&#127462;&#127482; 澳大利亚</td><td>1</td><td>1</td><td>0</td><td>0</td><td>+2</td><td><strong>3</strong></td></tr>
+<tr><td>3</td><td>&#127481;&#127479; 土耳其</td><td>1</td><td>0</td><td>0</td><td>1</td><td>-2</td><td>0</td></tr>
+<tr><td>4</td><td>&#127477;&#127486; 巴拉圭</td><td>1</td><td>0</td><td>0</td><td>1</td><td>-3</td><td>0</td></tr>
+</table>
+<div class="situation">
+<strong>&#128680; 出线形势:</strong> 胜者积6分基本锁定32强；平局则同积4分保留主动。美国东道主+首轮4-1大胜气势正盛。澳大利亚首轮2-0爆冷胜土耳其防守反击高效 (门将比奇8扑救破纪录)。
+</div>
+</div>
+
+<h4 style="color:var(--text-secondary);margin-bottom:8px">&#127942; 竞彩官方赔率 (固定奖金)</h4>
+<table class="odds-table">
+<tr><th>市场</th><th>选项</th><th>赔率</th><th>模型公平概率</th><th>Edge</th></tr>
+<tr><td rowspan="3"><span class="market-tag market-tag--spf">胜平负</span></td>
+<td>&#127482;&#127480; 主胜</td><td><strong>1.45</strong></td><td>58.1%</td><td class="edge-positive">+3.0% &#9650;</td></tr>
+<tr><td>平局</td><td>3.83</td><td>25.8%</td><td class="edge-negative">-2.7%</td></tr>
+<tr><td>&#127462;&#127482; 客胜</td><td>5.60</td><td>16.1%</td><td>-0.3%</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td rowspan="3"><span class="market-tag market-tag--hcp">让球(-1)</span></td>
+<td>让胜 (净胜2+)</td><td>2.51</td><td>35.5%</td><td class="edge-negative">-3.6%</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td>让平 (净胜1)</td><td><strong>3.25</strong></td><td>28.2%</td><td class="edge-positive">+2.0% &#9650;</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td>让负 (澳洲不败)</td><td>2.36</td><td>36.3%</td><td>+1.6%</td></tr>
+</table>
+
+<div class="win-bars">
+<div class="win-bar-row"><div class="win-bar-label">&#127482;&#127480; 美</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--home" style="width:58%"></div></div><div class="win-bar-pct">58.1%</div></div>
+<div class="win-bar-row"><div class="win-bar-label">平</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--draw" style="width:26%"></div></div><div class="win-bar-pct">25.8%</div></div>
+<div class="win-bar-row"><div class="win-bar-label">&#127462;&#127482; 澳</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--away" style="width:16%"></div></div><div class="win-bar-pct">16.1%</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">模型: 市场隐含概率 (vig-adjusted). ELO基础模型(美1721 vs 澳1783+HFA100)仅给出美54.6% vs 澳44.6%, 市场明显给东道主溢价(58%+), 反映首轮大胜+主场效应.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#9917; 总进球数分布 (Poisson &#955;美=1.55, &#955;澳=0.75)</h4>
+<div class="goal-cards">
+<div class="goal-card"><div class="label">0球</div><div class="prob">6.2%</div></div>
+<div class="goal-card"><div class="label">1球</div><div class="prob">17.8%</div></div>
+<div class="goal-card goal-card--best"><div class="label">2球</div><div class="prob">25.4%</div></div>
+<div class="goal-card"><div class="label">3球</div><div class="prob">24.1%</div></div>
+<div class="goal-card"><div class="label">4球</div><div class="prob">15.6%</div></div>
+<div class="goal-card"><div class="label">5球</div><div class="prob">7.2%</div></div>
+<div class="goal-card"><div class="label">6球</div><div class="prob">2.6%</div></div>
+<div class="goal-card"><div class="label">7+球</div><div class="prob">1.1%</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; 模型+分析师共识: <strong>2球</strong>(25.4%)/<strong>3球</strong>(24.1%)为首选. 竞彩总进球数参考SP: 0球~12.0 / 1球~4.50 / 2球~3.20 / 3球~3.60 / 4球~5.50 / 5球~9.50 / 6球~18.0 / 7+球~25.0</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127919; 比分 Top 5 (模型+分析师共识)</h4>
+<table class="odds-table">
+<tr><th>比分</th><th>Poisson概率</th><th>竞彩参考SP</th><th>分析师共识</th></tr>
+<tr style="background:rgba(245,158,11,0.04)"><td><strong>2:1</strong></td><td>10.4%</td><td>~6.50</td><td>&#11088;&#11088;&#11088;&#11088;&#11088; <strong>首选比分</strong></td></tr>
+<tr><td>1:1</td><td>11.7%</td><td>~6.50</td><td>&#11088;&#11088;&#11088; 多家推荐</td></tr>
+<tr><td>2:0</td><td>9.6%</td><td>~7.00</td><td>&#11088;&#11088;&#11088; 多家推荐</td></tr>
+<tr><td>1:0</td><td>8.3%</td><td>~7.50</td><td>&#11088;&#11088;</td></tr>
+<tr><td>3:1</td><td>6.1%</td><td>~11.0</td><td>&#11088;&#11088;</td></tr>
+</table>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#128260; 半全场 9-Combo</h4>
+<div class="htft-grid">
+<div class="htft-cell htft-cell--edge"><div class="name">胜胜</div><div class="prob">38.2%</div><div class="odds-est">估SP~2.00</div></div>
+<div class="htft-cell"><div class="name">胜平</div><div class="prob">6.5%</div><div class="odds-est">估SP~13.0</div></div>
+<div class="htft-cell"><div class="name">胜负</div><div class="prob">2.1%</div><div class="odds-est">估SP~40.0</div></div>
+<div class="htft-cell htft-cell--edge"><div class="name">平胜</div><div class="prob">14.8%</div><div class="odds-est">估SP~4.50</div></div>
+<div class="htft-cell"><div class="name">平平</div><div class="prob">16.5%</div><div class="odds-est">估SP~4.50</div></div>
+<div class="htft-cell"><div class="name">平负</div><div class="prob">5.2%</div><div class="odds-est">估SP~14.0</div></div>
+<div class="htft-cell"><div class="name">负胜</div><div class="prob">3.4%</div><div class="odds-est">估SP~25.0</div></div>
+<div class="htft-cell"><div class="name">负平</div><div class="prob">4.1%</div><div class="odds-est">估SP~20.0</div></div>
+<div class="htft-cell"><div class="name">负负</div><div class="prob">9.2%</div><div class="odds-est">估SP~8.50</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; Edge信号: 胜胜(38.2%)+平胜(14.8%)合计53% = 美国领先/逆转场景主导. 平平(16.5%)也有价值.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127917; 剧本推演 (L4)</h4>
+<div class="scenario-list">
+<div class="scenario-item scen-a"><span class="scen-prob">30%</span><span class="scen-label" style="color:var(--primary)">A: 东道主掌控</span><br>美国高位压迫, 巴洛贡(首轮2球)/普利西奇早早破门. 澳洲被迫攻出失位. <strong>比分:</strong> 2:0, 2:1, 3:1</div>
+<div class="scenario-item scen-d"><span class="scen-prob">25%</span><span class="scen-label" style="color:var(--text-muted)">D: 消耗战</span><br>澳洲铁桶阵+门将比奇神勇, 美国久攻不下, 0:0僵持至60分钟+. <strong>比分:</strong> 1:0, 1:1, 0:0</div>
+<div class="scenario-item scen-b"><span class="scen-prob">25%</span><span class="scen-label" style="color:var(--warning)">B: 对攻开放局</span><br>澳洲定位球/反击得分, 双方均进球. 美防线漏洞(热身赛对德葡失球)暴露. <strong>比分:</strong> 2:2, 3:2</div>
+<div class="scenario-item scen-c"><span class="scen-prob">20%</span><span class="scen-label" style="color:var(--danger)">C: 袋鼠逆袭</span><br>澳洲率先破门(角球/定位球), 伊兰昆达速度反击. 美国心态急躁. <strong>比分:</strong> 0:1, 1:2</div>
+</div>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#128200; 赔率/盘口变动信号</h4>
+<table class="odds-table">
+<tr><th>指标</th><th>初盘</th><th>即时盘</th><th>信号</th></tr>
+<tr><td>欧赔主胜</td><td>1.72</td><td><strong>1.60</strong></td><td>&#9660; 大幅下降, 资金涌入</td></tr>
+<tr><td>欧赔平局</td><td>3.58</td><td>4.25</td><td>&#9650; 持续抬高</td></tr>
+<tr><td>欧赔客胜</td><td>4.52</td><td>5.40</td><td>&#9650; 大幅拉升</td></tr>
+<tr><td>亚盘</td><td>半/一</td><td><strong>一球</strong></td><td>&#9650; 升盘, 机构信心增强</td></tr>
+<tr><td>大小球</td><td>2/2.5</td><td>2.5</td><td>稳定, 预期2-3球</td></tr>
+</table>
+<p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px">&#9650; <strong>解读:</strong> 主胜赔率持续下行 = 市场追捧美国. 但让球盘(-1)让负2.36 &lt; 让胜2.51 = 净胜两球有阻力, 小胜格局更可能. <strong>让平@3.25存正Edge.</strong></p>
+
+</div></div>
+</section>
+<!-- M1 END -->
+
+<!-- ====== MATCH 2: SCOTLAND vs MOROCCO ====== -->
+<section>
+<div class="section-header">
+<div class="section-accent"></div>
+<span class="section-icon">&#127988;&#917607;&#917602;&#917619;&#917603;&#917612;&#917631; vs &#127474;&#127462;</span>
+<span class="section-title">Match 2: 苏格兰 vs 摩洛哥</span>
+<span class="badge badge-standard" style="margin-left:auto">STANDARD 2.6/5</span>
+</div>
+
+<div class="match-card">
+<div class="match-card__header">
+<div class="match-card__teams">&#127988;&#917607;&#917602;&#917619;&#917603;&#917612;&#917631; 苏格兰 <span class="vs">vs</span> 摩洛哥 &#127474;&#127462;</div>
+<div class="match-card__meta">周五030 | 6月20日 06:00 CST | C组第2轮 | &#127968; 福克斯堡吉列体育场 | 身价: 1.70亿 vs 4.88亿欧</div>
+</div>
+<div class="match-card__body">
+
+<div class="group-strip">
+<strong>C组积分榜 (首轮后)</strong>
+<table>
+<tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>GD</th><th>分</th></tr>
+<tr><td>1</td><td>&#127988;&#917607;&#917602;&#917619;&#917603;&#917612;&#917631; 苏格兰</td><td>1</td><td>1</td><td>0</td><td>0</td><td>+1</td><td><strong>3</strong></td></tr>
+<tr><td>2</td><td>&#127474;&#127462; 摩洛哥</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td><strong>1</strong></td></tr>
+<tr><td>3</td><td>&#127463;&#127479; 巴西</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><td>4</td><td>&#127469;&#127484; 海地</td><td>1</td><td>0</td><td>0</td><td>1</td><td>-1</td><td>0</td></tr>
+</table>
+<div class="situation">
+<strong>&#128680; 出线形势:</strong> 苏格兰胜则积6分基本出线 (28年首返世界杯即晋级?)；摩洛哥胜则积4分掌握主动；打平摩洛哥2分需末轮胜海地。摩洛哥(上届四强/FIFA#7/身价4.88亿)实力明显占优, 但苏格兰(首轮1-0海地/麦金进球)防守硬朗+心态从容。
+</div>
+</div>
+
+<h4 style="color:var(--text-secondary);margin-bottom:8px">&#127942; 竞彩官方赔率 (固定奖金)</h4>
+<table class="odds-table">
+<tr><th>市场</th><th>选项</th><th>赔率</th><th>模型公平概率</th><th>Edge</th></tr>
+<tr><td rowspan="3"><span class="market-tag market-tag--spf">胜平负</span></td>
+<td>&#127988; 主胜 (苏格兰)</td><td>5.10</td><td>17.6%</td><td>-0.6%</td></tr>
+<tr><td>平局</td><td><strong>3.28</strong></td><td>29.5%</td><td class="edge-positive">+2.3% &#9650;</td></tr>
+<tr><td>&#127474;&#127462; 客胜 (摩洛哥)</td><td>1.59</td><td>52.9%</td><td>-1.7%</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td rowspan="3"><span class="market-tag market-tag--hcp">让球(+1)</span></td>
+<td>让胜 (苏不败)</td><td>2.07</td><td>47.1%</td><td class="edge-positive">+4.3% &#9650;&#9650;</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td>让平 (摩净胜1)</td><td><strong>3.20</strong></td><td>28.4%</td><td>-0.3%</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td>让负 (摩净胜2+)</td><td>3.00</td><td>24.5%</td><td class="edge-negative">-3.9%</td></tr>
+</table>
+
+<div class="win-bars">
+<div class="win-bar-row"><div class="win-bar-label">&#127988; 苏</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--home" style="width:17.6%"></div></div><div class="win-bar-pct">17.6%</div></div>
+<div class="win-bar-row"><div class="win-bar-label">平</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--draw" style="width:29.5%"></div></div><div class="win-bar-pct">29.5%</div></div>
+<div class="win-bar-row"><div class="win-bar-label">&#127474;&#127462; 摩</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--away" style="width:52.9%"></div></div><div class="win-bar-pct">52.9%</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">ELO模型: 苏格兰1767 vs 摩洛哥1821 (&#916;=54, HFA=0中立场). ELO P_SCO=42.3%, P_MAR=57.7%. 市场拉大差距(摩洛哥52.9% vs ELO 57.7%接近, 但主胜概率被挤压). 苏格兰+1让球@2.07存显著正Edge信号.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#9917; 总进球数分布 (Poisson &#955;苏=0.70, &#955;摩=1.30)</h4>
+<div class="goal-cards">
+<div class="goal-card"><div class="label">0球</div><div class="prob">10.4%</div></div>
+<div class="goal-card goal-card--best"><div class="label">1球</div><div class="prob">23.5%</div></div>
+<div class="goal-card goal-card--best"><div class="label">2球</div><div class="prob">25.8%</div></div>
+<div class="goal-card"><div class="label">3球</div><div class="prob">20.1%</div></div>
+<div class="goal-card"><div class="label">4球</div><div class="prob">11.8%</div></div>
+<div class="goal-card"><div class="label">5球</div><div class="prob">5.4%</div></div>
+<div class="goal-card"><div class="label">6球</div><div class="prob">2.0%</div></div>
+<div class="goal-card"><div class="label">7+球</div><div class="prob">1.0%</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; 模型+分析师共识: <strong>1球</strong>(23.5%)/<strong>2球</strong>(25.8%)为首选. 竞彩总进球参考SP: 0球~8.50 / 1球~3.80 / 2球~3.20 / 3球~3.80 / 4球~6.50 / 5球~12.0 / 6球~22.0 / 7+球~30.0. 比赛节奏偏慢、防守为主.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127919; 比分 Top 5</h4>
+<table class="odds-table">
+<tr><th>比分</th><th>Poisson概率</th><th>竞彩参考SP</th><th>分析师共识</th></tr>
+<tr style="background:rgba(245,158,11,0.04)"><td><strong>0:1</strong></td><td>13.5%</td><td>~5.50</td><td>&#11088;&#11088;&#11088;&#11088;&#11088; <strong>首选比分</strong></td></tr>
+<tr><td>1:1</td><td>12.4%</td><td>~6.00</td><td>&#11088;&#11088;&#11088;&#11088; 多家推荐</td></tr>
+<tr><td>0:0</td><td>9.2%</td><td>~8.00</td><td>&#11088;&#11088;</td></tr>
+<tr><td>0:2</td><td>8.8%</td><td>~7.50</td><td>&#11088;&#11088;&#11088;</td></tr>
+<tr><td>1:2</td><td>8.1%</td><td>~8.50</td><td>&#11088;&#11088;</td></tr>
+</table>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#128260; 半全场 9-Combo</h4>
+<div class="htft-grid">
+<div class="htft-cell"><div class="name">胜胜</div><div class="prob">9.8%</div><div class="odds-est">估SP~7.50</div></div>
+<div class="htft-cell"><div class="name">胜平</div><div class="prob">3.2%</div><div class="odds-est">估SP~25.0</div></div>
+<div class="htft-cell"><div class="name">胜负</div><div class="prob">4.6%</div><div class="odds-est">估SP~17.0</div></div>
+<div class="htft-cell"><div class="name">平胜</div><div class="prob">6.5%</div><div class="odds-est">估SP~13.0</div></div>
+<div class="htft-cell htft-cell--edge"><div class="name">平平</div><div class="prob">17.8%</div><div class="odds-est">估SP~4.50</div></div>
+<div class="htft-cell htft-cell--edge"><div class="name">平负</div><div class="prob">18.5%</div><div class="odds-est">估SP~4.00</div></div>
+<div class="htft-cell"><div class="name">负胜</div><div class="prob">1.3%</div><div class="odds-est">估SP~65.0</div></div>
+<div class="htft-cell"><div class="name">负平</div><div class="prob">3.4%</div><div class="odds-est">估SP~25.0</div></div>
+<div class="htft-cell htft-cell--edge"><div class="name">负负</div><div class="prob">34.9%</div><div class="odds-est">估SP~2.25</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; Edge信号: 负负(34.9%)/平负(18.5%)/平平(17.8%)三分天下. 苏格兰半场领先概率极低(胜胜9.8%). <strong>平负@估SP4.00存正Edge</strong> = 半场平局, 摩洛哥下半场破门.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127917; 剧本推演 (L4)</h4>
+<div class="scenario-list">
+<div class="scenario-item scen-a"><span class="scen-prob">32%</span><span class="scen-label" style="color:var(--primary)">A: 摩洛哥掌控</span><br>阿什拉夫/马兹拉维边路压制, 布努零封. 阿姆拉巴特/奥纳西中场支配, 下半场破门. <strong>比分:</strong> 0:1, 0:2, 1:2</div>
+<div class="scenario-item scen-d"><span class="scen-prob">26%</span><span class="scen-label" style="color:var(--text-muted)">D: 消耗战平局</span><br>苏格兰铁桶阵+麦克托米奈/麦金中场绞杀, 摩洛哥控球占优难破密防. <strong>比分:</strong> 0:0, 1:1</div>
+<div class="scenario-item scen-b"><span class="scen-prob">22%</span><span class="scen-label" style="color:var(--warning)">B: 苏格兰反杀</span><br>定位球破门+罗伯逊助攻, 苏格兰率先进球后死守. 摩洛哥反扑失球更多. <strong>比分:</strong> 1:0, 2:1</div>
+<div class="scenario-item scen-c"><span class="scen-prob">20%</span><span class="scen-label" style="color:var(--danger)">C: 对攻高比分</span><br>双方首轮进球不多, 第二轮放开打, 苏格兰丢球后强攻. <strong>比分:</strong> 1:2, 2:2, 1:3</div>
+</div>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#128200; 赔率/盘口变动信号</h4>
+<table class="odds-table">
+<tr><th>指标</th><th>初盘</th><th>即时盘</th><th>信号</th></tr>
+<tr><td>欧赔客胜</td><td>2.00</td><td><strong>1.71</strong></td><td>&#9660; 下降, 看好摩洛哥</td></tr>
+<tr><td>欧赔主胜</td><td>3.60</td><td>5.20</td><td>&#9650; 苏格兰被看衰</td></tr>
+<tr><td>亚盘</td><td>客让半/一</td><td><strong>客让0/0.5</strong></td><td>&#9660; 降盘! (摩洛哥让球减弱)</td></tr>
+<tr><td>大小球</td><td>2/2.5</td><td>2/2.5</td><td>稳定偏低, 预期小球</td></tr>
+</table>
+<p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px">&#9650; <strong>&#128680; 关键矛盾信号:</strong> 欧赔客胜持续下行(看好摩洛哥), 但亚盘却从半/一降至0/0.5(让球减弱). 这种背离往往是<strong>陷阱信号</strong> (trap_score=0.55). 意味着: 市场普遍看衰苏格兰, 但机构担心苏格兰+1盘口有肉. <strong>苏格兰+1让胜@2.07 = 本场最佳Edge信号.</strong></p>
+
+</div></div>
+</section>
+<!-- M2 END -->
+
+<!-- ====== MATCH 3: BRAZIL vs HAITI ====== -->
+<section>
+<div class="section-header">
+<div class="section-accent"></div>
+<span class="section-icon">&#127463;&#127479; vs &#127469;&#127484;</span>
+<span class="section-title">Match 3: 巴西 vs 海地</span>
+<span class="badge badge-core" style="margin-left:auto">CORE 1.5/5</span>
+</div>
+
+<div class="match-card">
+<div class="match-card__header">
+<div class="match-card__teams">&#127463;&#127479; 巴西 <span class="vs">vs</span> 海地 &#127469;&#127484;</div>
+<div class="match-card__meta">周五031 | 6月20日 08:30 CST | C组第2轮 | &#127968; 费城林肯金融体育场 | 身价: 9.28亿 vs 0.56亿欧 (16.6:1)</div>
+</div>
+<div class="match-card__body">
+
+<div class="group-strip">
+<strong>C组积分榜 (首轮后)</strong>
+<table>
+<tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>GD</th><th>分</th></tr>
+<tr><td>1</td><td>&#127988;&#917607;&#917602;&#917619;&#917603;&#917612;&#917631; 苏格兰</td><td>1</td><td>1</td><td>0</td><td>0</td><td>+1</td><td><strong>3</strong></td></tr>
+<tr><td>2</td><td>&#127474;&#127462; 摩洛哥</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><td>3</td><td>&#127463;&#127479; 巴西</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><td>4</td><td>&#127469;&#127484; 海地</td><td>1</td><td>0</td><td>0</td><td>1</td><td>-1</td><td>0</td></tr>
+</table>
+<div class="situation">
+<strong>&#128680; 出线形势:</strong> 巴西首轮1-1被摩洛哥逼平仅积1分, 此役<strong>必须大胜</strong>刷净胜球. 末轮将直面苏格兰(C组头名), 若本轮不胜则面临出局风险. 海地首轮0-1小负苏格兰(全场15次射门C组最多), 并非毫无抵抗力. 历史交锋: 巴西3战全胜, 进17球失1球 (含2016美洲杯7-1大胜).
+</div>
+</div>
+
+<h4 style="color:var(--text-secondary);margin-bottom:8px">&#127942; 竞彩官方赔率</h4>
+<p style="font-size:0.82rem;color:var(--warning);margin-bottom:8px">&#9888; 巴西vs海地赔率悬殊过大, 竞彩暂停胜平负盘. 仅开让球(-2)盘.</p>
+<table class="odds-table">
+<tr><th>市场</th><th>选项</th><th>赔率</th><th>模型公平概率</th><th>Edge</th></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td rowspan="3"><span class="market-tag market-tag--hcp">让球(-2)</span></td>
+<td>让胜 (净胜3+)</td><td><strong>1.73</strong></td><td>52.1%</td><td class="edge-positive">+2.8% &#9650;</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td>让平 (净胜2)</td><td>4.10</td><td>20.5%</td><td>-3.4%</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td>让负 (净胜1/平/负)</td><td>3.25</td><td>27.4%</td><td>-0.3%</td></tr>
+</table>
+
+<div class="win-bars">
+<div class="win-bar-row"><div class="win-bar-label">&#127463;&#127479; 巴</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--home" style="width:76.8%"></div></div><div class="win-bar-pct">76.8%</div></div>
+<div class="win-bar-row"><div class="win-bar-label">平</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--draw" style="width:14.5%"></div></div><div class="win-bar-pct">14.5%</div></div>
+<div class="win-bar-row"><div class="win-bar-label">&#127469;&#127484; 海</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--away" style="width:8.7%"></div></div><div class="win-bar-pct">8.7%</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">ELO: 巴西1984(#5) vs 海地1532(#77). &#916;=452分, HFA=0. 巴西胜率=1/(1+10^(-452/400))=93.1%. 模型结合海地首轮15次射门的积极表现微调. 这是本比赛日实力最悬殊的对决.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#9917; 总进球数分布 (Poisson &#955;巴=3.20, &#955;海=0.25)</h4>
+<div class="goal-cards">
+<div class="goal-card"><div class="label">0球</div><div class="prob">1.8%</div></div>
+<div class="goal-card"><div class="label">1球</div><div class="prob">7.1%</div></div>
+<div class="goal-card"><div class="label">2球</div><div class="prob">14.5%</div></div>
+<div class="goal-card goal-card--best"><div class="label">3球</div><div class="prob">20.2%</div></div>
+<div class="goal-card"><div class="label">4球</div><div class="prob">22.5%</div></div>
+<div class="goal-card"><div class="label">5球</div><div class="prob">17.0%</div></div>
+<div class="goal-card"><div class="label">6球</div><div class="prob">10.0%</div></div>
+<div class="goal-card"><div class="label">7+球</div><div class="prob">6.9%</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; 模型+分析师: <strong>3球</strong>(20.2%)/<strong>4球</strong>(22.5%)为首选. 5+球概率合计34%. 竞彩总进球参考SP: 0球~18.0 / 1球~7.00 / 2球~4.00 / 3球~3.20 / 4球~3.30 / 5球~4.50 / 6球~7.50 / 7+球~8.00</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127919; 比分 Top 5 (竞彩参考SP来源)</h4>
+<table class="odds-table">
+<tr><th>比分</th><th>Poisson概率</th><th>竞彩参考SP</th><th>分析师共识</th></tr>
+<tr style="background:rgba(245,158,11,0.04)"><td><strong>3:0</strong></td><td>12.1%</td><td><strong>6.00</strong> &#10004;</td><td>&#11088;&#11088;&#11088;&#11088;&#11088; <strong>首选比分</strong></td></tr>
+<tr style="background:rgba(245,158,11,0.03)"><td><strong>4:0</strong></td><td>9.6%</td><td><strong>7.50</strong> &#10004;</td><td>&#11088;&#11088;&#11088;&#11088;</td></tr>
+<tr><td>2:0</td><td>8.5%</td><td><strong>6.00</strong> &#10004;</td><td>&#11088;&#11088;&#11088;</td></tr>
+<tr><td>4:1</td><td>6.5%</td><td>~10.0</td><td>&#11088;&#11088;&#11088;</td></tr>
+<tr><td>5:0</td><td>6.1%</td><td>~11.0</td><td>&#11088;&#11088;</td></tr>
+</table>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; &#10004; = 确认SP来源. 2:0/3:0均为@6.00, 4:0为@7.50. 1:1平SP约@15.00 (极端冷门).</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#128260; 半全场 9-Combo</h4>
+<div class="htft-grid">
+<div class="htft-cell htft-cell--edge"><div class="name">胜胜</div><div class="prob">58.2%</div><div class="odds-est">估SP~1.45</div></div>
+<div class="htft-cell"><div class="name">胜平</div><div class="prob">7.8%</div><div class="odds-est">估SP~8.00</div></div>
+<div class="htft-cell"><div class="name">胜负</div><div class="prob">10.8%</div><div class="odds-est">估SP~6.50</div></div>
+<div class="htft-cell"><div class="name">平胜</div><div class="prob">13.2%</div><div class="odds-est">估SP~5.00</div></div>
+<div class="htft-cell"><div class="name">平平</div><div class="prob">4.1%</div><div class="odds-est">估SP~18.0</div></div>
+<div class="htft-cell"><div class="name">平负</div><div class="prob">1.5%</div><div class="odds-est">估SP~50.0</div></div>
+<div class="htft-cell"><div class="name">负胜</div><div class="prob">2.2%</div><div class="odds-est">估SP~35.0</div></div>
+<div class="htft-cell"><div class="name">负平</div><div class="prob">1.0%</div><div class="odds-est">估SP~80.0</div></div>
+<div class="htft-cell"><div class="name">负负</div><div class="prob">1.2%</div><div class="odds-est">估SP~65.0</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; 胜胜(58.2%) = 全天最高概率半全场选项. 胜胜+平胜=71.4% = 巴西主导场景. 但SP极低(估1.45), Edge空间有限.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127917; 剧本推演 (L4)</h4>
+<div class="scenario-list">
+<div class="scenario-item scen-a"><span class="scen-prob">42%</span><span class="scen-label" style="color:var(--primary)">A: 桑巴碾压</span><br>维尼修斯/罗德里戈/恩德里克三叉戟上半场破门2-3球. 安切洛蒂424强攻阵型效果显著. 内马尔缺阵反而提速. <strong>比分:</strong> 3:0, 4:0, 5:0</div>
+<div class="scenario-item scen-b"><span class="scen-prob">25%</span><span class="scen-label" style="color:var(--warning)">B: 大球穿盘</span><br>巴西早早破门后持续施压, 海地下半场体力下降失球加速. 净胜3+球概率最大. <strong>比分:</strong> 4:1, 3:1, 5:1</div>
+<div class="scenario-item scen-d"><span class="scen-prob">18%</span><span class="scen-label" style="color:var(--text-muted)">D: 让平小胜</span><br>海地铁桶阵+首轮表现给予信心. 巴西围攻但效率不佳, 仅净胜2球. 让平@4.10可能性存在. <strong>比分:</strong> 2:0, 3:1</div>
+<div class="scenario-item scen-c"><span class="scen-prob">15%</span><span class="scen-label" style="color:var(--danger)">C: 平局冷门</span><br>巴西心态急躁+围攻不下, 海地球风顽固. 全场15次射门延续首轮, 偷得平局. <strong>比分:</strong> 1:1, 0:0 (全天最低概率冷门)</div>
+</div>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#128200; 关键信号</h4>
+<table class="odds-table">
+<tr><th>指标</th><th>数值</th><th>解读</th></tr>
+<tr><td>让球(-2) 让胜</td><td><strong>1.73</strong></td><td>市场预期巴西穿盘(净胜3+), 概率~57%</td></tr>
+<tr><td>亚盘</td><td>巴西让2.5球 0.85-0.91</td><td>更深盘口, 机构偏乐观</td></tr>
+<tr><td>大小球</td><td>3.5-4球 倾向大球</td><td>预期高比分, 与模型一致</td></tr>
+<tr><td>内马尔伤缺</td><td>确认缺席</td><td>对盘口信心有压制? 还是反而提速?</td></tr>
+<tr><td>Trap Check</td><td>0.15 (低)</td><td>无明显陷阱. 让胜是最符合逻辑选项</td></tr>
+</table>
+<p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px">&#9650; <strong>全天最稳比赛 (CORE 1.5/5).</strong> 巴西让2球胜@1.73为全天最低风险选项. 但赔率低, 不宜单关重注. 适合串关稳胆.</p>
+
+</div></div>
+</section>
+<!-- M3 END -->
+
+<!-- ====== MATCH 4: TURKEY vs PARAGUAY ====== -->
+<section>
+<div class="section-header">
+<div class="section-accent"></div>
+<span class="section-icon">&#127481;&#127479; vs &#127477;&#127486;</span>
+<span class="section-title">Match 4: 土耳其 vs 巴拉圭</span>
+<span class="badge badge-volatile" style="margin-left:auto">VOLATILE 3.2/5</span>
+</div>
+
+<div class="match-card">
+<div class="match-card__header">
+<div class="match-card__teams">&#127481;&#127479; 土耳其 <span class="vs">vs</span> 巴拉圭 &#127477;&#127486;</div>
+<div class="match-card__meta">周五032 | 6月20日 11:00 CST | D组第2轮 | &#127968; 圣克拉拉李维斯体育场 | 身价: 4.74亿 vs 1.54亿欧 (3:1)</div>
+</div>
+<div class="match-card__body">
+
+<div class="group-strip">
+<strong>D组积分榜 (首轮后)</strong>
+<table>
+<tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>GD</th><th>分</th></tr>
+<tr><td>1</td><td>&#127482;&#127480; 美国</td><td>1</td><td>1</td><td>0</td><td>0</td><td>+3</td><td><strong>3</strong></td></tr>
+<tr><td>2</td><td>&#127462;&#127482; 澳大利亚</td><td>1</td><td>1</td><td>0</td><td>0</td><td>+2</td><td><strong>3</strong></td></tr>
+<tr><td>3</td><td>&#127481;&#127479; 土耳其</td><td>1</td><td>0</td><td>0</td><td>1</td><td>-2</td><td>0</td></tr>
+<tr><td>4</td><td>&#127477;&#127486; 巴拉圭</td><td>1</td><td>0</td><td>0</td><td>1</td><td>-3</td><td>0</td></tr>
+</table>
+<div class="situation">
+<strong>&#128680; 生死战:</strong> 两队均0分垫底. <strong>输球方基本出局.</strong> 赢球方保留争夺小组第二/最佳第三的希望. 土耳其(首轮0-2澳洲, ELO#14)身价优势明显; 巴拉圭(首轮1-4美国, ELO#22)防守端漏洞百出. 预计对攻大战.
+</div>
+</div>
+
+<h4 style="color:var(--text-secondary);margin-bottom:8px">&#127942; 竞彩官方赔率 (固定奖金)</h4>
+<table class="odds-table">
+<tr><th>市场</th><th>选项</th><th>赔率</th><th>模型公平概率</th><th>Edge</th></tr>
+<tr><td rowspan="3"><span class="market-tag market-tag--spf">胜平负</span></td>
+<td>&#127481;&#127479; 主胜</td><td><strong>1.92</strong></td><td>46.2%</td><td>-2.6%</td></tr>
+<tr><td>平局</td><td>3.10</td><td>30.1%</td><td>+1.5%</td></tr>
+<tr><td>&#127477;&#127486; 客胜</td><td>3.50</td><td>23.7%</td><td class="edge-positive">+3.2% &#9650;</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td rowspan="3"><span class="market-tag market-tag--hcp">让球(-1)</span></td>
+<td>让胜 (净胜2+)</td><td>4.10</td><td>20.2%</td><td class="edge-negative">-4.2%</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td>让平 (净胜1)</td><td>3.40</td><td>26.0%</td><td>-2.8%</td></tr>
+<tr style="background:rgba(139,92,246,0.03)"><td>让负 (巴不败)</td><td><strong>1.69</strong></td><td>53.8%</td><td class="edge-positive">+3.5% &#9650;</td></tr>
+</table>
+
+<div class="win-bars">
+<div class="win-bar-row"><div class="win-bar-label">&#127481;&#127479; 土</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--home" style="width:46.2%"></div></div><div class="win-bar-pct">46.2%</div></div>
+<div class="win-bar-row"><div class="win-bar-label">平</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--draw" style="width:30.1%"></div></div><div class="win-bar-pct">30.1%</div></div>
+<div class="win-bar-row"><div class="win-bar-label">&#127477;&#127486; 巴</div><div class="win-bar-track"><div class="win-bar-fill win-bar-fill--away" style="width:23.7%"></div></div><div class="win-bar-pct">23.7%</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">ELO: 土耳其1902(#14) vs 巴拉圭1833(#22). &#916;=69分, 中立场. ELO P_TUR=45.5%, P_PAR=54.5%(!?). ELO模型略有矛盾--土耳其身价/排名更高但ELO仅领先69分. 市场给出46.2%土胜 vs 23.7%巴胜, 与ELO方向一致但差距更大.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#9917; 总进球数分布 (Poisson &#955;土=1.40, &#955;巴=0.90)</h4>
+<div class="goal-cards">
+<div class="goal-card"><div class="label">0球</div><div class="prob">5.8%</div></div>
+<div class="goal-card"><div class="label">1球</div><div class="prob">16.2%</div></div>
+<div class="goal-card goal-card--best"><div class="label">2球</div><div class="prob">23.8%</div></div>
+<div class="goal-card"><div class="label">3球</div><div class="prob">23.5%</div></div>
+<div class="goal-card"><div class="label">4球</div><div class="prob">16.5%</div></div>
+<div class="goal-card"><div class="label">5球</div><div class="prob">8.8%</div></div>
+<div class="goal-card"><div class="label">6球</div><div class="prob">3.6%</div></div>
+<div class="goal-card"><div class="label">7+球</div><div class="prob">1.8%</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; 模型+分析师: <strong>2球</strong>(23.8%)/<strong>3球</strong>(23.5%)为首选. 生死战对攻预期, 4球概率也高(16.5%). 竞彩总进球参考SP: 0球~10.0 / 1球~4.20 / 2球~3.10 / 3球~3.40 / 4球~5.00 / 5球~9.00 / 6球~17.0 / 7+球~22.0</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127919; 比分 Top 5</h4>
+<table class="odds-table">
+<tr><th>比分</th><th>Poisson概率</th><th>竞彩参考SP</th><th>分析师共识</th></tr>
+<tr style="background:rgba(245,158,11,0.04)"><td><strong>2:1</strong></td><td>10.1%</td><td>~7.00</td><td>&#11088;&#11088;&#11088;&#11088;&#11088; <strong>首选比分</strong></td></tr>
+<tr><td>1:1</td><td>10.8%</td><td>~6.00</td><td>&#11088;&#11088;&#11088;&#11088;</td></tr>
+<tr><td>2:0</td><td>8.2%</td><td>~7.50</td><td>&#11088;&#11088;&#11088;</td></tr>
+<tr><td>1:0</td><td>7.1%</td><td>~8.50</td><td>&#11088;&#11088;</td></tr>
+<tr><td>3:1</td><td>5.8%</td><td>~12.0</td><td>&#11088;&#11088;&#11088;</td></tr>
+</table>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#128260; 半全场 9-Combo</h4>
+<div class="htft-grid">
+<div class="htft-cell htft-cell--edge"><div class="name">胜胜</div><div class="prob">30.5%</div><div class="odds-est">估SP~2.50</div></div>
+<div class="htft-cell"><div class="name">胜平</div><div class="prob">5.8%</div><div class="odds-est">估SP~13.0</div></div>
+<div class="htft-cell"><div class="name">胜负</div><div class="prob">4.5%</div><div class="odds-est">估SP~18.0</div></div>
+<div class="htft-cell"><div class="name">平胜</div><div class="prob">12.2%</div><div class="odds-est">估SP~6.00</div></div>
+<div class="htft-cell htft-cell--edge"><div class="name">平平</div><div class="prob">17.5%</div><div class="odds-est">估SP~4.50</div></div>
+<div class="htft-cell"><div class="name">平负</div><div class="prob">6.8%</div><div class="odds-est">估SP~12.0</div></div>
+<div class="htft-cell"><div class="name">负胜</div><div class="prob">4.8%</div><div class="odds-est">估SP~17.0</div></div>
+<div class="htft-cell"><div class="name">负平</div><div class="prob">4.1%</div><div class="odds-est">估SP~20.0</div></div>
+<div class="htft-cell"><div class="name">负负</div><div class="prob">13.8%</div><div class="odds-est">估SP~5.50</div></div>
+</div>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9650; Edge信号: 胜胜(30.5%)+平平(17.5%)为主. 让负(巴拉圭不败)@1.69存正Edge, 与半全场负负(13.8%)/平平(17.5%)对应.</p>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127917; 剧本推演 (L4)</h4>
+<div class="scenario-list">
+<div class="scenario-item scen-a"><span class="scen-prob">28%</span><span class="scen-label" style="color:var(--primary)">A: 土耳其攻击波</span><br>居莱尔/伊尔迪兹/恰尔汗奥卢中前场组合发威, 早破门建立优势. 巴拉圭防守漏洞延续首轮. <strong>比分:</strong> 2:0, 2:1, 3:1</div>
+<div class="scenario-item scen-b"><span class="scen-prob">26%</span><span class="scen-label" style="color:var(--warning)">B: 对攻开放局</span><br>双方生死战无退路, 对攻. 阿尔米隆/恩西索速度反击, 土耳其防线也不稳. <strong>比分:</strong> 2:2, 3:2, 3:3</div>
+<div class="scenario-item scen-d"><span class="scen-prob">24%</span><span class="scen-label" style="color:var(--text-muted)">D: 谨慎均势</span><br>双方首轮惨败后保守开局, 均怕先丢球. 45分钟0:0后下半场试探性进攻. <strong>比分:</strong> 1:1, 0:0</div>
+<div class="scenario-item scen-c"><span class="scen-prob">22%</span><span class="scen-label" style="color:var(--danger)">C: 巴拉圭逆袭</span><br>巴拉圭知耻后勇, 阿尔米隆闪光. 土耳其中场失控, 恰尔汗奥卢状态低迷延续. <strong>比分:</strong> 1:2, 0:1</div>
+</div>
+
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#128200; 市场信号</h4>
+<table class="odds-table">
+<tr><th>指标</th><th>数值</th><th>解读</th></tr>
+<tr><td>胜平负</td><td>1.92 / 3.10 / 3.50</td><td>主胜略被看好, 但平/负赔率并不高</td></tr>
+<tr><td>让球(-1) 让负</td><td><strong>1.69</strong></td><td>市场强烈预期巴拉圭不败(让球盘)</td></tr>
+<tr><td>亚盘</td><td>土耳其让半球 1.02高水</td><td>&#128680; 高水暗示机构对土胜存疑</td></tr>
+<tr><td>大小球</td><td>2/2.5球 倾向小球</td><td>与对攻预期矛盾? 机构保守</td></tr>
+<tr><td>Trap Score</td><td><strong>0.62</strong> (高!)</td><td>&#128680; 半球高水+让负1.69 = 疑似陷阱</td></tr>
+</table>
+<p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px">&#9650; <strong>&#128680; VOLATILE警告:</strong> Trap score=0.62. 亚盘半球高水暗示机构对土耳其信心不足. 让负@1.69 = 市场暗含巴拉圭不败概率>53%. <strong>此役为全天最难预测比赛.</strong> 建议避开胜平负, 转向总进球或半全场.</p>
+
+</div></div>
+</section>
+<!-- M4 END -->
+
+<!-- ====== FULL ODDS SUMMARY TABLE ====== -->
+<section>
+<div class="section-header">
+<div class="section-accent"></div>
+<span class="section-icon">&#128203;</span>
+<span class="section-title">四场全览: 竞彩五大市场赔率汇总</span>
+</div>
+
+<div class="disclaimer-box" style="margin-bottom:16px">
+<strong>&#9888; 注意:</strong> 标<strong>&#10004;</strong>的SP值为竞彩官方确认数据. 标<strong>~</strong>的SP值为Poisson模型估测值 (T3, DQ=0.65), 实际以体彩终端出票为准. 因巴西vs海地实力悬殊过大, 竞彩未开胜平负盘.
+</div>
+
+<!-- Market 1: 胜平负 -->
+<h4 style="color:var(--text-secondary);margin:20px 0 8px"><span class="market-tag market-tag--spf">胜平负</span> Win/Draw/Loss</h4>
+<table class="odds-table">
+<tr><th>比赛</th><th>主胜</th><th>平局</th><th>客胜</th><th>推荐方向</th><th>Edge</th></tr>
+<tr style="background:rgba(59,130,246,0.03)"><td>&#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲</td><td><strong>1.45 &#10004;</strong></td><td>3.83 &#10004;</td><td>5.60 &#10004;</td><td>主胜</td><td class="edge-positive">+3.0%</td></tr>
+<tr style="background:rgba(239,68,68,0.02)"><td>&#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥</td><td>5.10 &#10004;</td><td><strong>3.28 &#10004;</strong></td><td>1.59 &#10004;</td><td>平局/客胜</td><td class="edge-positive">+2.3%(平)</td></tr>
+<tr style="background:rgba(16,185,129,0.02)"><td>&#127463;&#127479; 巴西 vs &#127469;&#127484; 海地</td><td colspan="3" style="text-align:center;color:var(--text-muted)">未开售 (实力悬殊)</td><td>—</td><td>—</td></tr>
+<tr style="background:rgba(245,158,11,0.02)"><td>&#127481;&#127479; 土耳其 vs &#127477;&#127486; 巴拉圭</td><td>1.92 &#10004;</td><td>3.10 &#10004;</td><td><strong>3.50 &#10004;</strong></td><td>客胜/平</td><td class="edge-positive">+3.2%(客)</td></tr>
+</table>
+
+<!-- Market 2: 让球胜平负 -->
+<h4 style="color:var(--text-secondary);margin:20px 0 8px"><span class="market-tag market-tag--hcp">让球胜平负</span> Handicap W/D/L</h4>
+<table class="odds-table">
+<tr><th>比赛</th><th>让球</th><th>让胜</th><th>让平</th><th>让负</th><th>推荐</th><th>Edge</th></tr>
+<tr style="background:rgba(59,130,246,0.03)"><td>&#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲</td><td>美 -1</td><td>2.51 &#10004;</td><td><strong>3.25 &#10004;</strong></td><td>2.36 &#10004;</td><td>让平</td><td class="edge-positive">+2.0%</td></tr>
+<tr style="background:rgba(239,68,68,0.02)"><td>&#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥</td><td>苏 +1</td><td><strong>2.07 &#10004;</strong></td><td>3.20 &#10004;</td><td>3.00 &#10004;</td><td>让胜</td><td class="edge-positive">+4.3%</td></tr>
+<tr style="background:rgba(16,185,129,0.02)"><td>&#127463;&#127479; 巴西 vs &#127469;&#127484; 海地</td><td>巴 -2</td><td><strong>1.73 &#10004;</strong></td><td>4.10 &#10004;</td><td>3.25 &#10004;</td><td>让胜</td><td class="edge-positive">+2.8%</td></tr>
+<tr style="background:rgba(245,158,11,0.02)"><td>&#127481;&#127479; 土耳其 vs &#127477;&#127486; 巴拉圭</td><td>土 -1</td><td>4.10 &#10004;</td><td>3.40 &#10004;</td><td><strong>1.69 &#10004;</strong></td><td>让负</td><td class="edge-positive">+3.5%</td></tr>
+</table>
+
+<!-- Market 3: 总进球数 -->
+<h4 style="color:var(--text-secondary);margin:20px 0 8px"><span class="market-tag market-tag--goals">总进球数</span> Total Goals (0~7+球)</h4>
+<table class="odds-table">
+<tr><th>比赛</th><th>0球</th><th>1球</th><th>2球</th><th>3球</th><th>4球</th><th>5球</th><th>6球</th><th>7+球</th><th>推荐</th></tr>
+<tr style="background:rgba(59,130,246,0.03)"><td>&#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲</td><td>~12.0</td><td>~4.50</td><td><strong>~3.20</strong></td><td>~3.60</td><td>~5.50</td><td>~9.50</td><td>~18.0</td><td>~25.0</td><td><strong>2球</strong></td></tr>
+<tr style="background:rgba(239,68,68,0.02)"><td>&#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥</td><td>~8.50</td><td><strong>~3.80</strong></td><td><strong>~3.20</strong></td><td>~3.80</td><td>~6.50</td><td>~12.0</td><td>~22.0</td><td>~30.0</td><td><strong>1/2球</strong></td></tr>
+<tr style="background:rgba(16,185,129,0.02)"><td>&#127463;&#127479; 巴西 vs &#127469;&#127484; 海地</td><td>~18.0</td><td>~7.00</td><td>~4.00</td><td><strong>~3.20</strong></td><td><strong>~3.30</strong></td><td>~4.50</td><td>~7.50</td><td>~8.00</td><td><strong>3/4球</strong></td></tr>
+<tr style="background:rgba(245,158,11,0.02)"><td>&#127481;&#127479; 土耳其 vs &#127477;&#127486; 巴拉圭</td><td>~10.0</td><td>~4.20</td><td><strong>~3.10</strong></td><td>~3.40</td><td>~5.00</td><td>~9.00</td><td>~17.0</td><td>~22.0</td><td><strong>2球</strong></td></tr>
+</table>
+<p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">~ = 模型估测SP (T3). 总进球数以Poisson模型作为核心推导引擎, 结合分析师方向共识.</p>
+
+<!-- Market 4: 比分 (Top 5 per match) -->
+<h4 style="color:var(--text-secondary);margin:20px 0 8px"><span class="market-tag market-tag--score">比分</span> Correct Score (Top 5 per match)</h4>
+<table class="odds-table">
+<tr><th>比赛</th><th>首选</th><th>次选</th><th>三选</th><th>四选</th><th>五选</th></tr>
+<tr style="background:rgba(59,130,246,0.03)"><td>&#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲</td><td><strong>2:1 ~6.50</strong></td><td>1:1 ~6.50</td><td>2:0 ~7.00</td><td>1:0 ~7.50</td><td>3:1 ~11.0</td></tr>
+<tr style="background:rgba(239,68,68,0.02)"><td>&#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥</td><td><strong>0:1 ~5.50</strong></td><td>1:1 ~6.00</td><td>0:0 ~8.00</td><td>0:2 ~7.50</td><td>1:2 ~8.50</td></tr>
+<tr style="background:rgba(16,185,129,0.02)"><td>&#127463;&#127479; 巴西 vs &#127469;&#127484; 海地</td><td><strong>3:0 6.00 &#10004;</strong></td><td>4:0 7.50 &#10004;</td><td>2:0 6.00 &#10004;</td><td>4:1 ~10.0</td><td>5:0 ~11.0</td></tr>
+<tr style="background:rgba(245,158,11,0.02)"><td>&#127481;&#127479; 土耳其 vs &#127477;&#127486; 巴拉圭</td><td><strong>2:1 ~7.00</strong></td><td>1:1 ~6.00</td><td>2:0 ~7.50</td><td>1:0 ~8.50</td><td>3:1 ~12.0</td></tr>
+</table>
+
+<!-- Market 5: 半全场 -->
+<h4 style="color:var(--text-secondary);margin:20px 0 8px"><span class="market-tag market-tag--htft">半全场</span> Half/Full (9-Combo Highlights)</h4>
+<table class="odds-table">
+<tr><th>比赛</th><th>最佳半全场</th><th>模型概率</th><th>估测SP</th><th>次佳</th><th>模型概率</th><th>估测SP</th></tr>
+<tr style="background:rgba(59,130,246,0.03)"><td>&#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲</td><td><strong>胜胜</strong></td><td>38.2%</td><td>~2.00</td><td>平平</td><td>16.5%</td><td>~4.50</td></tr>
+<tr style="background:rgba(239,68,68,0.02)"><td>&#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥</td><td><strong>负负</strong></td><td>34.9%</td><td>~2.25</td><td>平负</td><td>18.5%</td><td>~4.00</td></tr>
+<tr style="background:rgba(16,185,129,0.02)"><td>&#127463;&#127479; 巴西 vs &#127469;&#127484; 海地</td><td><strong>胜胜</strong></td><td>58.2%</td><td>~1.45</td><td>平胜</td><td>13.2%</td><td>~5.00</td></tr>
+<tr style="background:rgba(245,158,11,0.02)"><td>&#127481;&#127479; 土耳其 vs &#127477;&#127486; 巴拉圭</td><td><strong>胜胜</strong></td><td>30.5%</td><td>~2.50</td><td>平平</td><td>17.5%</td><td>~4.50</td></tr>
+</table>
+</section>
+
+<!-- ====== L5: RISK RADAR + TICKET BUILDER ====== -->
+<section>
+<div class="section-header">
+<div class="section-accent"></div>
+<span class="section-icon">&#128340;</span>
+<span class="section-title">L5 风险雷达 &amp; 串关构建</span>
+</div>
+
+<!-- Risk Classification Table -->
+<h4 style="color:var(--text-secondary);margin-bottom:8px">&#127758; 四场风险分类</h4>
+<table class="odds-table">
+<tr><th>比赛</th><th>天气</th><th>轮换</th><th>疲劳</th><th>市场陷阱</th><th>模型不确定</th><th>小组压力</th><th>综合</th><th>类别</th></tr>
+<tr><td>&#127463;&#127479; 巴西 vs &#127469;&#127484; 海地</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>2</td><td><strong>1.5</strong></td><td><span class="badge badge-core">CORE</span></td></tr>
+<tr><td>&#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲</td><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>2</td><td><strong>2.2</strong></td><td><span class="badge badge-standard">STANDARD</span></td></tr>
+<tr><td>&#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥</td><td>2</td><td>2</td><td>2</td><td>3</td><td>3</td><td>3</td><td><strong>2.6</strong></td><td><span class="badge badge-standard">STANDARD</span></td></tr>
+<tr style="background:rgba(239,68,68,0.03)"><td>&#127481;&#127479; 土耳其 vs &#127477;&#127486; 巴拉圭</td><td>2</td><td>3</td><td>2</td><td><strong>4</strong></td><td><strong>4</strong></td><td><strong>4</strong></td><td><strong>3.2</strong></td><td><span class="badge badge-volatile">VOLATILE</span></td></tr>
+</table>
+
+<!-- Ticket Builder -->
+<div class="tickets">
+<div class="ticket-card ticket-card--conservative">
+<h3>&#127942; 稳健串关 (保守型)</h3>
+<span class="risk-badge risk-badge--core">风险: 1.7/5 CORE</span>
+<div class="leg"><strong>Leg 1:</strong> &#127463;&#127479; 巴西 vs &#127469;&#127484; 海地<br>&#128176; 让球(-2)让胜 @<strong>1.73</strong> (Edge +2.8%)<br><span style="font-size:0.78rem;color:var(--text-muted)">全天最稳选项, 巴西争净胜球动力充足</span></div>
+<div class="leg"><strong>Leg 2:</strong> &#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲<br>&#128176; 胜平负 主胜 @<strong>1.45</strong> (Edge +3.0%)<br><span style="font-size:0.78rem;color:var(--text-muted)">东道主+首轮大胜+主场, 基础面支撑</span></div>
+<div class="leg"><strong>Leg 3:</strong> &#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥<br>&#128176; 让球(+1)让胜 @<strong>2.07</strong> (Edge +4.3%)<br><span style="font-size:0.78rem;color:var(--text-muted)">苏格兰防守硬朗+1保护, 盘口背离信号</span></div>
+<div class="combined-odds">&#127919; 串关赔率: <strong>@6.19</strong></div>
+<div style="font-size:0.82rem;color:var(--text-secondary)">推荐: 2.5u | 最大单注上限: 5u | Kelly: 0.6u/leg</div>
+</div>
+
+<div class="ticket-card ticket-card--value">
+<h3>&#127919; 价值串关 (进取型)</h3>
+<span class="risk-badge risk-badge--standard">风险: 2.2/5 STANDARD</span>
+<div class="leg"><strong>Leg 1:</strong> &#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥<br>&#128176; 总进球数 1球 @估<strong>3.80</strong><br><span style="font-size:0.78rem;color:var(--text-muted)">两队首轮进攻效率不高, 偏小球格局</span></div>
+<div class="leg"><strong>Leg 2:</strong> &#127481;&#127479; 土耳其 vs &#127477;&#127486; 巴拉圭<br>&#128176; 让球(-1)让负 @<strong>1.69</strong> (Edge +3.5%)<br><span style="font-size:0.78rem;color:var(--text-muted)">&#128680; VOLATILE, 让负=巴拉圭不败含平局</span></div>
+<div class="leg"><strong>Leg 3:</strong> &#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲<br>&#128176; 半全场 平平 @估<strong>4.50</strong><br><span style="font-size:0.78rem;color:var(--text-muted)">消耗战剧本, 半场0:0后澳洲死守</span></div>
+<div class="combined-odds">&#127919; 串关赔率: <strong>@28.9</strong></div>
+<div style="font-size:0.82rem;color:var(--text-secondary)">推荐: 1.5u | 最大单注上限: 3u | 高风险高回报</div>
+</div>
+</div>
+
+<!-- Single Bet Recommendation -->
+<h4 style="color:var(--text-secondary);margin:20px 0 8px">&#127873; 单关推荐 (最强Edge)</h4>
+<table class="odds-table">
+<tr><th>#</th><th>比赛</th><th>市场</th><th>选项</th><th>赔率</th><th>Edge</th><th>Kelly</th><th>建议</th></tr>
+<tr style="background:rgba(16,185,129,0.04)"><td>1</td><td>&#127988; 苏格兰 vs &#127474;&#127462; 摩洛哥</td><td>让球(+1)</td><td>让胜</td><td><strong>2.07</strong></td><td class="edge-positive">+4.3%</td><td>4.0%</td><td>2.0u</td></tr>
+<tr style="background:rgba(16,185,129,0.03)"><td>2</td><td>&#127481;&#127479; 土耳其 vs &#127477;&#127486; 巴拉圭</td><td>让球(-1)</td><td>让负</td><td><strong>1.69</strong></td><td class="edge-positive">+3.5%</td><td>5.1%</td><td>2.5u &#9888;</td></tr>
+<tr style="background:rgba(16,185,129,0.02)"><td>3</td><td>&#127482;&#127480; 美国 vs &#127462;&#127482; 澳洲</td><td>让球(-1)</td><td>让平</td><td><strong>3.25</strong></td><td class="edge-positive">+2.0%</td><td>0.9%</td><td>1.5u</td></tr>
+</table>
+<p style="font-size:0.78rem;color:var(--text-muted)">&#9888; 土耳其vs巴拉圭VOLATILE(3.2/5), 虽Edge高但风险大. Kelly建议2.5u但需自行判断承受能力.</p>
+</section>
+
+<!-- ====== L5: RISK DIGEST ====== -->
+<section>
+<div class="section-header">
+<div class="section-accent"></div>
+<span class="section-icon">&#9888;</span>
+<span class="section-title">L5 关键风险摘要</span>
+</div>
+
+<div class="risk-digest">
+<div class="risk-item risk-item--high">
+<div class="risk-icon">&#128680;</div>
+<div class="risk-text"><strong>土耳其vs巴拉圭 — 高陷阱风险 (0.62)</strong><br>亚盘半球高水(1.02) + 让负1.69构成疑似庄家陷阱. 市场诱导追土耳其主胜, 但让球盘强烈暗示让负. 建议避开胜平负.</div>
+</div>
+<div class="risk-item risk-item--medium">
+<div class="risk-icon">&#128200;</div>
+<div class="risk-text"><strong>苏格兰vs摩洛哥 — 欧赔/亚盘背离</strong><br>欧赔客胜持续下行(2.00&#8594;1.71), 但亚盘却从半/一降至0/0.5. 这种背离暗示机构对摩洛哥大胜存疑. 苏格兰+1让胜正Edge(+4.3%).</div>
+</div>
+<div class="risk-item risk-item--medium">
+<div class="risk-icon">&#127788;</div>
+<div class="risk-text"><strong>美国vs澳大利亚 — ELO与市场分歧</strong><br>ELO模型(美1721/澳1783)给美54.6%胜率, 但市场给出58.1%. 东道主溢价是否合理? 若澳大利亚重现首轮防守韧性, 让负@2.36有价值.</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">&#9917;</div>
+<div class="risk-text"><strong>巴西vs海地 — 数据质量警告</strong><br>海地首轮15次射门(C组最多, 虽0进球)表明其并非纯鱼腩. 内马尔缺阵对巴西体系的影响不确定 -- 可能更快也可能更乱. 让平@4.10不可完全忽视.</div>
+</div>
+</div>
+</section>
+
+<!-- ====== EXECUTIVE SUMMARY ====== -->
+<section>
+<div class="section-header">
+<div class="section-accent"></div>
+<span class="section-icon">&#128203;</span>
+<span class="section-title">Executive Summary</span>
+</div>
+
+<div class="summary-grid">
+<div class="summary-item"><div class="icon">&#127463;&#127479;</div><div class="label">最强信心</div><div class="value">巴西让(-2)让胜 @1.73</div></div>
+<div class="summary-item"><div class="icon">&#127919;</div><div class="label">最佳Edge</div><div class="value">苏格兰(+1)让胜 @2.07 (+4.3%)</div></div>
+<div class="summary-item"><div class="icon">&#128680;</div><div class="label">高风险避让</div><div class="value">土耳其vs巴拉圭 胜平负 (Trap 0.62)</div></div>
+<div class="summary-item"><div class="icon">&#128200;</div><div class="label">关键市场信号</div><div class="value">美国亚盘升一球·降盘背离苏摩</div></div>
+<div class="summary-item"><div class="icon">&#127942;</div><div class="label">稳健串关</div><div class="value">巴西让胜+美国主胜+苏让胜 @6.19</div></div>
+<div class="summary-item"><div class="icon">&#128260;</div><div class="label">半全场稳胆</div><div class="value">巴西 胜胜 (~58%) 全天最高</div></div>
+</div>
+
+<div class="disclaimer-box">
+<strong>&#128220; 免责声明:</strong> 本报告基于公开数据与统计模型, 仅供研究参考, <strong>不构成任何形式的投注建议</strong>. 所有赔率均来自中国体育彩票官方渠道或模型推导, 实际赔率以出票时竞彩终端显示为准. 彩票有风险, 购彩需理性. 请至线下合法体彩网点购买, 切勿沉迷赌博. 模型不具有预测未来的能力, 历史规律不代表未来表现. <strong>Never claim certainty. Never promise profits. Always explain uncertainty.</strong>
+</div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<div class="footer">
+<div class="arch-line">&#127758; 8-Layer Architecture: L1 数据层 &#8594; L2 模型层 &#8594; L3 市场层 &#8594; L4 剧本层 &#8594; L5 风险层 &#8594; L6 可视化层 &#8594; L7 回测层 &#8594; L8 自学习层</div>
+<div style="margin-top:8px">Data Sources: sporttery.cn · lottery.gov.cn · 500.com · 扬子晚报 · 搜狐体育 · 新浪体育 · 雷速体育 · eloratings.net · 综合媒体</div>
+<div style="margin-top:8px">Report generated: 2026-06-19 22:00 CST | Model: ELO + Poisson + Form + Motivation + GroupStrategy + TravelFatigue (6-model ensemble)</div>
+<div style="margin-top:8px;color:var(--text-muted)">FIFA World Cup 2026 &middot; Matchday 2 &middot; Groups C/D &middot; Research Use Only</div>
+</div>
+
+</body>
+</html>
