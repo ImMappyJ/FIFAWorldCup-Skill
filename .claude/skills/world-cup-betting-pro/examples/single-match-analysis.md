@@ -21,7 +21,7 @@
 
 **Phase 7:** 3 HTML pages:
 - `html/赛事预览.html` — single match preview card
-- `html/Brazil-vs-France.html` — 完整单场分析 (group + weather + bars + scripts + heatmap + goals + 半全场 + odds)
+- `html/Brazil-vs-France.html` — 完整单场分析 (group + weather + bars + scripts + heatmap(竖列/横行) + goals + 半全场 + odds)
 - `html/投注建议.html` — 推荐单关 + risk + summary
 
 **Phase 8:** Screenshot all HTML → `images/` (750px, 2x DPI, fullPage). Spot-check visually.

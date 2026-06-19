@@ -189,7 +189,8 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* 7×7 grid: 1 corner + 6 away-goal columns × 1 header-row + 6 home-goal rows */
+/* 7×7 grid: 1 corner + 6 data cols × (1 header row + 6 data rows) */
+/* 横 = 行 (top), 竖 = 列 (left) — 用户约定 */
 .score-grid {
   display: grid;
   grid-template-columns: 56px repeat(6, 1fr);
@@ -197,7 +198,7 @@ body {
   min-width: 416px;
 }
 
-/* Corner cell — diagonal team/axis indicator */
+/* Corner cell — axis direction indicator */
 .score-grid__corner {
   display: flex;
   flex-direction: column;
@@ -209,19 +210,19 @@ body {
   padding: 4px;
   line-height: 1.2;
 }
-.score-grid__corner .corner-away {
+.score-grid__corner .corner-row {
   font-size: 0.58rem;
   font-weight: 700;
   color: var(--danger);
 }
-.score-grid__corner .corner-home {
+.score-grid__corner .corner-col {
   font-size: 0.58rem;
   font-weight: 700;
   color: var(--primary);
 }
 
-/* Column headers — which team scored how many (away team goals) */
-.score-grid__col-header {
+/* Top headers — 横=行 (horizontal), shows away team goals 0~5+ */
+.score-grid__top-header {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,8 +235,8 @@ body {
   min-height: 32px;
 }
 
-/* Row headers — which team scored how many (home team goals) */
-.score-grid__row-header {
+/* Left headers — 竖=列 (vertical), shows home team goals 0~5+ */
+.score-grid__left-header {
   display: flex;
   align-items: center;
   justify-content: center;

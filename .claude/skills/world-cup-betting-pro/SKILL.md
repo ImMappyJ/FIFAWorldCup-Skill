@@ -100,7 +100,7 @@ Authoritative artifact. Cover all 8 layers: header, dashboard, per-match(L1-L5),
 ## 页面二：单场分析 `<主队>-vs-<客队>.html`
 
 **每场比赛一个独立 HTML。内容:**
-Header(对阵标题) → Group context strip → Weather + Travel badge → Win probability bars → 4-script narratives → Score heatmap (行=主队/列=客队, 蓝/红标识) → Goal cards → 半全场 9-grid → Full odds table(5 markets) → 导航链接
+Header(对阵标题) → Group context strip → Weather + Travel badge → Win probability bars → 4-script narratives → Score heatmap (竖=列/蓝主队, 横=行/红客队) → Goal cards → 半全场 9-grid → Full odds table(5 markets) → 导航链接
 
 ## 页面三：投注建议 `投注建议.html`
 

@@ -44,7 +44,7 @@ Header(对阵双方 + 比赛信息 + 阶段)
 → Win Probability Bars (三色: 主胜蓝/平灰/客胜红)
 → Model Ensemble Breakdown (6模型贡献)
 → 4-Script Narratives (A表现/B对攻/C爆冷/D僵局)
-→ Score Heatmap (7×7 热力图 — 行=主队进球 0~5+, 列=客队进球 0~5+. 角格指示方向, 蓝行头/红列头标识球队, 最佳比分高亮)
+→ Score Heatmap (7×7 热力图 — 竖=列/蓝=主队进球 0~5+, 横=行/红=客队进球 0~5+. 角格指示方向, 最佳比分高亮)
 → Goal Cards (0~7+ 球概率, 最佳高亮)
 → 半全场 9-Grid (3×3, 有边路的格子绿色高亮)
 → Full Odds Table (5 markets: 胜平负/让球胜平负/半全场/比分/总进球数, 标记 edge)
@@ -52,44 +52,44 @@ Header(对阵双方 + 比赛信息 + 阶段)
 → Footer
 ```
 
-**关键 CSS 类:** `.match-card` `.group-strip` `.win-bars` `.score-heatmap` `.score-grid` `.goal-cards` `.htft-grid` `.odds-table` `.nav-links`
+**关键 CSS 类:** `.match-card` `.group-strip` `.win-bars` `.score-heatmap` `.score-grid` `.score-grid__top-header` `.score-grid__left-header` `.goal-cards` `.htft-grid` `.odds-table` `.nav-links`
 
 ### 比分热力图 HTML 结构
 
-**一目了然：行 = 主队进球（蓝色标签），列 = 客队进球（红色标签）。**
+**约定：横 = 行（红色顶部标签），竖 = 列（蓝色左侧标签）。**
 
 ```html
 <div class="score-heatmap">
   <!-- 标题栏：明确标注哪队是哪根轴 -->
   <div class="score-heatmap__title">
-    <span class="axis-badge axis-badge--home">🇧🇷 Brazil 进球（行）</span>
+    <span class="axis-badge axis-badge--home">🇧🇷 Brazil 进球（列）</span>
     <span class="axis-arrow">×</span>
-    <span class="axis-badge axis-badge--away">🇫🇷 France 进球（列）</span>
+    <span class="axis-badge axis-badge--away">🇫🇷 France 进球（行）</span>
   </div>
 
   <div class="score-grid-wrapper">
     <div class="score-grid">
       <!-- 角格：方向指示 -->
       <div class="score-grid__corner">
-        <span class="corner-away">客队 →</span>
-        <span class="corner-home">↓ 主队</span>
+        <span class="corner-row">行 →</span>
+        <span class="corner-col">↓ 列</span>
       </div>
-      <!-- 列头：客队进球数 0~5+（红色） -->
-      <div class="score-grid__col-header">0</div>
-      <div class="score-grid__col-header">1</div>
-      <div class="score-grid__col-header">2</div>
-      <div class="score-grid__col-header">3</div>
-      <div class="score-grid__col-header">4</div>
-      <div class="score-grid__col-header">5+</div>
-      <!-- 第1行：主队 0 球 → 6个概率格 -->
-      <div class="score-grid__row-header">0</div>
+      <!-- 顶部 = 行头：客队进球数 0~5+（红色，横排） -->
+      <div class="score-grid__top-header">0</div>
+      <div class="score-grid__top-header">1</div>
+      <div class="score-grid__top-header">2</div>
+      <div class="score-grid__top-header">3</div>
+      <div class="score-grid__top-header">4</div>
+      <div class="score-grid__top-header">5+</div>
+      <!-- 左侧 = 列头：主队 0 球（蓝色，竖排）→ 6 个概率格（该行 × 6 列） -->
+      <div class="score-grid__left-header">0</div>
       <div class="score-cell score-cell--hot">1.2%</div>
       <div class="score-cell score-cell--hot">2.8%</div>
       <div class="score-cell score-cell--best">5.1%</div>
       <div class="score-cell">3.4%</div>
       <div class="score-cell">1.8%</div>
       <div class="score-cell">0.9%</div>
-      <!-- 第2-6行同理：主队 1~5+ 球 -->
+      <!-- 第2-6行同理：主队 1~5+ 球 → 各 6 个概率格 -->
       ...
     </div>
   </div>
@@ -97,9 +97,9 @@ Header(对阵双方 + 比赛信息 + 阶段)
 ```
 
 **颜色编码规则:**
-- 行头 `.score-grid__row-header` — 蓝色背景 `rgba(59,130,246,0.1)`，代表主队
-- 列头 `.score-grid__col-header` — 红色背景 `rgba(239,68,68,0.1)`，代表客队
-- 角格内文字也遵循蓝=主队、红=客队的颜色对应
+- 左侧 `.score-grid__left-header` — 蓝色背景 `rgba(59,130,246,0.1)`，竖排 = **列**，代表主队进球数 0~5+
+- 顶部 `.score-grid__top-header` — 红色背景 `rgba(239,68,68,0.1)`，横排 = **行**，代表客队进球数 0~5+
+- 角格：`corner-row`（红，"行 →" 横方向）+ `corner-col`（蓝，"↓ 列" 竖方向）
 - `.score-cell--best` — 最可能比分，金色高亮 + glow
 
 ---
