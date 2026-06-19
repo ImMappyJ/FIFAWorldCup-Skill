@@ -44,7 +44,7 @@ Header(对阵双方 + 比赛信息 + 阶段)
 → Win Probability Bars (三色: 主胜蓝/平灰/客胜红)
 → Model Ensemble Breakdown (6模型贡献)
 → 4-Script Narratives (A表现/B对攻/C爆冷/D僵局)
-→ Score Heatmap (6×6 热力图, 最佳比分高亮)
+→ Score Heatmap (7×7 热力图 — 行=主队进球 0~5+, 列=客队进球 0~5+. 角格指示方向, 蓝行头/红列头标识球队, 最佳比分高亮)
 → Goal Cards (0~7+ 球概率, 最佳高亮)
 → 半全场 9-Grid (3×3, 有边路的格子绿色高亮)
 → Full Odds Table (5 markets: 胜平负/让球胜平负/半全场/比分/总进球数, 标记 edge)
@@ -52,7 +52,55 @@ Header(对阵双方 + 比赛信息 + 阶段)
 → Footer
 ```
 
-**关键 CSS 类:** `.match-card` `.group-strip` `.win-bars` `.score-grid` `.goal-cards` `.htft-grid` `.odds-table` `.nav-links`
+**关键 CSS 类:** `.match-card` `.group-strip` `.win-bars` `.score-heatmap` `.score-grid` `.goal-cards` `.htft-grid` `.odds-table` `.nav-links`
+
+### 比分热力图 HTML 结构
+
+**一目了然：行 = 主队进球（蓝色标签），列 = 客队进球（红色标签）。**
+
+```html
+<div class="score-heatmap">
+  <!-- 标题栏：明确标注哪队是哪根轴 -->
+  <div class="score-heatmap__title">
+    <span class="axis-badge axis-badge--home">🇧🇷 Brazil 进球（行）</span>
+    <span class="axis-arrow">×</span>
+    <span class="axis-badge axis-badge--away">🇫🇷 France 进球（列）</span>
+  </div>
+
+  <div class="score-grid-wrapper">
+    <div class="score-grid">
+      <!-- 角格：方向指示 -->
+      <div class="score-grid__corner">
+        <span class="corner-away">客队 →</span>
+        <span class="corner-home">↓ 主队</span>
+      </div>
+      <!-- 列头：客队进球数 0~5+（红色） -->
+      <div class="score-grid__col-header">0</div>
+      <div class="score-grid__col-header">1</div>
+      <div class="score-grid__col-header">2</div>
+      <div class="score-grid__col-header">3</div>
+      <div class="score-grid__col-header">4</div>
+      <div class="score-grid__col-header">5+</div>
+      <!-- 第1行：主队 0 球 → 6个概率格 -->
+      <div class="score-grid__row-header">0</div>
+      <div class="score-cell score-cell--hot">1.2%</div>
+      <div class="score-cell score-cell--hot">2.8%</div>
+      <div class="score-cell score-cell--best">5.1%</div>
+      <div class="score-cell">3.4%</div>
+      <div class="score-cell">1.8%</div>
+      <div class="score-cell">0.9%</div>
+      <!-- 第2-6行同理：主队 1~5+ 球 -->
+      ...
+    </div>
+  </div>
+</div>
+```
+
+**颜色编码规则:**
+- 行头 `.score-grid__row-header` — 蓝色背景 `rgba(59,130,246,0.1)`，代表主队
+- 列头 `.score-grid__col-header` — 红色背景 `rgba(239,68,68,0.1)`，代表客队
+- 角格内文字也遵循蓝=主队、红=客队的颜色对应
+- `.score-cell--best` — 最可能比分，金色高亮 + glow
 
 ---
 
@@ -92,4 +140,5 @@ Header(投注建议 + 日期)
 
 ## Screenshot
 
-所有 HTML → PNG 存入 `images/`，与 HTML 同名。750px × 2× DPI, fullPage:true。Edge: `--window-size=750,8000` | Puppeteer: `fullPage:true`。
+所有 HTML → PNG 存入 `images/`，与 HTML 同名。750px × 2× DPI。
+**自适应高度:** export.js 读取 scrollHeight 精确匹配 · screenshot.ps1 大窗口截图后自动裁剪底部空白。不再有留白。

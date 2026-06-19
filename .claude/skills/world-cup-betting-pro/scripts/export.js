@@ -2,6 +2,7 @@
 // Usage: node export.js analysis/report.html [analysis/report.png]
 // Prerequisite: npx puppeteer browsers install chrome
 // Width 750px @2x → crisp full-page PNG for mobile viewing
+// Auto-fits to exact content height — no blank bottom
 
 const puppeteer = require('puppeteer');
 const path = require('path');
@@ -24,15 +25,30 @@ fs.mkdirSync(path.dirname(absPng), { recursive: true });
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
 
-  // Mobile-optimized viewport: 750px max-width matches HTML body
-  await page.setViewport({ width: 750, height: 900, deviceScaleFactor: 2 });
+  // Set viewport to target width with a reasonable initial height
+  await page.setViewport({ width: 750, height: 1200, deviceScaleFactor: 2 });
   await page.goto(`file:///${absHtml.replace(/\\/g, '/')}`, { waitUntil: 'networkidle0' });
 
-  const fullHeight = await page.evaluate(() => document.body.scrollHeight);
+  // Get the true full-page height (content only, no extra blank space)
+  const fullHeight = await page.evaluate(() => {
+    return Math.max(
+      document.body.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.scrollHeight,
+      document.documentElement.offsetHeight
+    );
+  });
+
+  // Set viewport to exact content height for clean rendering
   await page.setViewport({ width: 750, height: fullHeight, deviceScaleFactor: 2 });
 
+  // fullPage: true captures exactly the document content — no blank bottom
   await page.screenshot({ path: absPng, type: 'png', fullPage: true });
   await browser.close();
 
-  console.log(`PNG saved: ${absPng} (750px width, ${fullHeight}px height, 2x DPI → 1500px render)`);
+  const renderWidth = 750 * 2;
+  const renderHeight = fullHeight * 2;
+  console.log(`PNG saved: ${absPng}`);
+  console.log(`  Content: ${750}x${fullHeight}px logical → ${renderWidth}x${renderHeight}px @2x`);
+  console.log(`  Height: ${fullHeight}px (auto-fit — no blank bottom)`);
 })();

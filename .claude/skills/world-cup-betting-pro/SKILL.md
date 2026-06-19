@@ -100,7 +100,7 @@ Authoritative artifact. Cover all 8 layers: header, dashboard, per-match(L1-L5),
 ## 页面二：单场分析 `<主队>-vs-<客队>.html`
 
 **每场比赛一个独立 HTML。内容:**
-Header(对阵标题) → Group context strip → Weather + Travel badge → Win probability bars → 4-script narratives → Score heatmap → Goal cards → 半全场 9-grid → Full odds table(5 markets) → 导航链接
+Header(对阵标题) → Group context strip → Weather + Travel badge → Win probability bars → 4-script narratives → Score heatmap (行=主队/列=客队, 蓝/红标识) → Goal cards → 半全场 9-grid → Full odds table(5 markets) → 导航链接
 
 ## 页面三：投注建议 `投注建议.html`
 
@@ -116,9 +116,11 @@ Header(对阵标题) → Group context strip → Weather + Travel badge → Win 
 
 # HTML → PNG
 
-所有 HTML 转为 PNG 存入 `images/` 文件夹，与 HTML 同名。750px × 2× DPI, fullPage:true, 暗色背景 `#060D1A`。
+所有 HTML 转为 PNG 存入 `images/` 文件夹，与 HTML 同名。750px × 2× DPI, 暗色背景 `#060D1A`。
 
-Scripts: [screenshot.ps1](scripts/screenshot.ps1) (Edge, --window-size=750,8000) | [export.js](scripts/export.js) (Puppeteer, fullPage:true).
+**自适应高度:** 两个脚本均自动适配内容实际高度，不会产生底部留白：
+- [export.js](scripts/export.js) — Puppeteer，读取 `scrollHeight` 精确匹配内容高度
+- [screenshot.ps1](scripts/screenshot.ps1) — Edge 两步法：先 JS 测量内容高度，再以精确高度截图
 
 ---
 

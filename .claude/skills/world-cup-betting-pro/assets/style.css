@@ -36,8 +36,8 @@ body {
   color: var(--text);
   max-width: 900px;
   margin: 0 auto;
-  padding: 32px 24px 48px;
-  line-height: 1.6;
+  padding: 24px 20px 36px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -51,8 +51,8 @@ body {
 
 /* === Section Header === */
 .section-header {
-  display:flex; align-items:center; gap:10px; margin-bottom:24px;
-  padding-top:16px; border-top:1px solid var(--border);
+  display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  padding-top:12px; border-top:1px solid var(--border);
 }
 .section-header .accent-bar {
   width:40px; height:4px; border-radius:2px;
@@ -64,7 +64,7 @@ body {
 
 /* === Header — Hero === */
 .header {
-  text-align:center; padding:40px 24px 32px; margin-bottom:36px;
+  text-align:center; padding:28px 20px 24px; margin-bottom:28px;
   background: linear-gradient(180deg, rgba(59,130,246,0.06) 0%, transparent 60%);
   border-radius: 16px; border: 1px solid var(--border);
 }
@@ -77,10 +77,10 @@ body {
 }
 
 /* === Dashboard — Stat Pills === */
-.dashboard { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:40px; }
+.dashboard { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:28px; }
 .stat-card {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 20px 16px; text-align: center;
+  border-radius: 14px; padding: 16px 12px; text-align: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 .stat-card .stat-icon { font-size: 1.5rem; margin-bottom: 6px; }
@@ -153,22 +153,123 @@ body {
 .win-bar-pct { width:56px; font-size:0.9rem; font-weight:700; }
 
 /* === Score Heatmap === */
-.score-grid-wrapper { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:20px 0; }
-.score-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:3px; min-width:360px; }
-.score-cell {
-  aspect-ratio:1; min-width:52px; min-height:52px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:0.85rem; font-weight:600; border-radius:6px;
-  background: var(--card); border: 1px solid transparent;
+.score-heatmap { margin: 24px 0; }
+
+/* Title bar with team names and axis direction */
+.score-heatmap__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  flex-wrap: wrap;
 }
-.score-cell--hot { border-color: rgba(255,255,255,0.08); }
+.score-heatmap__title .axis-badge {
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.score-heatmap__title .axis-badge--home {
+  color: var(--primary);
+  background: rgba(59, 130, 246, 0.12);
+}
+.score-heatmap__title .axis-badge--away {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.12);
+}
+.score-heatmap__title .axis-arrow {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.score-grid-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 7×7 grid: 1 corner + 6 away-goal columns × 1 header-row + 6 home-goal rows */
+.score-grid {
+  display: grid;
+  grid-template-columns: 56px repeat(6, 1fr);
+  gap: 3px;
+  min-width: 416px;
+}
+
+/* Corner cell — diagonal team/axis indicator */
+.score-grid__corner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  background: var(--card-alt);
+  border-radius: 8px;
+  padding: 4px;
+  line-height: 1.2;
+}
+.score-grid__corner .corner-away {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--danger);
+}
+.score-grid__corner .corner-home {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Column headers — which team scored how many (away team goals) */
+.score-grid__col-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--danger);
+  min-height: 32px;
+}
+
+/* Row headers — which team scored how many (home team goals) */
+.score-grid__row-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Score cells */
+.score-cell {
+  aspect-ratio: 1;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid transparent;
+}
+.score-cell--hot {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: var(--card-alt);
+}
 .score-cell--best {
   border: 2px solid var(--warning) !important;
-  box-shadow: 0 0 16px var(--warning-glow), inset 0 0 12px rgba(245,158,11,0.08);
-  font-weight: 800; font-size: 0.95rem;
-}
-.score-grid .row-label, .score-grid .col-label {
-  color: var(--text-muted); font-size:0.72rem; font-weight:500;
+  box-shadow: 0 0 20px var(--warning-glow), inset 0 0 12px rgba(245, 158, 11, 0.12);
+  font-weight: 800;
+  font-size: 0.95rem;
 }
 
 /* === Goal Cards === */
