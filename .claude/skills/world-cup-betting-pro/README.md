@@ -32,8 +32,7 @@
 │   ├── architecture.md         # Full 8-layer detailed specification
 │   └── checklist.md            # Execution checklist (phases 1-9)
 ├── scripts/
-│   ├── screenshot.ps1          # Edge headless: HTML → PNG (Windows)
-│   └── export.js               # Puppeteer: HTML → PNG (cross-platform)
+│   └── export.js               # Puppeteer: HTML → PNG (fullPage auto-height)
 └── assets/
     ├── style.css               # Shared CSS — single source, inlined into all HTML
     └── schema.json             # Match data JSON schema
@@ -50,7 +49,7 @@ Analyze today's World Cup matches and build all three ticket types:
 conservative accumulator + aggressive cold-bet + recommended single.
 
 # Specific matches
-Analyze: Brazil vs France, England vs Argentina
+Analyze: 巴西 vs 法国, 英格兰 vs 阿根廷
 Use China Sports Lottery odds. Include weather, injuries, lineups,
 market movement, score prediction, total goals, handicap, HT/FT.
 Generate: 保守串关 + 激进搏冷 + 推荐单关.

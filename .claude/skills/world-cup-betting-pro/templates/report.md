@@ -18,7 +18,7 @@ Header(比赛日 + 日期 + 比赛数量 badge)
 → Dashboard(5 pills: 比赛数/CORE数/边缘数/冷门风险/平均风险)
 → Match preview cards (每场一个 .match-card--preview)
    ┌─────────────────────────────────────────────┐
-   │ ⚽ Brazil vs France    CORE · Risk 1.6      │
+   │ ⚽ 巴西 vs 法国    CORE · Risk 1.6      │
    │ 主胜42%  平30%  客胜28%   最佳: 总进球2球    │
    │                    [查看详细分析 →]          │
    └─────────────────────────────────────────────┘
@@ -56,40 +56,47 @@ Header(对阵双方 + 比赛信息 + 阶段)
 
 ### 比分热力图 HTML 结构
 
-**约定：横 = 行（红色顶部标签），竖 = 列（蓝色左侧标签）。**
+**每个格子直接标注国家队译名 + 进球数，一目了然。**
+**规则：能用译名的地方用译名（巴西、法国），仅极窄空间（如角格）可用 FIFA 三字码（BRA、FRA）。**
 
 ```html
 <div class="score-heatmap">
-  <!-- 标题栏：明确标注哪队是哪根轴 -->
+  <!-- 标题栏 -->
   <div class="score-heatmap__title">
-    <span class="axis-badge axis-badge--home">🇧🇷 Brazil 进球（列）</span>
+    <span class="axis-badge axis-badge--home">🇧🇷 巴西 进球（列 ↓）</span>
     <span class="axis-arrow">×</span>
-    <span class="axis-badge axis-badge--away">🇫🇷 France 进球（行）</span>
+    <span class="axis-badge axis-badge--away">🇫🇷 法国 进球（行 →）</span>
   </div>
 
   <div class="score-grid-wrapper">
     <div class="score-grid">
-      <!-- 角格：方向指示 -->
+      <!-- 角格（极窄，可用三字码） -->
       <div class="score-grid__corner">
-        <span class="corner-row">行 →</span>
-        <span class="corner-col">↓ 列</span>
+        <span class="corner-row">法国 →</span>
+        <span class="corner-col">↓ 巴西</span>
       </div>
-      <!-- 顶部 = 行头：客队进球数 0~5+（红色，横排） -->
-      <div class="score-grid__top-header">0</div>
-      <div class="score-grid__top-header">1</div>
-      <div class="score-grid__top-header">2</div>
-      <div class="score-grid__top-header">3</div>
-      <div class="score-grid__top-header">4</div>
-      <div class="score-grid__top-header">5+</div>
-      <!-- 左侧 = 列头：主队 0 球（蓝色，竖排）→ 6 个概率格（该行 × 6 列） -->
-      <div class="score-grid__left-header">0</div>
+      <!-- 顶部行头：每格 = 客队译名 + 进球数（红色） -->
+      <div class="score-grid__top-header">
+        <span class="team-abbr">法国</span>
+        <span class="goal-num">0</span>
+      </div>
+      <div class="score-grid__top-header">
+        <span class="team-abbr">法国</span>
+        <span class="goal-num">1</span>
+      </div>
+      ... 2 3 4 5+
+      <!-- 左侧列头：每格 = 主队译名 + 进球数（蓝色）→ 6 个概率格 -->
+      <div class="score-grid__left-header">
+        <span class="team-abbr">巴西</span>
+        <span class="goal-num">0</span>
+      </div>
       <div class="score-cell score-cell--hot">1.2%</div>
       <div class="score-cell score-cell--hot">2.8%</div>
       <div class="score-cell score-cell--best">5.1%</div>
       <div class="score-cell">3.4%</div>
       <div class="score-cell">1.8%</div>
       <div class="score-cell">0.9%</div>
-      <!-- 第2-6行同理：主队 1~5+ 球 → 各 6 个概率格 -->
+      <!-- 第2-6行同理：巴西 1~5+ 球 → 各 6 个概率格 -->
       ...
     </div>
   </div>
@@ -97,9 +104,9 @@ Header(对阵双方 + 比赛信息 + 阶段)
 ```
 
 **颜色编码规则:**
-- 左侧 `.score-grid__left-header` — 蓝色背景 `rgba(59,130,246,0.1)`，竖排 = **列**，代表主队进球数 0~5+
-- 顶部 `.score-grid__top-header` — 红色背景 `rgba(239,68,68,0.1)`，横排 = **行**，代表客队进球数 0~5+
-- 角格：`corner-row`（红，"行 →" 横方向）+ `corner-col`（蓝，"↓ 列" 竖方向）
+- 左侧 `.score-grid__left-header` — **蓝色**，竖排 = 列，双行显示（队名 + 进球数），代表主队
+- 顶部 `.score-grid__top-header` — **红色**，横排 = 行，双行显示（队名 + 进球数），代表客队
+- 角格 — 红 "法国 →" + 蓝 "↓ 巴西"
 - `.score-cell--best` — 最可能比分，金色高亮 + glow
 
 ---
@@ -141,4 +148,4 @@ Header(投注建议 + 日期)
 ## Screenshot
 
 所有 HTML → PNG 存入 `images/`，与 HTML 同名。750px × 2× DPI。
-**自适应高度:** export.js 读取 scrollHeight 精确匹配 · screenshot.ps1 大窗口截图后自动裁剪底部空白。不再有留白。
+**唯一方案:** [export.js](../scripts/export.js) — Puppeteer `fullPage: true`，自动匹配内容高度，无留白。

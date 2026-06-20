@@ -198,7 +198,7 @@ body {
   min-width: 416px;
 }
 
-/* Corner cell — axis direction indicator */
+/* Corner cell — axis direction + team indicators */
 .score-grid__corner {
   display: flex;
   flex-direction: column;
@@ -208,44 +208,70 @@ body {
   background: var(--card-alt);
   border-radius: 8px;
   padding: 4px;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 .score-grid__corner .corner-row {
-  font-size: 0.58rem;
+  font-size: 0.52rem;
   font-weight: 700;
   color: var(--danger);
 }
 .score-grid__corner .corner-col {
-  font-size: 0.58rem;
+  font-size: 0.52rem;
   font-weight: 700;
   color: var(--primary);
 }
 
-/* Top headers — 横=行 (horizontal), shows away team goals 0~5+ */
+/* Top headers — 横=行 (horizontal), 客队译名 + 进球数 */
 .score-grid__top-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px 4px;
+  gap: 1px;
+  padding: 4px 4px;
   background: rgba(239, 68, 68, 0.1);
   border-radius: 6px;
-  font-size: 0.75rem;
+  min-height: 36px;
+}
+.score-grid__top-header .team-abbr {
+  font-size: 0.52rem;
+  font-weight: 600;
+  color: var(--danger);
+  opacity: 0.85;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.score-grid__top-header .goal-num {
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--danger);
-  min-height: 32px;
+  line-height: 1.1;
 }
 
-/* Left headers — 竖=列 (vertical), shows home team goals 0~5+ */
+/* Left headers — 竖=列 (vertical), 主队译名 + 进球数 */
 .score-grid__left-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  gap: 1px;
+  padding: 3px;
   background: rgba(59, 130, 246, 0.1);
   border-radius: 6px;
-  font-size: 0.75rem;
+}
+.score-grid__left-header .team-abbr {
+  font-size: 0.52rem;
+  font-weight: 600;
+  color: var(--primary);
+  opacity: 0.85;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.score-grid__left-header .goal-num {
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--primary);
+  line-height: 1.1;
 }
 
 /* Score cells */

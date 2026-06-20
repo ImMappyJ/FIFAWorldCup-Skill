@@ -51,8 +51,8 @@
 - [ ] Validate all HTML: no CDN/JS, dark theme, 中文, shared CSS inline
 
 ## Phase 8 — PNG
-- [ ] Run Edge/Puppeteer for each HTML → `images/` folder, same filename as HTML
-- [ ] Settings: 750px@2x, fullPage:true, dark bg `#060D1A`
+- [ ] Run `node scripts/export.js analysis/.../html/<name>.html analysis/.../images/<name>.png` for each HTML
+- [ ] Uses Puppeteer fullPage:true → auto-fits content height, no blank bottom
 - [ ] Visual spot-check each PNG: header-to-footer all captured, no clipping
 
 ## Phase 9 — BACKTEST + LEARN (L7/L8)
