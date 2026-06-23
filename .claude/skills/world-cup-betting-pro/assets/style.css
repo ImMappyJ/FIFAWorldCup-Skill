@@ -299,7 +299,93 @@ body {
   font-size: 0.95rem;
 }
 
-/* === Goal Cards === */
+/* === Poisson Score Matrix === */
+.poisson-matrix-section { margin: 24px 0; }
+
+.poisson-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.85rem;
+}
+
+.poisson-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--border);
+}
+
+.poisson-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.poisson-table tbody tr:hover {
+  background: rgba(59, 130, 246, 0.04);
+}
+
+.poisson-table .rank-num {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--card-alt);
+}
+
+.poisson-row--best {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, transparent 60%);
+  border-left: 3px solid var(--warning);
+}
+
+.poisson-row--best .rank-num {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+}
+
+.poisson-row--best .prob-value {
+  color: var(--warning);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.poisson-row--best .score-line strong {
+  color: var(--warning);
+  font-size: 1.05rem;
+}
+
+.score-line {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.score-line strong {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.prob-value {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.odds-value {
+  font-weight: 700;
+  color: var(--success);
+  font-size: 0.9rem;
+  font-family: "SF Mono", "Cascadia Code", "Consolas", monospace;
+}
 .goal-cards { display:grid; grid-template-columns:repeat(8,1fr); gap:10px; margin:20px 0; }
 .goal-card {
   background: var(--card); border: 1px solid var(--border);
@@ -410,7 +496,142 @@ body {
 .nav-links a:hover { background:rgba(59,130,246,0.1); }
 .nav-links a.active { background:var(--primary); color:#fff; border-color:var(--primary); }
 
-/* === Footer === */
+/* === Path Analysis — 出线形势 & 淘汰赛路线 === */
+.path-analysis { margin: 24px 0; }
+
+/* 小组排名表 */
+.standing-table { width:100%; border-collapse:collapse; font-size:0.85rem; margin-bottom:16px; }
+.standing-table th {
+  text-align:left; padding:8px 10px; font-size:0.68rem; font-weight:600;
+  color: var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;
+  border-bottom:2px solid var(--border);
+}
+.standing-table td { padding:7px 10px; border-bottom:1px solid var(--border); }
+.standing-table .pos-num {
+  display:inline-block; width:22px; height:22px; line-height:22px; text-align:center;
+  border-radius:50%; font-size:0.72rem; font-weight:700;
+}
+.standing-table .pos-1st .pos-num { background:rgba(16,185,129,0.15); color:var(--success); }
+.standing-table .pos-2nd .pos-num { background:rgba(16,185,129,0.10); color:var(--success); }
+.standing-table .pos-out .pos-num { background:rgba(239,68,68,0.10); color:var(--danger); }
+.standing-table .highlight-team { background:rgba(59,130,246,0.06); font-weight:600; }
+
+/* 出线概率矩阵 — 概率条矩阵 */
+.prob-matrix { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:14px 0; }
+.prob-matrix .prob-cell {
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:12px 10px; text-align:center;
+}
+.prob-matrix .prob-cell .team-name { font-size:0.78rem; font-weight:600; margin-bottom:4px; }
+.prob-matrix .prob-cell .prob-bar-track {
+  height:6px; border-radius:3px; background:var(--border); overflow:hidden; margin:4px 0;
+}
+.prob-matrix .prob-cell .prob-bar-fill { height:100%; border-radius:3px; }
+.prob-matrix .prob-cell .prob-label { font-size:0.72rem; color:var(--text-muted); }
+
+/* 路线对比卡片 */
+.route-cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+.route-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+.route-card--1st { border-top:3px solid var(--primary); }
+.route-card--2nd { border-top:3px solid var(--warning); }
+.route-card .route-title {
+  font-size:0.9rem; font-weight:700; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.route-card .route-leg {
+  padding:6px 10px; margin-bottom:4px; background:var(--card-alt);
+  border-radius:6px; font-size:0.78rem; border:1px solid var(--border-light);
+  display:flex; justify-content:space-between;
+}
+.route-card .route-leg .opponent { font-weight:600; }
+.route-card .route-leg .difficulty { font-size:0.72rem; }
+.route-card .route-diff {
+  margin-top:8px; font-size:0.78rem; color:var(--text-secondary);
+  padding:8px 10px; background:rgba(245,158,11,0.06); border-radius:6px;
+  border-left:3px solid var(--warning);
+}
+
+/* 战略动机标签 */
+.motive-bar { display:flex; gap:10px; align-items:center; margin:14px 0; flex-wrap:wrap; }
+.motive-tag {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:6px 14px; border-radius:20px; font-size:0.82rem; font-weight:600;
+}
+.motive-tag--push {
+  background:rgba(16,185,129,0.12); color:var(--success);
+  border:1px solid rgba(16,185,129,0.2);
+}
+.motive-tag--neutral {
+  background:rgba(148,163,184,0.10); color:var(--text-secondary);
+  border:1px solid var(--border-light);
+}
+.motive-tag--conserve {
+  background:rgba(239,68,68,0.10); color:var(--danger);
+  border:1px solid rgba(239,68,68,0.15);
+}
+.motive-tag .motive-icon { font-size:0.9rem; }
+
+/* 淘汰赛对阵树 */
+.bracket-tree {
+  display:flex; justify-content:center; gap:8px;
+  padding:16px 0; margin:16px 0 8px;
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+}
+.bracket-round {
+  display:flex; flex-direction:column; justify-content:space-around;
+  min-width:100px; gap:0;
+}
+.bracket-round__title {
+  text-align:center; font-size:0.62rem; font-weight:600;
+  color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;
+  margin-bottom:6px;
+}
+.bracket-match {
+  background:var(--card); border:1px solid var(--border-light);
+  border-radius:8px; padding:8px 12px; margin:3px 0;
+  font-size:0.72rem; text-align:center; min-height:40px;
+  display:flex; flex-direction:column; justify-content:center;
+  box-shadow:0 1px 4px rgba(0,0,0,0.1);
+}
+.bracket-match .team { font-weight:600; font-size:0.75rem; }
+.bracket-match .team--highlight { color:var(--primary); }
+.bracket-match .scoreline { font-size:0.65rem; color:var(--text-muted); }
+.bracket-match--projected {
+  border-color:var(--primary);
+  background:linear-gradient(180deg, rgba(59,130,246,0.06) 0%, var(--card) 50%);
+}
+.bracket-match--empty {
+  opacity:0.4; font-style:italic; color:var(--text-muted);
+  justify-content:center;
+}
+.bracket-connector { height:20px; min-width:20px; position:relative; }
+.bracket-connector::before,
+.bracket-connector::after {
+  content:''; position:absolute; background:var(--border-light);
+}
+/* Horizontal connector */
+.bracket-connector::before {
+  top:50%; left:0; right:0; height:1px;
+}
+/* Vertical connector — only for merge points */
+.bracket-connector--merge::after {
+  top:0; bottom:0; left:50%; width:1px;
+}
+
+/* 赛程预览标签 — 紧凑 */
+.fixture-list { display:flex; flex-direction:column; gap:4px; margin:12px 0; font-size:0.8rem; }
+.fixture-item {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 12px; background:var(--card); border-radius:6px; border:1px solid var(--border);
+}
+.fixture-item .teams { font-weight:500; }
+.fixture-item .impact {
+  font-size:0.7rem; padding:2px 8px; border-radius:10px;
+  background:rgba(245,158,11,0.08); color:var(--warning);
+}
 .footer {
   margin-top:48px; padding-top:24px; border-top: 1px solid var(--border);
   text-align:center; font-size:0.75rem; color: var(--text-muted);
@@ -420,7 +641,7 @@ body {
 /* === Responsive === */
 @media (max-width:768px) { .goal-cards { grid-template-columns:repeat(4,1fr); } }
 @media (max-width:750px) { .tickets { grid-template-columns:1fr; } }
-@media (max-width:640px) { .dashboard { grid-template-columns:repeat(3,1fr); } }
+@media (max-width:640px) { .dashboard { grid-template-columns:repeat(3,1fr); } .route-cards { grid-template-columns:1fr; } }
 @media (max-width:600px) { .summary { grid-template-columns:repeat(2,1fr); } }
 @media (max-width:500px) { .odds-table { font-size:0.75rem; } .odds-table th, .odds-table td { padding:8px 6px; } }
 @media (max-width:400px) {
@@ -432,4 +653,10 @@ body {
   .goal-card { padding:24px 16px; }
   .goal-card .prob { font-size:1.4rem; }
   .match-card--preview { flex-direction:column; align-items:flex-start; }
+  .prob-matrix { grid-template-columns:1fr; }
+  .standing-table { font-size:0.75rem; }
+  .standing-table th, .standing-table td { padding:5px 6px; }
+  .bracket-tree { flex-direction:column; align-items:center; }
+  .bracket-round { min-width:100%; }
+  .bracket-connector { display:none; }
 }

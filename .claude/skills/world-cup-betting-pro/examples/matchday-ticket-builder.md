@@ -23,7 +23,7 @@
 
 **Phase 7:** Multi-page HTML:
 - `html/赛事预览.html` — 3 match preview cards
-- `html/Germany-vs-Spain.html` / `Portugal-vs-Italy.html` / `Netherlands-vs-Belgium.html` — 单场分析
+- `html/德国-vs-西班牙.html` / `html/葡萄牙-vs-意大利.html` / `html/荷兰-vs-比利时.html` — 单场分析（含出线形势+路线预测）
 - `html/投注建议.html` — 3 tickets + risk + summary
 
 **Phase 8:** All HTML → PNG in `images/` folder.
@@ -33,14 +33,14 @@ analysis/2026-06-19-1430/
 ├── report.md
 ├── html/
 │   ├── 赛事预览.html
-│   ├── Germany-vs-Spain.html
-│   ├── Portugal-vs-Italy.html
-│   ├── Netherlands-vs-Belgium.html
+│   ├── 德国-vs-西班牙.html
+│   ├── 葡萄牙-vs-意大利.html
+│   ├── 荷兰-vs-比利时.html
 │   └── 投注建议.html
 └── images/
     ├── 赛事预览.png
-    ├── Germany-vs-Spain.png
-    ├── Portugal-vs-Italy.png
-    ├── Netherlands-vs-Belgium.png
+    ├── 德国-vs-西班牙.png
+    ├── 葡萄牙-vs-意大利.png
+    ├── 荷兰-vs-比利时.png
     └── 投注建议.png
 ```

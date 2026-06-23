@@ -35,7 +35,7 @@ motivation{must_win, qualification, approach}
 
 ## L2: 模型层 (MODEL)
 
-### Six-Model Ensemble
+### Seven-Model Ensemble
 
 **A: ELO** — `P_home = 1/(1+10^(-(ELO_h-ELO_a+HFA)/400))`, HFA=100 (0 neutral venue). Draw=1-P_home-P_away. Knockout: draw ×0.3.
 
@@ -70,8 +70,41 @@ motivation{must_win, qualification, approach}
 
 Cumulative >2000 km in tournament: extra ×0.95. Compare both sides for travel inequality.
 
+**G: Bracket Path Optimization (NEW — 出线路径优化)**
+
+Three sub-modules calculating strategic group-stage incentives:
+
+**a) 小组排名预测 (Standing Projection)**
+Simulate remaining group fixtures. For each team, estimate probability of finishing 1st/2nd/eliminated based on: current points, remaining opponents, goal difference, head-to-head. Tiebreaker order: GD → GF → H2H → Fair Play → Draw.
+
+**b) 淘汰赛路线映射 (Bracket Path Mapping)**
+Hard-code FIFA World Cup Round of 16 pairing rules. Each group's 1st/2nd maps to a specific bracket slot:
+
+| 组别 | 第1名 → Ro16 对手 | 第2名 → Ro16 对手 |
+|------|-------------------|-------------------|
+| A | vs 2B (Match 49) | vs 1B (Match 50) |
+| B | vs 2A (Match 50) | vs 1A (Match 49) |
+| C | vs 2D (Match 51) | vs 1D (Match 52) |
+| D | vs 2C (Match 52) | vs 1C (Match 51) |
+| E | vs 2F (Match 53) | vs 1F (Match 54) |
+| F | vs 2E (Match 54) | vs 1E (Match 53) |
+| G | vs 2H (Match 55) | vs 1H (Match 56) |
+| H | vs 2G (Match 56) | vs 1G (Match 55) |
+
+**同半区路线（Quarter/Semi）：**
+- **上半区：** 49胜者 vs 51胜者 · 53胜者 vs 55胜者
+- **下半区：** 50胜者 vs 52胜者 · 54胜者 vs 56胜者
+
+Use this to trace each team's full knockout path from Ro16 → QF → SF based on their group finish position.
+
+**c) 路线优势度评分 (Path Advantage Score)**
+For each possible finish position (1st/2nd), calculate the average opponent ELO along the full path to the final. `PATH_ADV = avg_elo_if_2nd - avg_elo_if_1st`.
+- Positive PATH_ADV → finishing 1st yields easier path → push incentive
+- Negative PATH_ADV → finishing 2nd yields easier path → may conserve/concede 1st
+- Near zero → no strategic preference
+
 ### Ensemble Weights
-Poisson:0.35, ELO:0.15, Form:0.15, Motivation:0.10, GroupStrategy:0.10, TravelFatigue:0.08, H2H:0.07. Normalize to 1.0.
+Poisson:0.35, ELO:0.15, Form:0.15, Motivation:0.10, GroupStrategy:0.10, TravelFatigue:0.06, H2H:0.06, **BracketPath:0.08**. Normalize to 1.0.
 
 ### Confidence
 `MODEL_CONF = 1 - max(variance_across_models)`.
@@ -137,6 +170,13 @@ Key edges: comeback potential → 平胜/平负 undervalued · dominance → 胜
 Each script references: tactical matchup · key player mini-story · weather · game-state dynamics · subs · **group pressure** · **future-opponent strategy** · **travel inequality**.
 
 **Group/future-opp influence:** Must-win → B/D less likely. Need draw → D more likely. Tough next opponent → A less dominant. Eliminated → C more likely vs them.
+
+**Strategic motive (算分战略):** Each script gets a strategic_motive tag based on BracketPath analysis:
+- `push` — team has strong incentive to win (first-place path much easier)
+- `neutral` — no significant path advantage either way
+- `conserve` — team may rotate/rest (second-place path easier, or already qualified)
+
+Motive affects script probability: `push` → A/B probability +10%, `conserve` → D probability +15%, rotation risk +1 level.
 
 **半全场 mapping:** A→勝勝/平勝, B→勝勝/平勝/勝平, C→平負/負負/勝負, D→平平/平勝/平負.
 

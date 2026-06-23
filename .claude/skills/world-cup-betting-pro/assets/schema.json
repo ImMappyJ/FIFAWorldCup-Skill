@@ -43,8 +43,59 @@
       "type": "object",
       "properties": {
         "group_name": { "type": "string" },
-        "standings": { "type": "array" },
-        "qualification_scenarios": { "type": "object" }
+        "standings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "team": { "type": "string" },
+              "played": { "type": "integer", "minimum": 0, "maximum": 3 },
+              "won": { "type": "integer", "minimum": 0 },
+              "drawn": { "type": "integer", "minimum": 0 },
+              "lost": { "type": "integer", "minimum": 0 },
+              "GF": { "type": "integer", "minimum": 0 },
+              "GA": { "type": "integer", "minimum": 0 },
+              "GD": { "type": "integer" },
+              "pts": { "type": "integer", "minimum": 0 },
+              "prob_1st": { "type": "number", "minimum": 0, "maximum": 1, "description": "probability of finishing 1st" },
+              "prob_2nd": { "type": "number", "minimum": 0, "maximum": 1, "description": "probability of finishing 2nd" },
+              "prob_out": { "type": "number", "minimum": 0, "maximum": 1, "description": "probability of elimination" },
+              "strategic_motive": { "enum": ["push", "neutral", "conserve"] }
+            }
+          }
+        },
+        "remaining_fixtures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "home": { "type": "string" },
+              "away": { "type": "string" },
+              "impact": { "type": "string" }
+            }
+          }
+        },
+        "tiebreaker_status": {
+          "type": "object",
+          "properties": {
+            "head_to_head": { "type": "string" },
+            "goal_difference": { "type": "string" },
+            "goals_scored": { "type": "string" },
+            "fair_play": { "type": "string" }
+          }
+        }
+      }
+    },
+    "knockout_path": {
+      "type": "object",
+      "properties": {
+        "if_1st": { "$ref": "#/$defs/path" },
+        "if_2nd": { "$ref": "#/$defs/path" },
+        "incentive_score": {
+          "type": "number",
+          "description": "positive = benefit to aim 1st, negative = benefit to aim 2nd"
+        },
+        "recommendation": { "enum": ["push_for_1st", "neutral", "conserve_ok"] }
       }
     },
     "travel_log": {
@@ -85,7 +136,8 @@
           "properties": {
             "must_win": { "type": "boolean" },
             "qualification_status": { "type": "string" },
-            "approach": { "type": "string" }
+            "approach": { "type": "string" },
+            "strategic_motive": { "enum": ["push", "neutral", "conserve"] }
           }
         },
         "future_opponent": {
@@ -96,6 +148,24 @@
             "rest_days_until": { "type": "integer" }
           }
         }
+      }
+    },
+    "path": {
+      "type": "object",
+      "properties": {
+        "ro16": { "$ref": "#/$defs/matchup" },
+        "quarter": { "$ref": "#/$defs/matchup" },
+        "semi": { "$ref": "#/$defs/matchup" },
+        "avg_elo": { "type": "number" },
+        "avg_difficulty": { "type": "number" }
+      }
+    },
+    "matchup": {
+      "type": "object",
+      "properties": {
+        "opponent": { "type": "string" },
+        "difficulty": { "enum": ["easy", "even", "tough"] },
+        "group_position": { "type": "string" }
       }
     },
     "travel": {

@@ -13,7 +13,7 @@
 3. **市场层** — China Sports Lottery odds, edge detection, 半全场 analysis, trap detection
 4. **剧本层** — 4-script narratives with group/travel/future-opponent influence
 5. **风险层** — 5-dim risk, Kelly sizing, ticket construction
-6. **可视化层** — Standalone dark-theme HTML with heatmaps and dashboards
+6. **可视化层** — Standalone dark-theme HTML with Poisson matrices and dashboards
 7. **历史回测层** — Brier score, calibration, market efficiency testing
 8. **自学习层** — Error decomposition, weight updates, pattern library, learning log
 

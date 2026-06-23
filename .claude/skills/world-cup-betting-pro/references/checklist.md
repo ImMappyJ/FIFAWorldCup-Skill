@@ -15,8 +15,9 @@
 - [ ] Compute DATA_QUALITY per match; flag DQ<0.6
 
 ## Phase 2 — MODEL (L2)
-- [ ] Run ELO, Poisson(λ from xG→full score matrix), Form Power, Motivation, Group Strategy, Travel Fatigue
+- [ ] Run ELO, Poisson(λ from xG→full score matrix), Form Power, Motivation, Group Strategy, Travel Fatigue, **Bracket Path Optimization (Model G)**
 - [ ] Ensemble→normalize, extract top 5 scores, BTTS, goal thresholds, MODEL_CONFIDENCE
+- [ ] **Model G: calculate standing projections, bracket paths, path advantage score (PATH_ADV)**
 
 ## Phase 3 — MARKET (L3)
 - [ ] Collect odds for 5 markets, remove vig, calculate edge per selection
@@ -26,7 +27,7 @@
 
 ## Phase 4 — SCENARIO (L4)
 - [ ] 4 scripts/match (Dominance/Open/Upset/Stalemate) with narratives, triggers, scores, probs
-- [ ] Annotate: group pressure, future-opponent strategy, travel inequality
+- [ ] Annotate: group pressure, future-opponent strategy, travel inequality, **strategic motive (push/neutral/conserve per team)**
 - [ ] Map scripts→半全场 outcomes
 
 ## Phase 5 — RISK (L5)
@@ -46,7 +47,7 @@
 **CSS: 首次读取 `assets/style.css` 并内联到 `<style>`，后续页面复用同一 CSS 文本。**
 
 - [ ] **7a. 赛事预览.html** — Header + Dashboard + match preview cards (`.match-card--preview`) + nav links → Footer
-- [ ] **7b. 单场分析 `<主队>-vs-<客队>.html`** — 每场一个: Group context + weather/travel + win bars + scripts + heatmap + goals + 半全场 + odds table + nav
+- [ ] **7b. 单场分析 `<主队>-vs-<客队>.html`** — 每场一个: Group context → **Path Analysis (standings + bracket + motive)** → weather/travel → win bars → scripts → Poisson得分矩阵（含赔率）→ goals → 半全场 → odds table → nav
 - [ ] **7c. 投注建议.html** — 3 ticket cards (.tickets) + risk digest + executive summary + nav
 - [ ] Validate all HTML: no CDN/JS, dark theme, 中文, shared CSS inline
 

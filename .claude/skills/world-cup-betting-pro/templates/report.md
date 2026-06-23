@@ -40,11 +40,18 @@ Header(比赛日 + 日期 + 比赛数量 badge)
 ```
 Header(对阵双方 + 比赛信息 + 阶段)
 → Group Context Strip (小组排名表 + 出线形势 + 奔波距离)
+→ Path Analysis（出线形势 & 淘汰赛路线）
+   ├─ 小组当前排名表（高亮主客两队，标注出线区/淘汰区）
+   ├─ 剩余赛程一览（各队剩余对手 + 关键度标记）
+   ├─ 出线概率矩阵（每队拿第1/第2/淘汰概率）
+   ├─ 路线对比卡（拿第1 vs 拿第2的淘汰赛路线 + 对手难度）
+   ├─ 战略动机标签（全力争胜 / 中性 / 可能留力）
+   └─ 对阵树可视化（聚焦该队所在半区，含路线连接线）
 → Weather + Travel Badge
 → Win Probability Bars (三色: 主胜蓝/平灰/客胜红)
-→ Model Ensemble Breakdown (6模型贡献)
-→ 4-Script Narratives (A表现/B对攻/C爆冷/D僵局)
-→ Score Heatmap (7×7 热力图 — 竖=列/蓝=主队进球 0~5+, 横=行/红=客队进球 0~5+. 角格指示方向, 最佳比分高亮)
+→ Model Ensemble Breakdown (7模型贡献)
+→ 4-Script Narratives (A表现/B对攻/C爆冷/D僵局, 每剧本含strategic_motive)
+→ Poisson得分矩阵（含赔率 — 按概率降序排列的比分概率表，每行标注对应赔率，最可能比分高亮）
 → Goal Cards (0~7+ 球概率, 最佳高亮)
 → 半全场 9-Grid (3×3, 有边路的格子绿色高亮)
 → Full Odds Table (5 markets: 胜平负/让球胜平负/半全场/比分/总进球数, 标记 edge)
@@ -52,62 +59,189 @@ Header(对阵双方 + 比赛信息 + 阶段)
 → Footer
 ```
 
-**关键 CSS 类:** `.match-card` `.group-strip` `.win-bars` `.score-heatmap` `.score-grid` `.score-grid__top-header` `.score-grid__left-header` `.goal-cards` `.htft-grid` `.odds-table` `.nav-links`
+**关键 CSS 类:** `.match-card` `.group-strip` `.win-bars` `.poisson-matrix-section` `.poisson-table` `.poisson-row--best` `.prob-value` `.odds-value` `.score-line` `.goal-cards` `.htft-grid` `.odds-table` `.path-analysis` `.standing-table` `.prob-matrix` `.route-cards` `.motive-tag` `.bracket-tree` `.nav-links`
 
-### 比分热力图 HTML 结构
+### Poisson得分矩阵 HTML 结构
 
-**每个格子直接标注国家队译名 + 进球数，一目了然。**
-**规则：能用译名的地方用译名（巴西、法国），仅极窄空间（如角格）可用 FIFA 三字码（BRA、FRA）。**
+**Poisson模型预测的比分概率矩阵，按概率降序排列，每行标注对应赔率。**
+**只在比分处标注国家队译名（巴西、法国），列标题用译名即可。**
 
 ```html
-<div class="score-heatmap">
+<div class="poisson-matrix-section">
   <!-- 标题栏 -->
-  <div class="score-heatmap__title">
-    <span class="axis-badge axis-badge--home">🇧🇷 巴西 进球（列 ↓）</span>
-    <span class="axis-arrow">×</span>
-    <span class="axis-badge axis-badge--away">🇫🇷 法国 进球（行 →）</span>
+  <div class="section-header">
+    <span class="accent-bar"></span><span class="icon">📊</span>
+    <span class="title">Poisson 得分矩阵</span>
   </div>
 
-  <div class="score-grid-wrapper">
-    <div class="score-grid">
-      <!-- 角格（极窄，可用三字码） -->
-      <div class="score-grid__corner">
-        <span class="corner-row">法国 →</span>
-        <span class="corner-col">↓ 巴西</span>
+  <table class="poisson-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>比分 (主:客)</th>
+        <th>Poisson 概率</th>
+        <th>赔率</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="poisson-row--best">
+        <td>1</td>
+        <td><span class="score-line">🇧🇷 巴西 <strong>1:1</strong> 🇫🇷 法国</span></td>
+        <td><span class="prob-value">12.3%</span></td>
+        <td><span class="odds-value">@6.50</span></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><span class="score-line">🇧🇷 巴西 <strong>1:0</strong> 🇫🇷 法国</span></td>
+        <td><span class="prob-value">10.8%</span></td>
+        <td><span class="odds-value">@7.00</span></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><span class="score-line">🇧🇷 巴西 <strong>2:1</strong> 🇫🇷 法国</span></td>
+        <td><span class="prob-value">9.2%</span></td>
+        <td><span class="odds-value">@8.50</span></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><span class="score-line">🇧🇷 巴西 <strong>0:0</strong> 🇫🇷 法国</span></td>
+        <td><span class="prob-value">8.5%</span></td>
+        <td><span class="odds-value">@9.00</span></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><span class="score-line">🇧🇷 巴西 <strong>0:1</strong> 🇫🇷 法国</span></td>
+        <td><span class="prob-value">7.8%</span></td>
+        <td><span class="odds-value">@9.50</span></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><span class="score-line">🇧🇷 巴西 <strong>2:0</strong> 🇫🇷 法国</span></td>
+        <td><span class="prob-value">7.2%</span></td>
+        <td><span class="odds-value">@10.00</span></td>
+      </tr>
+      <!-- ... 继续列出所有比分（通常 ~10-15 行），按概率降序 -->
+    </tbody>
+  </table>
+</div>
+```
+
+**规则:**
+- 按 Poisson 概率降序排列（最可能比分排第一）
+- `.poisson-row--best` — 最可能比分行，金色高亮 + glow
+- `.prob-value` — 概率值，粗体显示
+- `.odds-value` — 赔率值，绿色高亮（对应中国竞彩 比分 玩法）
+- `.score-line` — 比分行，包含国旗 + 译名 + 比分
+- 仅列出概率 >1% 的比分（通常 10-15 行）
+- 赔率为中国竞彩 比分 玩法对应的官方赔率
+
+### 出线分析 HTML 结构
+
+**位置：** Group Context Strip 之后，Weather 之前。
+
+```html
+<div class="path-analysis">
+  <!-- Section 标题 -->
+  <div class="section-header">
+    <span class="accent-bar"></span><span class="icon">🧮</span>
+    <span class="title">出线形势 & 淘汰赛路线</span>
+  </div>
+
+  <!-- ① 小组排名表 -->
+  <table class="standing-table">
+    <tr><th>#</th><th>球队</th><th>赛</th><th>胜</th><th>平</th><th>负</th><th>进</th><th>失</th><th>净</th><th>分</th></tr>
+    <tr class="highlight-team pos-1st"><td><span class="pos-num">1</span></td><td>🇧🇷 巴西</td><td>2</td><td>2</td><td>0</td><td>0</td><td>5</td><td>1</td><td>+4</td><td><strong>6</strong></td></tr>
+    <tr class="pos-2nd"><td><span class="pos-num">2</span></td><td>🇫🇷 法国</td><td>2</td><td>1</td><td>0</td><td>1</td><td>3</td><td>2</td><td>+1</td><td><strong>3</strong></td></tr>
+    <tr class="pos-out"><td><span class="pos-num">3</span></td><td>🇨🇲 喀麦隆</td><td>2</td><td>1</td><td>0</td><td>1</td><td>2</td><td>4</td><td>-2</td><td><strong>3</strong></td></tr>
+    <tr class="pos-out"><td><span class="pos-num">4</span></td><td>🇷🇸 塞尔维亚</td><td>2</td><td>0</td><td>0</td><td>2</td><td>1</td><td>4</td><td>-3</td><td><strong>0</strong></td></tr>
+  </table>
+
+  <!-- ② 剩余赛程 -->
+  <div class="fixture-list">
+    <div class="fixture-item"><span class="teams">🇧🇷 巴西 vs 🇷🇸 塞尔维亚</span><span class="impact">关键</span></div>
+    <div class="fixture-item"><span class="teams">🇫🇷 法国 vs 🇨🇲 喀麦隆</span><span class="impact">生死战</span></div>
+  </div>
+
+  <!-- ③ 出线概率矩阵 -->
+  <div class="prob-matrix">
+    <div class="prob-cell">
+      <div class="team-name">🇧🇷 巴西</div>
+      <div class="prob-bar-track"><div class="prob-bar-fill" style="width:85%;background:var(--success);"></div></div>
+      <div class="prob-label">出线 95%</div>
+    </div>
+    <div class="prob-cell">
+      <div class="team-name">🇫🇷 法国</div>
+      <div class="prob-bar-track"><div class="prob-bar-fill" style="width:45%;background:var(--warning);"></div></div>
+      <div class="prob-label">出线 50%</div>
+    </div>
+    <div class="prob-cell">
+      <div class="team-name">🇨🇲 喀麦隆</div>
+      <div class="prob-bar-track"><div class="prob-bar-fill" style="width:40%;background:var(--warning);"></div></div>
+      <div class="prob-label">出线 45%</div>
+    </div>
+  </div>
+
+  <!-- ④ 路线对比卡 -->
+  <div class="route-cards">
+    <div class="route-card route-card--1st">
+      <div class="route-title">🏆 拿第1的路线</div>
+      <div class="route-leg"><span class="opponent">Ro16 vs 2B</span><span class="difficulty">🔴 tough</span></div>
+      <div class="route-leg"><span class="opponent">QF vs 1D/2C</span><span class="difficulty">🟡 even</span></div>
+      <div class="route-leg"><span class="opponent">SF vs 1E/2F/1G/2H</span><span class="difficulty">🟢 easy</span></div>
+      <div class="route-diff">同半区强敌较少 ✓</div>
+    </div>
+    <div class="route-card route-card--2nd">
+      <div class="route-title">🥈 拿第2的路线</div>
+      <div class="route-leg"><span class="opponent">Ro16 vs 1B</span><span class="difficulty">🔴 tough</span></div>
+      <div class="route-leg"><span class="opponent">QF vs 1A/2B</span><span class="difficulty">🔴 tough</span></div>
+      <div class="route-leg"><span class="opponent">SF vs 1C/2D/1E/2F</span><span class="difficulty">🔴 tough</span></div>
+      <div class="route-diff">连续遭遇强队 ✗</div>
+    </div>
+  </div>
+
+  <!-- ⑤ 战略动机标签 -->
+  <div class="motive-bar">
+    <span class="motive-tag motive-tag--push"><span class="motive-icon">🔥</span> 巴西全力争胜——第1路线更有利</span>
+    <span class="motive-tag motive-tag--neutral"><span class="motive-icon">⚖️</span> 法国中性——出线优先</span>
+  </div>
+
+  <!-- ⑥ 对阵树 -->
+  <div class="bracket-tree">
+    <div class="bracket-round">
+      <div class="bracket-round__title">Ro16</div>
+      <div class="bracket-match bracket-match--projected">
+        <span class="team team--highlight">🇧🇷 巴西</span>
+        <span class="scoreline">vs 2B</span>
       </div>
-      <!-- 顶部行头：每格 = 客队译名 + 进球数（红色） -->
-      <div class="score-grid__top-header">
-        <span class="team-abbr">法国</span>
-        <span class="goal-num">0</span>
-      </div>
-      <div class="score-grid__top-header">
-        <span class="team-abbr">法国</span>
-        <span class="goal-num">1</span>
-      </div>
-      ... 2 3 4 5+
-      <!-- 左侧列头：每格 = 主队译名 + 进球数（蓝色）→ 6 个概率格 -->
-      <div class="score-grid__left-header">
-        <span class="team-abbr">巴西</span>
-        <span class="goal-num">0</span>
-      </div>
-      <div class="score-cell score-cell--hot">1.2%</div>
-      <div class="score-cell score-cell--hot">2.8%</div>
-      <div class="score-cell score-cell--best">5.1%</div>
-      <div class="score-cell">3.4%</div>
-      <div class="score-cell">1.8%</div>
-      <div class="score-cell">0.9%</div>
-      <!-- 第2-6行同理：巴西 1~5+ 球 → 各 6 个概率格 -->
-      ...
+      <div class="bracket-connector"></div>
+      <div class="bracket-match bracket-match--empty">2B</div>
+    </div>
+    <div class="bracket-round">
+      <div class="bracket-round__title">QF</div>
+      <div class="bracket-match bracket-match--empty">1D/2C</div>
+      <div class="bracket-connector bracket-connector--merge"></div>
+      <div class="bracket-match bracket-match--empty">1D/2C</div>
+    </div>
+    <div class="bracket-round">
+      <div class="bracket-round__title">SF</div>
+      <div class="bracket-match bracket-match--empty">上半区</div>
+      <div class="bracket-connector"></div>
+      <div class="bracket-match bracket-match--empty">上半区</div>
     </div>
   </div>
 </div>
 ```
 
 **颜色编码规则:**
-- 左侧 `.score-grid__left-header` — **蓝色**，竖排 = 列，双行显示（队名 + 进球数），代表主队
-- 顶部 `.score-grid__top-header` — **红色**，横排 = 行，双行显示（队名 + 进球数），代表客队
-- 角格 — 红 "法国 →" + 蓝 "↓ 巴西"
-- `.score-cell--best` — 最可能比分，金色高亮 + glow
+- `.pos-1st` 行 — 绿色圆形标记，代表出线区
+- `.pos-2nd` 行 — 浅绿标记，代表竞争区
+- `.pos-out` 行 — 红色标记，代表淘汰区
+- `.highlight-team` 行 — 蓝色底色，代表当前分析的主客两队
+- `.route-card--1st` — 蓝色顶边，代表第1名路线
+- `.route-card--2nd` — 黄色顶边，代表第2名路线
+- `.motive-tag--push` — 绿色，全力争胜
+- `.motive-tag--neutral` — 灰色，中性
+- `.motive-tag--conserve` — 红色，可能留力
 
 ---
 
@@ -141,9 +275,7 @@ Header(投注建议 + 日期)
 1. 第一次生成 HTML 时，读取 `assets/style.css`，完整内联到 `<style>` 标签。
 2. 后续 HTML 页面直接复用同一 CSS 文本 — 不再重复消耗 Token 生成样式。
 3. 所有页面共用 `:root` 变量、typography、section header、footer、nav-links。
-4. 预览页额外使用 `.match-card--preview`；单场页使用 `.match-card`（完整版）；投注页使用 `.tickets`。
-
----
+4. 预览页额外使用 `.match-card--preview`；单场页使用 `.match-card`（完整版），外加 `.path-analysis` `.bracket-tree`（出线分析）；投注页使用 `.tickets`。
 
 ## Screenshot
 

@@ -21,7 +21,7 @@
 
 **Phase 7:** 3 HTML pages:
 - `html/赛事预览.html` — single match preview card
-- `html/Brazil-vs-France.html` — 完整单场分析 (group + weather + bars + scripts + heatmap(每格标注译名) + goals + 半全场 + odds)
+- `html/巴西-vs-法国.html` — 完整单场分析 (group + path分析 + weather + bars + scripts + Poisson得分矩阵(含赔率) + goals + 半全场 + odds)
 - `html/投注建议.html` — 推荐单关 + risk + summary
 
 **Phase 8:** Screenshot all HTML → `images/` via `node scripts/export.js` (750px@2x, fullPage auto-height). Spot-check visually.
@@ -34,10 +34,10 @@ analysis/2026-06-19-1430/
 ├── report.md
 ├── html/
 │   ├── 赛事预览.html
-│   ├── Brazil-vs-France.html
+│   ├── 巴西-vs-法国.html
 │   └── 投注建议.html
 └── images/
     ├── 赛事预览.png
-    ├── Brazil-vs-France.png
+    ├── 巴西-vs-法国.png
     └── 投注建议.png
 ```

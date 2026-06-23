@@ -17,7 +17,7 @@ Professional football research analyst. 8-layer system: Data→Model→Market→
 | Layer | Purpose | Detailed Spec |
 |-------|---------|---------------|
 | L1 数据层 | Multi-source data, quality scoring | [architecture.md](references/architecture.md#l1) |
-| L2 模型层 | 6-model ensemble (ELO+Poisson+Form+Motivation+GroupStrategy+TravelFatigue) | [architecture.md](references/architecture.md#l2) |
+| L2 模型层 | 7-model ensemble (ELO+Poisson+Form+Motivation+GroupStrategy+TravelFatigue+BracketPath) | [architecture.md](references/architecture.md#l2) |
 | L3 市场层 | China Sports Lottery 5 markets, edge detection, trap detection, 半全场 analysis | [architecture.md](references/architecture.md#l3) |
 | L4 剧本层 | 4 scripts/match with group/travel/future-opponent influence | [architecture.md](references/architecture.md#l4) |
 | L5 风险层 | 5-dim risk, Kelly sizing, ticket construction | [architecture.md](references/architecture.md#l5) |
@@ -63,17 +63,17 @@ analysis/
     ├── report.md                         # 中文完整分析报告 (L1-L8)
     ├── html/
     │   ├── 赛事预览.html                  # 所有比赛概览 (dashboard + mini cards)
-    │   ├── Brazil-vs-France.html          # 单场深度分析 (队名命名)
-    │   ├── Germany-vs-Spain.html          # 单场深度分析
+    │   ├── 巴西-vs-法国.html          # 单场深度分析 (汉语命名)
+    │   ├── 德国-vs-西班牙.html          # 单场深度分析
     │   └── 投注建议.html                  # 三票型 + 风险 + 总结
     └── images/
         ├── 赛事预览.png
-        ├── Brazil-vs-France.png
-        ├── Germany-vs-Spain.png
+        ├── 巴西-vs-法国.png
+        ├── 德国-vs-西班牙.png
         └── 投注建议.png
 ```
 
-**HTML 命名规则:** 预览页 → `赛事预览.html` · 单场 → `<主队>-vs-<客队>.html` · 投注 → `投注建议.html`
+**HTML 命名规则:** 预览页 → `赛事预览.html` · 单场 → `<主队>-vs-<客队>.html`（汉语命名） · 投注 → `投注建议.html`
 **PNG 命名规则:** 与对应 HTML 同名，全部放入 `images/` 文件夹。
 
 ---
@@ -95,12 +95,12 @@ Authoritative artifact. Cover all 8 layers: header, dashboard, per-match(L1-L5),
 ## 页面一：赛事预览 `赛事预览.html`
 
 **内容:** Header(比赛日标题) → Dashboard(5 stat pills) → 每场比赛的 compact preview card → Footer
-**Compact card:** `.match-card--preview` — 横向布局，显示队名、核心概率、风险等级、最佳边路。不包含 heatmap/goals/完整 odds。底部链接到各场详细分析页。
+**Compact card:** `.match-card--preview` — 横向布局，显示队名、核心概率、风险等级、最佳边路。不包含 Poisson矩阵/goals/完整 odds。底部链接到各场详细分析页。
 
 ## 页面二：单场分析 `<主队>-vs-<客队>.html`
 
 **每场比赛一个独立 HTML。内容:**
-Header(对阵标题) → Group context strip → Weather + Travel badge → Win probability bars → 4-script narratives → Score heatmap (竖=列/蓝主队, 横=行/红客队) → Goal cards → 半全场 9-grid → Full odds table(5 markets) → 导航链接
+Header(对阵标题) → Group context strip → Path Analysis（出线形势 & 淘汰赛路线）→ Weather + Travel badge → Win probability bars → 4-script narratives → Poisson得分矩阵（含赔率）→ Goal cards → 半全场 9-grid → Full odds table(5 markets) → 导航链接
 
 ## 页面三：投注建议 `投注建议.html`
 
